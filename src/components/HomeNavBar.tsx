@@ -1,13 +1,20 @@
 import { type NextPage } from "next";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 const NavBar: NextPage = () => {
   return (
     <div className="navbar backdrop-blur-lg">
       <div className="flex-1">
         <Link href="/" className="btn-ghost btn text-2xl normal-case">
-          Worksheesh
+          <Image
+            src="/images/logo-icon.png"
+            alt="Logo"
+            width="32"
+            height="32"
+          />
+          <h2 className="ml-2">Worksheesh</h2>
         </Link>
       </div>
       <div className="flex-none">
