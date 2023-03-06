@@ -5,9 +5,10 @@ import {
   type DefaultSession,
 } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
+import ZoomProvider from "next-auth/providers/zoom";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { env } from "~/utils/env.mjs";
-import { prisma } from "~/utils/server/db";
+import { env } from "src/env.mjs";
+import { prisma } from "@server/db";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -50,6 +51,10 @@ export const authOptions: NextAuthOptions = {
     DiscordProvider({
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
+    }),
+    ZoomProvider({
+      clientId: process.env.ZOOM_CLIENT_ID,
+      clientSecret: process.env.ZOOM_CLIENT_SECRET,
     }),
     /**
      * ...add more providers here.
