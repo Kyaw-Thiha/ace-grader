@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 
 const NavBar: NextPage = () => {
   return (
-    <div className="navbar fixed backdrop-blur-lg">
+    <div className="navbar backdrop-blur-lg">
       <div className="flex-1">
         <Link href="/" className="btn-ghost btn text-2xl normal-case">
           Worksheesh
@@ -31,7 +31,7 @@ const NavActions: React.FC = () => {
     );
   } else {
     return (
-      <Link href="/">
+      <Link href="/sign-in">
         <button className="btn-primary btn">Sign In</button>
       </Link>
     );
