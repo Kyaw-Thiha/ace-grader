@@ -18,6 +18,12 @@ const SignIn: NextPage<Props> = () => {
         <button className="btn-primary btn" onClick={() => void signIn("zoom")}>
           Sign In With Zoom
         </button>
+        <button
+          className="btn-primary btn"
+          onClick={() => void signIn("google")}
+        >
+          Sign In With Google
+        </button>
       </main>
     </>
   );

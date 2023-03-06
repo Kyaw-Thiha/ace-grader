@@ -6,6 +6,7 @@ import {
 } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import ZoomProvider from "next-auth/providers/zoom";
+import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "src/env.mjs";
 import { prisma } from "@server/db";
@@ -55,6 +56,10 @@ export const authOptions: NextAuthOptions = {
     ZoomProvider({
       clientId: process.env.ZOOM_CLIENT_ID,
       clientSecret: process.env.ZOOM_CLIENT_SECRET,
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
     /**
      * ...add more providers here.
