@@ -41,7 +41,7 @@ const Home: NextPage = () => {
                 assumenda excepturi exercitationem quasi. In deleniti eaque aut
                 repudiandae et a id nisi.
               </p>
-              <Link href="/">
+              <Link href="/sign-in">
                 <button className="btn-primary btn">Get Started</button>
               </Link>
             </div>

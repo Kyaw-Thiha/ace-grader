@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const NavBar: NextPage = () => {
   return (
-    <div className="navbar backdrop-blur-lg">
+    <div className="navbar fixed backdrop-blur-lg">
       <div className="flex-1">
         <Link href="/" className="btn-ghost btn text-2xl normal-case">
           <Image
