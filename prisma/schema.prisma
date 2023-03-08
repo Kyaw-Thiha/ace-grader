@@ -51,6 +51,15 @@ model Session {
     @@index([userId])
 }
 
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
+
+
 model User {
     id            String    @id @default(cuid())
     name          String?
@@ -59,12 +68,73 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    teacherProfiles TeacherProfile[]
 }
 
-model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+model TeacherProfile {
+    id            String    @id @default(cuid())
+    username      String
+    userId        String
+    notifications TeacherNotification[]
+    drafts        Draft[]
+    worksheets    Worksheet[]
+    user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([identifier, token])
+    @@index([userId])
 }
+
+model TeacherNotification {
+    id            String    @id @default(cuid())
+    text          String?
+    time          DateTime
+    isRead        Boolean  @default(false)
+    resource      String   
+    profileId     String
+    profile       TeacherProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+    @@index([profileId])
+}
+
+
+model Draft {
+    id             String    @id @default(cuid())
+    title          String
+    lastEdited     DateTime     @updatedAt
+    profileId      String
+    profile        TeacherProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+    @@index([profileId])
+}
+
+model Worksheet {
+    id             String    @id @default(cuid())
+    title          String
+    status         WorksheetStatus      @default(PRIVATE)
+    createdTime    DateTime     @default(now())
+    totalMarks     Int  
+    answerSheets   AnswerSheet[]
+    profileId      String
+    profile        TeacherProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+    @@index([profileId])
+}
+
+enum WorksheetStatus {
+    PUBLIC
+    PRIVATE
+}
+
+model AnswerSheet {
+    id                  String    @id @default(cuid())
+    studentEmail        String
+    studentPassword     String? 
+    startTime           DateTime     @default(now())
+    endTime             DateTime?
+    totalMarks          Int?     
+    worksheetId         String
+    worksheet           Worksheet @relation(fields: [worksheetId], references: [id], onDelete: Cascade)
+
+    @@index([worksheetId])
+}
+
+
