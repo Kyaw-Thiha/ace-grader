@@ -86,7 +86,7 @@ model TeacherProfile {
 model TeacherNotification {
     id            String    @id @default(cuid())
     text          String?
-    time          DateTime
+    time          DateTime?  @default(now())
     isRead        Boolean  @default(false)
     resource      String   
     profileId     String
@@ -111,7 +111,7 @@ model Worksheet {
     title          String
     status         WorksheetStatus      @default(PRIVATE)
     createdTime    DateTime     @default(now())
-    totalMarks     Int  
+    totalMarks     Int 
     answerSheets   AnswerSheet[]
     profileId      String
     profile        TeacherProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
