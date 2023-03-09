@@ -9,6 +9,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "src/env.mjs";
 import { prisma } from "@server/db";
+import { api } from "@utils/api";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -45,6 +46,15 @@ export const authOptions: NextAuthOptions = {
         // session.user.role = user.role; <-- put other properties on the session here
       }
       return session;
+    },
+  },
+  events: {
+    signIn: async ({ user, isNewUser }) => {
+      if (isNewUser) {
+        //Initialising a new profile
+        const createProfile = api.teacherProfile.create.useMutation({});
+        await createProfile.mutateAsync();
+      }
     },
   },
   adapter: PrismaAdapter(prisma),
