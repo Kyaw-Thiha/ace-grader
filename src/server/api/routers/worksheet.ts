@@ -1,10 +1,6 @@
 import { z } from "zod";
 
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "@server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "@server/api/trpc";
 
 export const worksheetRouter = createTRPCRouter({
   get: protectedProcedure
@@ -34,8 +30,6 @@ export const worksheetRouter = createTRPCRouter({
         data: {
           title: input.title,
           profileId: input.profileId,
-          status: "PRIVATE",
-          totalMarks: 0,
         },
       });
     }),
