@@ -1,12 +1,8 @@
-import { signIn } from "next-auth/react";
-
 import { type NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import Link from "next/link";
 import NavBar from "@components/HomeNavBar";
-import { useSession } from "next-auth/react";
-import { api } from "../utils/api";
+import { api } from "@utils/api";
 
 const MyWorksheets: NextPage = () => {
   return (
@@ -23,36 +19,17 @@ const MyWorksheets: NextPage = () => {
 
 export default MyWorksheets;
 
-const NavActions: React.FC = () => {
-  const { data: profiles, refetch: refetchProfiles } =
-    api.teacherProfile.getAll.useQuery(
-      undefined // no input
-    );
-
-  if (profiles?.length == 0) {
-    const createProfile = api.teacherProfile.create.useMutation({
-      onSuccess: () => {
-        void refetchProfiles();
-      },
-    });
-
-    createProfile.mutate();
-  }
-
-  return (
-    <WorksheetList profileId={profiles?.at(0)?.id as string}></WorksheetList>
-  );
-};
-
 interface Props {
   profileId: string;
 }
 
 const WorksheetList: React.FC<Props> = ({ profileId }) => {
-  const { data: worksheets, refetch: refetchWorksheets } =
-    api.worksheet.getByProfile.useQuery({
-      profileId: profileId,
-    });
+  const { data: profiles, refetch: refetchProfiles } =
+    api.teacherProfile.getWorksheets.useQuery(
+      undefined // no input
+    );
+
+  const worksheets = profiles?.at(0)?.worksheets;
 
   if (worksheets?.length == 0) {
     return <></>;
@@ -60,3 +37,22 @@ const WorksheetList: React.FC<Props> = ({ profileId }) => {
     return <></>;
   }
 };
+
+// const NavActions: React.FC = () => {
+//   const { data: profiles, refetch: refetchProfiles } =
+//     api.teacherProfile.getAll.useQuery(
+//       undefined // no input
+//     );
+
+//   if (profiles?.length == 0) {
+//     const createProfile = api.teacherProfile.create.useMutation({
+//       onSuccess: () => {
+//         void refetchProfiles();
+//       },
+//     });
+
+//     createProfile.mutate();
+//   }
+
+//   return <DraftList profileId={profiles?.at(0)?.id as string}></DraftList>;
+// };
