@@ -99,10 +99,15 @@ model TeacherNotification {
 model Worksheet {
     id             String    @id @default(cuid())
     title          String
-    lastEdited     DateTime     @updatedAt
-    worksheets     PublishedWorksheet[]
+    lastEdited     DateTime      @updatedAt
+    parentQuestions              ParentQuestion[]
+    multipleChoiceQuestions      MultipleChoiceQuestion[]
+    shortAnswerQuestions         ShortAnswerQuestion[]
+    longAnswerQuestions          LongAnswerQuestion[]
+    publishedWorksheets          PublishedWorksheet[]
     profileId      String
     profile        TeacherProfile @relation(fields: [profileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+   
 
     @@index([profileId])
 	
@@ -114,15 +119,18 @@ model PublishedWorksheet {
     status         WorksheetStatus      @default(PRIVATE)
     createdTime    DateTime     @default(now())
     totalMarks     Int 
-    answerSheets   AnswerSheet[]
+    parentQuestions              ParentQuestion[]
+    multipleChoiceQuestion       MultipleChoiceQuestion[]
+    shortAnswerQuestion          ShortAnswerQuestion[]
+    longAnswerQuestions          LongAnswerQuestion[]
+    answerSheets                 AnswerSheet[]
     worksheetId      String
     worksheet        Worksheet @relation(fields: [worksheetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-    profileId      String
-    profile        TeacherProfile @relation(fields: [profileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    profileId        String
+    profile          TeacherProfile @relation(fields: [profileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([worksheetId])
     @@index([profileId])
-	
 }
 
 enum WorksheetStatus {
@@ -143,4 +151,95 @@ model AnswerSheet {
     @@index([worksheetId])
 }
 
+model ParentQuestion {
+    id                  String    @id @default(cuid())
+    index               Int
+    text                String?
+    images              String?
+    // parentQuestionId    String?
+    // parentQuestion      ParentQuestion @relation("ParentQuestion", fields: [parentQuestionId], references: [id])
+    // childrenQuestions   ParentQuestion[] @relation("ParentQuestion")
+    multipleChoiceQuestion       MultipleChoiceQuestion[]
+    shortAnswerQuestion          ShortAnswerQuestion[]
+    longAnswerQuestions          LongAnswerQuestion[] 
+    worksheetId         String
+    worksheet           Worksheet @relation(fields: [worksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    publishedWorksheetId         String
+    publishedWorksheet           PublishedWorksheet @relation(fields: [publishedWorksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
+    @@index([worksheetId])
+    @@index([publishedWorksheetId])
+}
+
+model MultipleChoiceQuestion {
+    id                  String    @id @default(cuid())
+    text                String?
+    images              String? 
+    answer              String?
+    explanation         String?
+    marks               Int    
+    choices             MultipleChoiceQuestionChoice[]
+    parentQuestionId    String
+    parentQuestion      ParentQuestion  @relation(fields: [parentQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    worksheetId         String
+    worksheet           Worksheet @relation(fields: [worksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    publishedWorksheetId         String
+    publishedWorksheet           PublishedWorksheet @relation(fields: [publishedWorksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+    @@index([parentQuestionId])
+    @@index([worksheetId])
+    @@index([publishedWorksheetId])
+}
+
+model MultipleChoiceQuestionChoice {
+    id                  String    @id @default(cuid())
+    index               Int
+    choice              String
+    text                String? 
+    marks               Int?     
+    multipleChoiceQuestionChoiceId         String
+    multipleChoiceQuestionChoice           MultipleChoiceQuestion @relation(fields: [multipleChoiceQuestionChoiceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+    @@index([multipleChoiceQuestionChoiceId])
+}
+
+
+model ShortAnswerQuestion {
+    id                  String    @id @default(cuid())
+    index               Int
+    text                String?
+    images              String? 
+    answer              String?
+    explanation         String?
+    marks               Int    
+    parentQuestionId    String
+    parentQuestion      ParentQuestion  @relation(fields: [parentQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    worksheetId         String
+    worksheet           Worksheet @relation(fields: [worksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    publishedWorksheetId         String
+    publishedWorksheet           PublishedWorksheet @relation(fields: [publishedWorksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+    @@index([parentQuestionId])
+    @@index([worksheetId])
+    @@index([publishedWorksheetId])
+}
+
+model LongAnswerQuestion {
+    id                  String    @id @default(cuid())
+    index               Int
+    text                String?
+    images              String? 
+    sampleAnswer        String?
+    explanation         String?
+    marks               Int    
+    parentQuestionId    String
+    parentQuestion      ParentQuestion  @relation(fields: [parentQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    worksheetId         String
+    worksheet           Worksheet @relation(fields: [worksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    publishedWorksheetId         String
+    publishedWorksheet           PublishedWorksheet @relation(fields: [publishedWorksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+    @@index([parentQuestionId])
+    @@index([worksheetId])
+    @@index([publishedWorksheetId])
+}
