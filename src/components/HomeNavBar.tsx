@@ -32,7 +32,7 @@ const NavActions: React.FC = () => {
 
   if (isLoggedIn) {
     return (
-      <Link href="/">
+      <Link href="/my-worksheets">
         <button className="btn-primary btn">Dashboard</button>
       </Link>
     );
