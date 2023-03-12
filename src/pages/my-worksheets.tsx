@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import NavBar from "@components/HomeNavBar";
 import { api } from "@utils/api";
+import Image from "next/image";
 
 const MyWorksheets: NextPage = () => {
   return (
@@ -13,28 +14,99 @@ const MyWorksheets: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <NavBar />
+      <main>
+        <div className="mx-8 mt-8 flex items-center justify-between">
+          <h1 className=" text-4xl">My Worksheets</h1>
+          <Link href="/answer-sheets">
+            <button className="btn-ghost btn">Go to my answer sheets</button>
+          </Link>
+        </div>
+
+        <WorksheetList />
+      </main>
     </>
   );
 };
 
 export default MyWorksheets;
 
-interface Props {
-  profileId: string;
-}
+const WorksheetList: React.FC = () => {
+  // const { data: profiles, refetch: refetchProfiles } =
+  //   api.teacherProfile.getWorksheets.useQuery(
+  //     undefined // no input
+  //   );
 
-const WorksheetList: React.FC<Props> = ({ profileId }) => {
-  const { data: profiles, refetch: refetchProfiles } =
-    api.teacherProfile.getWorksheets.useQuery(
-      undefined // no input
-    );
+  // const worksheets = profiles?.at(0)?.worksheets;
 
-  const worksheets = profiles?.at(0)?.worksheets;
+  const worksheets = [
+    {
+      id: "Hihih",
+      title: "42 FM 2016",
+      lastEdited: "",
+    },
+    {
+      id: "Hihih",
+      title: "42 FM 2016",
+      lastEdited: "",
+    },
+  ];
+
+  const createWorksheet = () => {
+    return;
+  };
+
+  const copyLink = () => {
+    return;
+  };
 
   if (worksheets?.length == 0) {
-    return <></>;
+    return (
+      <div className="flex min-h-[80vh] flex-col items-center justify-center gap-16">
+        <Image
+          src="/images/illustrations/empty_worksheet.svg"
+          alt="Empty Worksheet Image"
+          width="350"
+          height="350"
+        />
+        <div className="flex items-center justify-center">
+          <button className="btn-primary btn " onClick={createWorksheet}>
+            Create Worksheet
+          </button>
+        </div>
+      </div>
+    );
   } else {
-    return <></>;
+    return (
+      <div className="mx-8 mt-8">
+        {worksheets.map((worksheet) => (
+          <div
+            key={worksheet.id}
+            className="mb-4 flex items-stretch justify-between"
+          >
+            <Link
+              href={`/worksheets/${worksheet.id}`}
+              className="flex w-full items-center justify-start rounded-lg py-2 px-4 transition-all hover:bg-gray-200 active:bg-gray-100"
+            >
+              <div className="flex flex-col items-start">
+                <h2 className="mb-2 text-xl font-semibold">
+                  {worksheet.title}
+                </h2>
+                <h3> Last Edited:</h3>
+              </div>
+            </Link>
+
+            <div className="mx-4 flex items-center justify-center">
+              <button
+                className="btn-outline btn-primary btn-circle btn text-xl"
+                onClick={copyLink}
+              >
+                🔗
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
   }
 };
 
