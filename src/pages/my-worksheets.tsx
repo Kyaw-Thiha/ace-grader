@@ -4,6 +4,7 @@ import Link from "next/link";
 import NavBar from "@components/HomeNavBar";
 import { api } from "@utils/api";
 import Image from "next/image";
+import { signOut } from "next-auth/react";
 
 const MyWorksheets: NextPage = () => {
   return (
@@ -30,11 +31,35 @@ const MyWorksheets: NextPage = () => {
 
 export default MyWorksheets;
 
+const createWorksheet = () => {
+  return;
+};
+
 const WorksheetList: React.FC = () => {
-  // const { data: profiles, refetch: refetchProfiles } =
-  //   api.teacherProfile.getWorksheets.useQuery(
-  //     undefined // no input
-  //   );
+  const { data: profiles, refetch: refetchProfiles } =
+    api.teacherProfile.getWorksheets.useQuery(
+      undefined // no input
+    );
+
+  console.log(profiles);
+
+  const deleteUser = api.user.delete.useMutation({
+    onSuccess: () => {
+      void signOut({
+        callbackUrl: `${window.location.origin}`,
+      });
+    },
+  });
+
+  const copyLink = () => {
+    // void signOut({
+    //   callbackUrl: `${window.location.origin}`,
+    // });
+
+    deleteUser.mutate();
+
+    return;
+  };
 
   // const worksheets = profiles?.at(0)?.worksheets;
 
@@ -50,14 +75,6 @@ const WorksheetList: React.FC = () => {
       lastEdited: "",
     },
   ];
-
-  const createWorksheet = () => {
-    return;
-  };
-
-  const copyLink = () => {
-    return;
-  };
 
   if (worksheets?.length == 0) {
     return (
