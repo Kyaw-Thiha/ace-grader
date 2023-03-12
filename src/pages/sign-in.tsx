@@ -26,7 +26,7 @@ const SignIn: NextPage = () => {
           <h1 className="mb-12 mt-4 text-4xl">Welcome To Worksheesh</h1>
           <button
             className="btn-primary btn my-2 gap-2"
-            onClick={() => void signIn("zoom")}
+            onClick={signInToProvider("zoom")}
           >
             <Image
               src="/images/social/zoom.png"
@@ -39,7 +39,7 @@ const SignIn: NextPage = () => {
           OR
           <button
             className="btn-primary btn my-2 mb-20 gap-2"
-            onClick={() => void signIn("google")}
+            onClick={signInToProvider("google")}
           >
             <Image
               src="/images/social/google.png"
@@ -53,6 +53,12 @@ const SignIn: NextPage = () => {
       </main>
     </>
   );
+};
+
+const signInToProvider = (provider: "google" | "zoom") => {
+  return void signIn(provider, {
+    callbackUrl: `${window.location.origin}/my-worksheets`,
+  });
 };
 
 export default SignIn;
