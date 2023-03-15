@@ -17,7 +17,7 @@ const Dialog: React.FC<Props> = (props) => {
         <div className="modal-box relative">
           <label
             htmlFor={props.id}
-            className="btn-ghost btn-sm btn-circle btn absolute right-2 top-2 text-lg"
+            className="btn-ghost btn-md btn absolute right-2 top-2 text-lg"
           >
             ✕
           </label>
