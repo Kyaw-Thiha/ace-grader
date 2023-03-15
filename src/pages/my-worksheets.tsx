@@ -39,7 +39,7 @@ export default MyWorksheets;
 const AddWorksheetButton: React.FC = () => {
   const [title, setTitle] = useState("");
 
-  //Fetching list of worksheets
+  //Fetching the teacher profiles
   const { data: profiles, refetch: refetchProfiles } =
     api.teacherProfile.getAll.useQuery(
       undefined // no input
@@ -69,7 +69,7 @@ const AddWorksheetButton: React.FC = () => {
       }
       body={
         <>
-          <h3 className="mb-4 text-xl font-bold">Create Worksheet</h3>
+          <h3 className="mb-4 text-2xl font-bold">Create Worksheet</h3>
           <input
             type="text"
             placeholder="Type here"
@@ -97,33 +97,40 @@ const WorksheetList: React.FC = () => {
     },
   });
 
-  const copyLink = () => {
+  const copyLink = (worksheetId: string) => {
     // void signOut({
     //   callbackUrl: `${window.location.origin}`,
     // });
-    // void navigator.clipboard.writeText(
-    //   `${window.location.origin}/answer-sheet/${worksheetId}`
-    // );
+    void navigator.clipboard.writeText(
+      `${window.location.origin}/answer-sheet/${worksheetId}`
+    );
 
-    deleteUser.mutate();
+    // deleteUser.mutate();
 
     return;
   };
 
-  // const worksheets = profiles?.at(0)?.worksheets;
+  //Fetching list of worksheets
+  const { data: profiles, refetch: refetchProfiles } =
+    api.teacherProfile.getWorksheets.useQuery(
+      undefined // no input
+    );
+  console.log("profiles: ", profiles);
 
-  const worksheets = [
-    {
-      id: "Hihih",
-      title: "42 FM 2016",
-      lastEdited: "",
-    },
-    {
-      id: "Hihih",
-      title: "42 FM 2016",
-      lastEdited: "",
-    },
-  ];
+  const worksheets = profiles?.at(0)?.worksheets ?? [];
+
+  // const worksheets = [
+  //   {
+  //     id: "Hihih",
+  //     title: "42 FM 2016",
+  //     lastEdited: "",
+  //   },
+  //   {
+  //     id: "Hihih",
+  //     title: "42 FM 2016",
+  //     lastEdited: "",
+  //   },
+  // ];
 
   if (worksheets?.length == 0) {
     //Empty worksheets
@@ -156,17 +163,24 @@ const WorksheetList: React.FC = () => {
                 <h2 className="mb-2 text-xl font-semibold">
                   {worksheet.title}
                 </h2>
-                <h3> Last Edited:</h3>
+                <h3>
+                  {" "}
+                  {`Last Edited: ${worksheet.lastEdited.toLocaleTimeString()}`}{" "}
+                </h3>
               </div>
             </Link>
 
             <div className="mx-4 flex items-center justify-center">
-              <button
-                className="btn-outline btn-primary btn-circle btn text-xl"
-                onClick={copyLink}
-              >
-                🔗
-              </button>
+              {worksheet.publishedWorksheets.length > 0 && (
+                <button
+                  className="btn-outline btn-primary btn-circle btn text-xl"
+                  onClick={() =>
+                    copyLink(worksheet.publishedWorksheets.at(-1)?.id ?? "")
+                  }
+                >
+                  🔗
+                </button>
+              )}
             </div>
           </div>
         ))}
