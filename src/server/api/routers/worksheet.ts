@@ -20,6 +20,9 @@ export const worksheetRouter = createTRPCRouter({
         where: {
           profileId: input.profileId,
         },
+        orderBy: {
+          lastEdited: "desc",
+        },
       });
     }),
 

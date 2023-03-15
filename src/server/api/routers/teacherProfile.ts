@@ -15,7 +15,19 @@ export const teacherProfileRouter = createTRPCRouter({
         userId: ctx.session.user.id,
       },
       select: {
-        worksheets: true,
+        worksheets: {
+          orderBy: { lastEdited: "desc" },
+          select: {
+            id: true,
+            title: true,
+            lastEdited: true,
+            publishedWorksheets: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
       },
     });
   }),
