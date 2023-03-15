@@ -5,6 +5,8 @@ import NavBar from "@components/HomeNavBar";
 import { api } from "@utils/api";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
+import Dialog from "@components/Dialog";
+import { useState } from "react";
 
 const MyWorksheets: NextPage = () => {
   return (
@@ -18,9 +20,12 @@ const MyWorksheets: NextPage = () => {
       <main>
         <div className="mx-8 mt-8 flex items-center justify-between">
           <h1 className=" text-4xl">My Worksheets</h1>
-          <Link href="/answer-sheets">
-            <button className="btn-ghost btn">Go to my answer sheets</button>
-          </Link>
+          <div className="flex gap-4">
+            <Link href="/answer-sheets">
+              <button className="btn-ghost btn">Answer Sheets</button>
+            </Link>
+            <AddWorksheetButton />
+          </div>
         </div>
 
         <WorksheetList />
@@ -31,18 +36,59 @@ const MyWorksheets: NextPage = () => {
 
 export default MyWorksheets;
 
-const createWorksheet = () => {
-  return;
-};
+const AddWorksheetButton: React.FC = () => {
+  const [title, setTitle] = useState("");
 
-const WorksheetList: React.FC = () => {
+  //Fetching list of worksheets
   const { data: profiles, refetch: refetchProfiles } =
-    api.teacherProfile.getWorksheets.useQuery(
+    api.teacherProfile.getAll.useQuery(
       undefined // no input
     );
 
-  console.log(profiles);
+  //Function for creating worksheet
+  const createWorksheet = api.worksheet.create.useMutation({
+    onSuccess: () => {
+      void refetchProfiles();
+    },
+  });
 
+  const addWorksheet = () => {
+    createWorksheet.mutate({
+      title: title,
+      profileId: profiles?.at(0)?.id ?? "",
+    });
+  };
+
+  return (
+    <Dialog
+      id="add-worksheet"
+      openContainer={
+        <label htmlFor="add-worksheet" className="btn-primary btn">
+          Create Worksheet
+        </label>
+      }
+      body={
+        <>
+          <h3 className="mb-4 text-xl font-bold">Create Worksheet</h3>
+          <input
+            type="text"
+            placeholder="Type here"
+            className="input-bordered input w-full max-w-xs"
+            value={title} // ...force the input's value to match the state variable...
+            onChange={(e) => setTitle(e.target.value)} // ... and update the state variable on any edits!
+          />
+        </>
+      }
+      actions={
+        <label htmlFor="add-worksheet" className="btn" onClick={addWorksheet}>
+          Create Worksheet
+        </label>
+      }
+    />
+  );
+};
+
+const WorksheetList: React.FC = () => {
   const deleteUser = api.user.delete.useMutation({
     onSuccess: () => {
       void signOut({
@@ -55,6 +101,9 @@ const WorksheetList: React.FC = () => {
     // void signOut({
     //   callbackUrl: `${window.location.origin}`,
     // });
+    // void navigator.clipboard.writeText(
+    //   `${window.location.origin}/answer-sheet/${worksheetId}`
+    // );
 
     deleteUser.mutate();
 
@@ -77,6 +126,7 @@ const WorksheetList: React.FC = () => {
   ];
 
   if (worksheets?.length == 0) {
+    //Empty worksheets
     return (
       <div className="flex min-h-[80vh] flex-col items-center justify-center gap-16">
         <Image
@@ -86,9 +136,7 @@ const WorksheetList: React.FC = () => {
           height="350"
         />
         <div className="flex items-center justify-center">
-          <button className="btn-primary btn " onClick={createWorksheet}>
-            Create Worksheet
-          </button>
+          <AddWorksheetButton />
         </div>
       </div>
     );
@@ -126,22 +174,3 @@ const WorksheetList: React.FC = () => {
     );
   }
 };
-
-// const NavActions: React.FC = () => {
-//   const { data: profiles, refetch: refetchProfiles } =
-//     api.teacherProfile.getAll.useQuery(
-//       undefined // no input
-//     );
-
-//   if (profiles?.length == 0) {
-//     const createProfile = api.teacherProfile.create.useMutation({
-//       onSuccess: () => {
-//         void refetchProfiles();
-//       },
-//     });
-
-//     createProfile.mutate();
-//   }
-
-//   return <DraftList profileId={profiles?.at(0)?.id as string}></DraftList>;
-// };
