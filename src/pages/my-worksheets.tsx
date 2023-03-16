@@ -1,14 +1,25 @@
+import { useState } from "react";
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
+
 import NavBar from "@components/HomeNavBar";
 import { api } from "@utils/api";
-import Image from "next/image";
 import { signOut } from "next-auth/react";
 import Dialog from "@components/Dialog";
-import { useState } from "react";
+import { toast } from "react-toastify";
+import Toast from "@components/Toast";
+
+// https://github.com/jherr/notetaker
 
 const MyWorksheets: NextPage = () => {
+  //Fetching list of worksheets
+  const { data: profiles, refetch: refetchProfiles } =
+    api.teacherProfile.getWorksheets.useQuery(
+      undefined // no input
+    );
+
   return (
     <>
       <Head>
@@ -29,64 +40,13 @@ const MyWorksheets: NextPage = () => {
         </div>
 
         <WorksheetList />
+        <Toast />
       </main>
     </>
   );
 };
 
 export default MyWorksheets;
-
-const AddWorksheetButton: React.FC = () => {
-  const [title, setTitle] = useState("");
-
-  //Fetching the teacher profiles
-  const { data: profiles, refetch: refetchProfiles } =
-    api.teacherProfile.getAll.useQuery(
-      undefined // no input
-    );
-
-  //Function for creating worksheet
-  const createWorksheet = api.worksheet.create.useMutation({
-    onSuccess: () => {
-      void refetchProfiles();
-    },
-  });
-
-  const addWorksheet = () => {
-    createWorksheet.mutate({
-      title: title,
-      profileId: profiles?.at(0)?.id ?? "",
-    });
-  };
-
-  return (
-    <Dialog
-      id="add-worksheet"
-      openContainer={
-        <label htmlFor="add-worksheet" className="btn-primary btn">
-          Create Worksheet
-        </label>
-      }
-      body={
-        <>
-          <h3 className="mb-4 text-2xl font-bold">Create Worksheet</h3>
-          <input
-            type="text"
-            placeholder="Type here"
-            className="input-bordered input w-full max-w-xs"
-            value={title} // ...force the input's value to match the state variable...
-            onChange={(e) => setTitle(e.target.value)} // ... and update the state variable on any edits!
-          />
-        </>
-      }
-      actions={
-        <label htmlFor="add-worksheet" className="btn" onClick={addWorksheet}>
-          Create Worksheet
-        </label>
-      }
-    />
-  );
-};
 
 const WorksheetList: React.FC = () => {
   const deleteUser = api.user.delete.useMutation({
@@ -115,22 +75,8 @@ const WorksheetList: React.FC = () => {
     api.teacherProfile.getWorksheets.useQuery(
       undefined // no input
     );
-  console.log("profiles: ", profiles);
 
   const worksheets = profiles?.at(0)?.worksheets ?? [];
-
-  // const worksheets = [
-  //   {
-  //     id: "Hihih",
-  //     title: "42 FM 2016",
-  //     lastEdited: "",
-  //   },
-  //   {
-  //     id: "Hihih",
-  //     title: "42 FM 2016",
-  //     lastEdited: "",
-  //   },
-  // ];
 
   if (worksheets?.length == 0) {
     //Empty worksheets
@@ -181,10 +127,176 @@ const WorksheetList: React.FC = () => {
                   🔗
                 </button>
               )}
+
+              <DeleteWorksheetButton
+                worksheetId={worksheet.id}
+                worksheetTitle={worksheet.title}
+              />
             </div>
           </div>
         ))}
       </div>
     );
   }
+};
+
+const AddWorksheetButton: React.FC = () => {
+  const [title, setTitle] = useState("");
+
+  const { data, refetch: refetchProfiles } =
+    api.teacherProfile.getWorksheets.useQuery(
+      undefined // no input
+    );
+
+  //Fetching the teacher profiles
+  const { data: profiles } = api.teacherProfile.getAll.useQuery(
+    undefined // no input
+  );
+
+  //Function for creating worksheet
+  const createWorksheet = api.worksheet.create.useMutation({
+    onSuccess: () => {
+      void refetchProfiles();
+    },
+  });
+
+  const addWorksheet = () => {
+    if (title.trim() == "") {
+      // If title is not entered
+      toast.error("Enter a title");
+    } else if (title.split(" ").length > 20) {
+      // If title is above word limit
+      toast.error("Your title cannot have more than 20 words");
+    } else if (title.length > 250) {
+      // If title is above character limit
+      toast.error("Your title cannot have more than 250 characters");
+    } else {
+      void toast.promise(
+        createWorksheet.mutateAsync({
+          title: title,
+          profileId: profiles?.at(0)?.id ?? "",
+        }),
+        {
+          pending: "Creating Worksheet",
+          success: "Worksheet Created 👌",
+          error: "Error in Worksheet Creation 🤯",
+        }
+      );
+    }
+
+    setTitle("");
+  };
+
+  return (
+    <>
+      <Dialog
+        id="add-worksheet"
+        openContainer={
+          <label htmlFor="add-worksheet" className="btn-primary btn">
+            Create Worksheet
+          </label>
+        }
+        body={
+          <>
+            <h3 className="mb-4 text-2xl font-bold">Create Worksheet</h3>
+            <input
+              type="text"
+              placeholder="Type here"
+              className="input-bordered input w-full max-w-xs"
+              value={title} // ...force the input's value to match the state variable...
+              onChange={(e) => setTitle(e.target.value)} // ... and update the state variable on any edits!
+            />
+          </>
+        }
+        actions={
+          <label htmlFor="add-worksheet" className="btn" onClick={addWorksheet}>
+            Create Worksheet
+          </label>
+        }
+      />
+    </>
+  );
+};
+
+interface DeleteWorksheetButtonProps {
+  worksheetId: string;
+  worksheetTitle: string;
+}
+
+const DeleteWorksheetButton: React.FC<DeleteWorksheetButtonProps> = ({
+  worksheetId,
+  worksheetTitle,
+}) => {
+  const [text, setText] = useState("");
+
+  const { data, refetch: refetchProfiles } =
+    api.teacherProfile.getWorksheets.useQuery(
+      undefined // no input
+    );
+
+  //Function for creating worksheet
+  const deleteWorksheet = api.worksheet.delete.useMutation({
+    onSuccess: () => {
+      void refetchProfiles();
+    },
+  });
+
+  const removeWorksheet = () => {
+    if (text != worksheetTitle) {
+      // If title is not entered
+      toast.error("Your input text is incorrect");
+    } else {
+      void toast.promise(
+        deleteWorksheet.mutateAsync({
+          id: worksheetId,
+        }),
+        {
+          pending: "Removing Worksheet",
+          success: "Worksheet Removed 👌",
+          error: "Error in Worksheet Deletion 🤯",
+        }
+      );
+    }
+
+    setText("");
+  };
+
+  return (
+    <>
+      <Dialog
+        id="delete-worksheet"
+        openContainer={
+          <label htmlFor="delete-worksheet" className="btn-primary btn">
+            Delete Worksheet
+          </label>
+        }
+        body={
+          <>
+            <h3 className="mb-4 text-2xl font-bold">Delete Worksheet</h3>
+            <h4 className="mb-2">Note: This process is irreversible</h4>
+            <p className="mb-6">
+              Please type in<b className="ml-2">{worksheetTitle}</b> below to
+              proceed with worksheet removal
+            </p>
+            <input
+              type="text"
+              placeholder="Type here"
+              className="input-bordered input w-full max-w-xs"
+              value={text} // ...force the input's value to match the state variable...
+              onChange={(e) => setText(e.target.value)} // ... and update the state variable on any edits!
+            />
+          </>
+        }
+        actions={
+          <label
+            htmlFor="delete-worksheet"
+            className="btn-warning btn"
+            onClick={removeWorksheet}
+          >
+            Delete Worksheet
+          </label>
+        }
+      />
+    </>
+  );
 };
