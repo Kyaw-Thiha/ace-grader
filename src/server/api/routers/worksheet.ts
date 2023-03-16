@@ -36,4 +36,14 @@ export const worksheetRouter = createTRPCRouter({
         },
       });
     }),
+
+  delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.worksheet.delete({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
 });
