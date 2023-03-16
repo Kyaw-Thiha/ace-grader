@@ -6,6 +6,12 @@ import Image from "next/image";
 import NavBar from "@components/HomeNavBar";
 
 const SignIn: NextPage = () => {
+  const signInToProvider = (provider: "google" | "zoom") => {
+    return void signIn(provider, {
+      callbackUrl: `${window.location.origin}/my-worksheets`,
+    });
+  };
+
   return (
     <>
       <Head>
@@ -53,12 +59,6 @@ const SignIn: NextPage = () => {
       </main>
     </>
   );
-};
-
-const signInToProvider = (provider: "google" | "zoom") => {
-  return void signIn(provider, {
-    callbackUrl: `${window.location.origin}/my-worksheets`,
-  });
 };
 
 export default SignIn;
