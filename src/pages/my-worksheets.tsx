@@ -10,6 +10,8 @@ import { signOut } from "next-auth/react";
 import Dialog from "@components/Dialog";
 import { toast } from "react-toastify";
 import Toast from "@components/Toast";
+import Loading from "@components/Loading";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 // https://github.com/jherr/notetaker
 
@@ -40,6 +42,7 @@ const MyWorksheets: NextPage = () => {
         </div>
 
         <WorksheetList />
+
         <Toast />
       </main>
     </>
@@ -49,6 +52,9 @@ const MyWorksheets: NextPage = () => {
 export default MyWorksheets;
 
 const WorksheetList: React.FC = () => {
+  // Automatically animate the list add and delete
+  const [parent, enableAnimations] = useAutoAnimate(/* optional config */);
+
   const deleteUser = api.user.delete.useMutation({
     onSuccess: () => {
       void signOut({
@@ -71,14 +77,20 @@ const WorksheetList: React.FC = () => {
   };
 
   //Fetching list of worksheets
-  const { data: profiles, refetch: refetchProfiles } =
-    api.teacherProfile.getWorksheets.useQuery(
-      undefined // no input
-    );
+  const {
+    data: profiles,
+    refetch: refetchProfiles,
+    isLoading,
+    isError,
+  } = api.teacherProfile.getWorksheets.useQuery(
+    undefined // no input
+  );
 
   const worksheets = profiles?.at(0)?.worksheets ?? [];
 
-  if (worksheets?.length == 0) {
+  if (isLoading) {
+    return <Loading />;
+  } else if (worksheets?.length == 0) {
     //Empty worksheets
     return (
       <div className="flex min-h-[80vh] flex-col items-center justify-center gap-16">
@@ -95,7 +107,7 @@ const WorksheetList: React.FC = () => {
     );
   } else {
     return (
-      <div className="mx-8 mt-8">
+      <div className="mx-8 mt-8" ref={parent}>
         {worksheets.map((worksheet) => (
           <div
             key={worksheet.id}
