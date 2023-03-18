@@ -28,6 +28,7 @@
     "next": "^13.2.1",
     "next-auth": "^4.19.0",
     "react": "18.2.0",
+    "react-autosave": "^0.4.2",
     "react-dom": "18.2.0",
     "react-toastify": "^9.1.1",
     "superjson": "1.9.1",
