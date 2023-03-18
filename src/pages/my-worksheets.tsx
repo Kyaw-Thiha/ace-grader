@@ -16,12 +16,6 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 // https://github.com/jherr/notetaker
 
 const MyWorksheets: NextPage = () => {
-  //Fetching list of worksheets
-  const { data: profiles, refetch: refetchProfiles } =
-    api.teacherProfile.getWorksheets.useQuery(
-      undefined // no input
-    );
-
   return (
     <>
       <Head>
@@ -123,7 +117,7 @@ const WorksheetList: React.FC = () => {
                 </h2>
                 <h3>
                   {" "}
-                  {`Last Edited: ${worksheet.lastEdited.toLocaleTimeString()}`}{" "}
+                  {`Last Edited: ${worksheet.lastEdited.toLocaleDateString()}`}{" "}
                 </h3>
               </div>
             </Link>
