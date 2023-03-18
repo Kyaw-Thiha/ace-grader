@@ -6,7 +6,7 @@ export const worksheetRouter = createTRPCRouter({
   get: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
-      return ctx.prisma.worksheet.findMany({
+      return ctx.prisma.worksheet.findFirst({
         where: {
           id: input.id,
         },
