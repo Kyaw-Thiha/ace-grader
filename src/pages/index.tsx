@@ -50,6 +50,7 @@ const Home: NextPage = () => {
               alt="Hero Image"
               width="800"
               height="600"
+              priority
               className=" rounded-lg shadow-2xl"
             />
           </div>
