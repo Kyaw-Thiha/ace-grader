@@ -26,6 +26,49 @@ export const worksheetRouter = createTRPCRouter({
       });
     }),
 
+  getQuestions: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.worksheet.findFirst({
+        where: {
+          id: input.id,
+        },
+        select: {
+          questions: {
+            orderBy: {
+              order: "asc",
+            },
+            include: {
+              parentQuestions: {
+                // 1st Level
+                include: {
+                  // 2nd Level
+                  childrenQuestions: {
+                    include: {
+                      // 3rd Level
+                      childrenQuestions: {
+                        include: {
+                          // 4th Level
+                          childrenQuestions: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              multipleChoiceQuestion: {
+                include: {
+                  choices: true,
+                },
+              },
+              shortAnswerQuestion: true,
+              longAnswerQuestions: true,
+            },
+          },
+        },
+      });
+    }),
+
   create: protectedProcedure
     .input(z.object({ title: z.string(), profileId: z.string() }))
     .mutation(({ ctx, input }) => {
