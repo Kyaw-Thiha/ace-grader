@@ -158,10 +158,10 @@ model Question {
     id                  String    @id @default(cuid())
     order               Int   
     questionType        QuestionType
-    parentQuestions              ParentQuestion[]
-    multipleChoiceQuestion       MultipleChoiceQuestion[]
-    shortAnswerQuestion          ShortAnswerQuestion[]
-    longAnswerQuestions          LongAnswerQuestion[] 
+    parentQuestions              ParentQuestion?
+    multipleChoiceQuestion       MultipleChoiceQuestion?
+    shortAnswerQuestion          ShortAnswerQuestion?
+    longAnswerQuestions          LongAnswerQuestion? 
     worksheetId         String
     worksheet           Worksheet @relation(fields: [worksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     publishedWorksheetId         String
@@ -205,7 +205,7 @@ model ParentQuestion {
     parentQuestion      ParentQuestion? @relation("ParentQuestion", fields: [parentQuestionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
     childrenQuestions   ParentQuestion[] @relation("ParentQuestion")
     // Many-to-one relationship to question
-    questionId         String
+    questionId         String   @unique
     question           Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     
 
@@ -223,7 +223,7 @@ model MultipleChoiceQuestion {
     choices             MultipleChoiceQuestionOption[]
     parentQuestionId    String?
     parentQuestion      ParentQuestion?  @relation(fields: [parentQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    questionId         String
+    questionId         String   @unique
     question           Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([parentQuestionId])
@@ -251,7 +251,7 @@ model ShortAnswerQuestion {
     marks               Int    
     parentQuestionId    String?
     parentQuestion      ParentQuestion?  @relation(fields: [parentQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    questionId         String
+    questionId         String   @unique
     question           Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([parentQuestionId])
@@ -268,7 +268,7 @@ model LongAnswerQuestion {
     marks               Int    
     parentQuestionId    String?
     parentQuestion      ParentQuestion?  @relation(fields: [parentQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    questionId         String
+    questionId         String   @unique
     question           Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([parentQuestionId])
