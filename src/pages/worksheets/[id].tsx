@@ -7,8 +7,8 @@ import { api } from "@utils/api";
 
 const WorksheetEditor: NextPage = () => {
   const router = useRouter();
+  const { isReady } = router;
   const { id } = router.query;
-  console.log(id);
 
   return (
     <>
@@ -35,7 +35,7 @@ const WorksheetEditor: NextPage = () => {
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
       <main>
-        <WorksheetHeader worksheetId={id as string} />
+        {isReady ? <WorksheetHeader worksheetId={id as string} /> : <></>}
       </main>
     </>
   );
@@ -49,20 +49,29 @@ interface WorksheetHeaderProps {
 }
 
 const WorksheetHeader: React.FC<WorksheetHeaderProps> = ({ worksheetId }) => {
-  //Fetching the worksheet
-  const { data: worksheet } = api.worksheet.get.useQuery(
-    { id: worksheetId },
-    {
-      onSuccess: () => {
-        setTitle(worksheet?.title ?? "");
-      },
-    }
-  );
-  console.log(worksheet);
-
   const [title, setTitle] = useState("");
 
+  //Fetching the worksheet
+  const { data: worksheet, refetch: refetchWorksheet } =
+    api.worksheet.get.useQuery(
+      { id: worksheetId },
+      {
+        onSuccess: (worksheet) => {
+          setTitle(worksheet?.title ?? "");
+        },
+      }
+    );
+
+  // Automatically Editing the title
+  const editTitle = api.worksheet.editTitle.useMutation({
+    onSuccess: () => {
+      void refetchWorksheet();
+    },
+  });
   const updateTitle = () => {
+    if (title != "") {
+      editTitle.mutate({ id: worksheetId, title: title });
+    }
     return;
   };
   useAutosave({ data: title, onSave: updateTitle });
@@ -75,8 +84,8 @@ const WorksheetHeader: React.FC<WorksheetHeaderProps> = ({ worksheetId }) => {
             type="text"
             placeholder="Type here"
             className="input-bordered input w-full max-w-xs"
-            value={title} // ...force the input's value to match the state variable...
-            onChange={(e) => setTitle(e.target.value)} // ... and update the state variable on any edits!
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
         </div>
         <div className="flex-none">
