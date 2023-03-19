@@ -45,7 +45,7 @@ export const worksheetRouter = createTRPCRouter({
       })
     )
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.publishedWorksheet.update({
+      return ctx.prisma.worksheet.update({
         where: {
           id: input.id,
         },
