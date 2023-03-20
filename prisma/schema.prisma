@@ -193,7 +193,6 @@ enum QuestionType {
 
 model ParentQuestion {
     id                  String    @id @default(cuid())
-    index               Int
     text                String?
     images              String?
     multipleChoiceQuestion       MultipleChoiceQuestion[]
@@ -217,7 +216,7 @@ model MultipleChoiceQuestion {
     id                  String    @id @default(cuid())
     text                String?
     images              String? 
-    answer              String?
+    answer              Int?
     explanation         String?
     marks               Int    
     choices             MultipleChoiceQuestionOption[]
@@ -242,7 +241,6 @@ model MultipleChoiceQuestionOption {
 
 model ShortAnswerQuestion {
     id                  String    @id @default(cuid())
-    index               Int
     text                String?
     images              String? 
     answer              String?
@@ -259,7 +257,6 @@ model ShortAnswerQuestion {
 
 model LongAnswerQuestion {
     id                  String    @id @default(cuid())
-    index               Int
     text                String?
     images              String? 
     sampleAnswer        String?
