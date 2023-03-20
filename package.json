@@ -27,6 +27,7 @@
     "lottie-react": "^2.4.0",
     "next": "^13.2.1",
     "next-auth": "^4.19.0",
+    "next-seo": "^5.15.0",
     "react": "18.2.0",
     "react-autosave": "^0.4.2",
     "react-dom": "18.2.0",
