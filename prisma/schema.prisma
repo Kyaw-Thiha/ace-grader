@@ -281,9 +281,9 @@ model Answer {
     id                              String    @id @default(cuid())
     order                           Int   
     answerType                      AnswerType
-    multipleChoiceQuestionAnswer    MultipleChoiceQuestionAnswer[]
-    shortAnswerQuestionAnswer       ShortAnswerQuestionAnswer[]
-    longAnswerQuestionAnswer        LongAnswerQuestionAnswer[]
+    multipleChoiceQuestionAnswer    MultipleChoiceQuestionAnswer?
+    shortAnswerQuestionAnswer       ShortAnswerQuestionAnswer?
+    longAnswerQuestionAnswer        LongAnswerQuestionAnswer?
     answerSheetId                   String
     answerSheet                     AnswerSheet @relation(fields: [answerSheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
@@ -300,8 +300,8 @@ model MultipleChoiceQuestionAnswer {
     id                    String    @id @default(cuid())
     studentAnswer         String   
     feedback              String
-    answerId              String
-    answer                Answer @relation(fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    answerId              String    @unique
+    answer                Answer    @relation(fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([answerId])
 }
@@ -310,8 +310,8 @@ model ShortAnswerQuestionAnswer {
     id                    String    @id @default(cuid())
     studentAnswer         String   
     feedback              String
-    answerId              String
-    answer                Answer @relation(fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    answerId              String    @unique
+    answer                Answer    @relation(fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([answerId])
 }
@@ -321,8 +321,8 @@ model LongAnswerQuestionAnswer {
     studentAnswer         String   
     studentImages         String
     feedback              String
-    answerId              String
-    answer                Answer @relation(fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    answerId              String    @unique 
+    answer                Answer    @relation(fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([answerId])
 }
