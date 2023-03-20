@@ -162,10 +162,10 @@ model Question {
     multipleChoiceQuestion       MultipleChoiceQuestion?
     shortAnswerQuestion          ShortAnswerQuestion?
     longAnswerQuestions          LongAnswerQuestion? 
-    worksheetId         String
-    worksheet           Worksheet @relation(fields: [worksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    publishedWorksheetId         String
-    publishedWorksheet           PublishedWorksheet @relation(fields: [publishedWorksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    worksheetId         String?
+    worksheet           Worksheet? @relation(fields: [worksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    publishedWorksheetId         String?
+    publishedWorksheet           PublishedWorksheet? @relation(fields: [publishedWorksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([worksheetId])
     @@index([publishedWorksheetId])
@@ -233,7 +233,6 @@ model MultipleChoiceQuestion {
 model MultipleChoiceQuestionOption {
     id                  String    @id @default(cuid())
     index               Int
-    choice              String
     text                String? 
     multipleChoiceQuestionChoiceId         String
     multipleChoiceQuestionChoice           MultipleChoiceQuestion @relation(fields: [multipleChoiceQuestionChoiceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
