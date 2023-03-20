@@ -4,6 +4,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { Autosave, useAutosave } from "react-autosave";
 import { api } from "@utils/api";
+import Image from "next/image";
 
 const WorksheetEditor: NextPage = () => {
   const router = useRouter();
@@ -35,7 +36,14 @@ const WorksheetEditor: NextPage = () => {
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
       <main>
-        {isReady ? <WorksheetHeader worksheetId={id as string} /> : <></>}
+        {isReady ? (
+          <>
+            <WorksheetHeader worksheetId={id as string} />
+            <QuestionList worksheetId={id as string} />
+          </>
+        ) : (
+          <></>
+        )}
       </main>
     </>
   );
@@ -94,4 +102,31 @@ const WorksheetHeader: React.FC<WorksheetHeaderProps> = ({ worksheetId }) => {
       </div>
     </>
   );
+};
+
+interface QuestionListProps {
+  worksheetId: string;
+}
+
+const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
+  //Fetching the worksheet
+  const { data: worksheet, refetch: refetchWorksheet } =
+    api.worksheet.getQuestions.useQuery({ id: worksheetId });
+  const questions = worksheet?.questions;
+
+  if (questions?.length == 0) {
+    return (
+      <div className="flex min-h-[80vh] flex-col items-center justify-center gap-16">
+        <Image
+          src="/images/illustrations/empty_questions.svg"
+          alt="Empty Worksheet Image"
+          width="350"
+          height="350"
+        />
+        <div className="flex items-center justify-center"></div>
+      </div>
+    );
+  } else {
+    return <></>;
+  }
 };
