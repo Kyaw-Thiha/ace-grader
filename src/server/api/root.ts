@@ -21,9 +21,9 @@ export const appRouter = createTRPCRouter({
   worksheet: worksheetRouter,
   publishedWorksheet: publishedWorksheetRouter,
   question: questionRouter,
-  multipleChoiceQuestionRouter: multipleChoiceQuestionRouter,
-  shortAnswerQuestionRouter: shortAnswerQuestionRouter,
-  longAnswerQuestionRouter: longAnswerQuestionRouter,
+  multipleChoiceQuestion: multipleChoiceQuestionRouter,
+  shortAnswerQuestion: shortAnswerQuestionRouter,
+  longAnswerQuestion: longAnswerQuestionRouter,
 });
 
 // export type definition of API
