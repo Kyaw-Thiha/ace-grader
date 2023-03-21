@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { Autosave, useAutosave } from "react-autosave";
 import { api } from "@utils/api";
 import Image from "next/image";
+import AddQuestionButton from "@components/worksheet/AddQuestionButton";
 
 const WorksheetEditor: NextPage = () => {
   const router = useRouter();
@@ -123,7 +124,13 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
           width="350"
           height="350"
         />
-        <div className="flex items-center justify-center"></div>
+        <div className="flex items-center justify-center">
+          <AddQuestionButton
+            id={worksheetId}
+            order={0}
+            refetch={refetchWorksheet}
+          />
+        </div>
       </div>
     );
   } else {
