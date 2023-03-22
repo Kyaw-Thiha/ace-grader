@@ -5,6 +5,7 @@ interface Props {
   openContainer?: ReactNode;
   body?: ReactNode;
   actions?: ReactNode;
+  className?: string;
 }
 
 const Dialog: React.FC<Props> = (props) => {
@@ -14,7 +15,7 @@ const Dialog: React.FC<Props> = (props) => {
 
       <input type="checkbox" id={props.id} className="modal-toggle" />
       <div className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box relative">
+        <div className={`modal-box relative ${props.className ?? ""}`}>
           <label
             htmlFor={props.id}
             className="btn-ghost btn-md btn absolute right-2 top-2 text-lg"
