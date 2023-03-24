@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { toast } from "react-toastify";
 import { api } from "@utils/api";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
@@ -17,14 +17,6 @@ interface Choice {
   text: string;
 }
 
-const indexToChoice = {
-  0: "Not Chosen",
-  1: "A",
-  2: "B",
-  3: "C",
-  4: "D",
-};
-
 // https://levelup.gitconnected.com/adding-katex-and-markdown-in-react-7b70694004ef
 const CreateMultipleChoiceQuestionDialog: React.FC<Props> = ({
   worksheetId,
@@ -35,9 +27,13 @@ const CreateMultipleChoiceQuestionDialog: React.FC<Props> = ({
   const [text, setText] = useState(
     "This is the question text for the question. Please edit this."
   );
+  const [prevText, setPrevText] = useState(
+    "This is the question text for the question. Please edit this."
+  );
   const [explanation, setExplanation] = useState("");
   const [answer, setAnswer] = useState(0);
   const [marks, setMarks] = useState(1);
+  const [prevMarks, setPrevMarks] = useState(1);
 
   const [choices, setChoices] = useState<Array<Choice>>([]);
 

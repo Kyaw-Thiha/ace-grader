@@ -35,6 +35,12 @@ export const multipleChoiceQuestionRouter = createTRPCRouter({
       })
     )
     .mutation(({ ctx, input }) => {
+      // let currentOrder = input.order + 1;
+      // void ctx.prisma.question.updateMany({
+      //   data: {
+      //     order: currentOrder;
+      //   }
+      // })
       return ctx.prisma.question.create({
         data: {
           order: input.order,
