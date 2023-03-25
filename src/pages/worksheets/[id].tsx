@@ -2,10 +2,12 @@ import { useState } from "react";
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import Image from "next/image";
 import { Autosave, useAutosave } from "react-autosave";
 import { api } from "@utils/api";
-import Image from "next/image";
+import Toast from "@components/Toast";
 import AddQuestionButton from "@components/worksheet/AddQuestionButton";
+import Loading from "@components/Loading";
 
 const WorksheetEditor: NextPage = () => {
   const router = useRouter();
@@ -36,7 +38,7 @@ const WorksheetEditor: NextPage = () => {
         />
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
-      <main>
+      <main className="min-h-screen bg-slate-300">
         {isReady ? (
           <>
             <WorksheetHeader worksheetId={id as string} />
@@ -45,6 +47,8 @@ const WorksheetEditor: NextPage = () => {
         ) : (
           <></>
         )}
+
+        <Toast />
       </main>
     </>
   );
@@ -111,11 +115,17 @@ interface QuestionListProps {
 
 const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
   //Fetching the worksheet
-  const { data: worksheet, refetch: refetchWorksheet } =
-    api.worksheet.getQuestions.useQuery({ id: worksheetId });
+  const {
+    data: worksheet,
+    refetch: refetchWorksheet,
+    isLoading,
+    isError,
+  } = api.worksheet.getQuestions.useQuery({ id: worksheetId });
   const questions = worksheet?.questions;
 
-  if (questions?.length == 0) {
+  if (isLoading) {
+    return <Loading />;
+  } else if (questions?.length == 0) {
     return (
       <div className="flex min-h-[80vh] flex-col items-center justify-center gap-16">
         <Image
@@ -123,6 +133,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
           alt="Empty Worksheet Image"
           width="350"
           height="350"
+          priority
         />
         <div className="flex items-center justify-center">
           <AddQuestionButton
@@ -134,6 +145,17 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
       </div>
     );
   } else {
-    return <></>;
+    return (
+      <div className="mt-4">
+        {questions?.map((question) => (
+          <div
+            key={question.id}
+            className="my-4 bg-slate-50 py-4 px-2 md:mx-8 md:rounded-md md:px-4 md:py-8"
+          >
+            Hi
+          </div>
+        ))}
+      </div>
+    );
   }
 };
