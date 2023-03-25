@@ -1,8 +1,6 @@
 import { api } from "@utils/api";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import Dialog from "@components/Dialog";
-import CreateMultipleChoiceQuestionDialog from "./dialog/CreateMultipleQuestionChoiceDialog";
 
 interface Props {
   id: string;
@@ -11,18 +9,116 @@ interface Props {
 }
 
 const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
+  //Function for creating multiple choice question
+  const createMultipleChoiceQuestion =
+    api.multipleChoiceQuestion.create.useMutation({
+      onSuccess: () => {
+        void refetch();
+      },
+    });
+
+  const addMultipleChoiceQuestion = () => {
+    void toast.promise(
+      createMultipleChoiceQuestion.mutateAsync({
+        order: order + 1,
+        worksheetId: id,
+        text: "text",
+        explanation: "explanation",
+        marks: 1,
+        answer: 1,
+        choices: [
+          {
+            index: 1,
+            text: "Choice-A",
+          },
+          {
+            index: 2,
+            text: "Choice-B",
+          },
+          {
+            index: 3,
+            text: "Choice-C",
+          },
+          {
+            index: 4,
+            text: "Choice-D",
+          },
+        ],
+      }),
+      {
+        pending: "Creating Question",
+        success: "Question Created 👌",
+        error: "Error in Question Creation 🤯",
+      }
+    );
+  };
+
+  //Function for creating multiple choice question
+  const createShortAnswerQuestion = api.shortAnswerQuestion.create.useMutation({
+    onSuccess: () => {
+      void refetch();
+    },
+  });
+
+  const addShortAnswerQuestion = () => {
+    void toast.promise(
+      createShortAnswerQuestion.mutateAsync({
+        order: order + 1,
+        worksheetId: id,
+        text: "text",
+        explanation: "explanation",
+        marks: 1,
+        answer:
+          "This is the exact answer that will be automatically checked to student answer",
+      }),
+      {
+        pending: "Creating Question",
+        success: "Question Created 👌",
+        error: "Error in Question Creation 🤯",
+      }
+    );
+  };
+
+  //Function for creating multiple choice question
+  const createLongAnswerQuestion = api.longAnswerQuestion.create.useMutation({
+    onSuccess: () => {
+      void refetch();
+    },
+  });
+
+  const addLongAnwerQuestion = () => {
+    void toast.promise(
+      createLongAnswerQuestion.mutateAsync({
+        order: order + 1,
+        worksheetId: id,
+        text: "text",
+        explanation: "explanation",
+        marks: 1,
+        sampleAnswer: "This is the sample answer for feedback to student",
+      }),
+      {
+        pending: "Creating Question",
+        success: "Question Created 👌",
+        error: "Error in Question Creation 🤯",
+      }
+    );
+  };
+
   const questionTypes = [
     {
       label: "Multiple Choice",
       dialogId: "create-multiple-choice-question",
+      create: addMultipleChoiceQuestion,
     },
     {
       label: "Short Answer",
       dialogId: "create-short-answer-question",
+      create: addShortAnswerQuestion,
     },
     {
       label: "Long Answer",
       dialogId: "create-long-answer-question",
+      create: addLongAnwerQuestion,
     },
   ];
 
@@ -38,26 +134,18 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
         >
           {questionTypes.map((questionType) => {
             return (
-              <li key={questionType.dialogId} className="w-full">
-                <label
-                  htmlFor={questionType.dialogId}
+              <li key={questionType.label} className="w-full ">
+                <button
                   className="btn-ghost btn"
+                  onClick={() => questionType.create()}
                 >
                   {questionType.label}
-                </label>
+                </button>
               </li>
             );
           })}
         </ul>
       </div>
-
-      {/* Dialogs */}
-      <CreateMultipleChoiceQuestionDialog
-        worksheetId={id}
-        dialogId={questionTypes[0]?.dialogId ?? ""}
-        order={order}
-        refetch={refetch}
-      />
     </>
   );
 };
