@@ -20,9 +20,13 @@ export const longAnswerQuestionRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
       z.object({
-        id: z.string(),
         order: z.number(),
-        text: z.string(),
+        worksheetId: z.string().optional(),
+        publishedWorksheetId: z.string().optional(),
+        text: z.string().optional(),
+        explanation: z.string().optional(),
+        marks: z.number().optional(),
+        sampleAnswer: z.string().optional(),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -30,10 +34,14 @@ export const longAnswerQuestionRouter = createTRPCRouter({
         data: {
           order: input.order,
           questionType: "LongAnswerQuestion",
+          worksheetId: input.worksheetId,
+          publishedWorksheetId: input.publishedWorksheetId,
           longAnswerQuestions: {
             create: {
               text: input.text,
-              marks: 1,
+              explanation: input.explanation,
+              marks: input.marks ?? 1,
+              sampleAnswer: input.sampleAnswer,
             },
           },
         },
