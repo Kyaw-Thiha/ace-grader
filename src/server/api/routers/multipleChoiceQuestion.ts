@@ -50,8 +50,8 @@ export const multipleChoiceQuestionRouter = createTRPCRouter({
           publishedWorksheetId: input.publishedWorksheetId,
           multipleChoiceQuestion: {
             create: {
-              text: input.text ?? "",
-              explanation: input.explanation ?? "",
+              text: input.text,
+              explanation: input.explanation,
               marks: input.marks ?? 1,
               answer: input.answer ?? 0,
               choices: {
