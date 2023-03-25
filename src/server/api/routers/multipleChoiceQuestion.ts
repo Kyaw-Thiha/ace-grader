@@ -20,8 +20,9 @@ export const multipleChoiceQuestionRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
       z.object({
-        id: z.string(),
         order: z.number(),
+        worksheetId: z.string().optional(),
+        publishedWorksheetId: z.string().optional(),
         text: z.string().optional(),
         explanation: z.string().optional(),
         marks: z.number().optional(),
@@ -45,6 +46,8 @@ export const multipleChoiceQuestionRouter = createTRPCRouter({
         data: {
           order: input.order,
           questionType: "MultipleChoiceQuestion",
+          worksheetId: input.worksheetId,
+          publishedWorksheetId: input.publishedWorksheetId,
           multipleChoiceQuestion: {
             create: {
               text: input.text ?? "",
