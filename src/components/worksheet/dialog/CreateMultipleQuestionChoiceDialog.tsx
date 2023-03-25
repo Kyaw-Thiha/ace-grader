@@ -48,7 +48,7 @@ const CreateMultipleChoiceQuestionDialog: React.FC<Props> = ({
   const addQuestion = () => {
     void toast.promise(
       createMultipleChoiceQuestion.mutateAsync({
-        id: worksheetId,
+        worksheetId: worksheetId,
         order: order + 1,
         text: text,
         explanation: explanation,
