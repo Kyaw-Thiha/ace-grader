@@ -14,6 +14,9 @@ export const multipleChoiceQuestionRouter = createTRPCRouter({
         where: {
           id: input.id,
         },
+        include: {
+          choices: true,
+        },
       });
     }),
 
