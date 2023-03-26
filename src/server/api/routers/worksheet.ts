@@ -62,7 +62,7 @@ export const worksheetRouter = createTRPCRouter({
                 },
               },
               shortAnswerQuestion: true,
-              longAnswerQuestions: true,
+              longAnswerQuestion: true,
             },
           },
         },
