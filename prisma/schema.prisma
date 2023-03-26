@@ -161,7 +161,7 @@ model Question {
     parentQuestions              ParentQuestion?
     multipleChoiceQuestion       MultipleChoiceQuestion?
     shortAnswerQuestion          ShortAnswerQuestion?
-    longAnswerQuestions          LongAnswerQuestion? 
+    longAnswerQuestion          LongAnswerQuestion? 
     worksheetId         String?
     worksheet           Worksheet? @relation(fields: [worksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     publishedWorksheetId         String?
