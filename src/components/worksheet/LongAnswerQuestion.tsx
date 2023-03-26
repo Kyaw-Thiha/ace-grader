@@ -105,7 +105,7 @@ const Marks: React.FC<Props> = (props) => {
       <input
         type="text"
         placeholder="Type here"
-        className="input-bordered input transition-all"
+        className="input-bordered input w-14 bg-gray-700 text-white transition-all"
         value={marks.toString()}
         onChange={(e) => {
           setMarks(e.target.value);
