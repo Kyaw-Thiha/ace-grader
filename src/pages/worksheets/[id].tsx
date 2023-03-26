@@ -157,49 +157,57 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
     return (
       <div className="mt-4" ref={parent}>
         {questions?.map((question) => (
-          <div
-            key={question.id}
-            className="my-4 bg-slate-50 shadow-sm md:mx-8 md:rounded-md"
-          >
-            <div className="relative">
-              <label className="absolute right-1 top-1 md:right-2 md:top-2">
-                <DeleteQuestionButton
-                  id={question.id}
-                  order={question.order}
-                  refetch={refetchWorksheet}
-                  questions={questions}
-                />
-              </label>
-            </div>
-            <div className="flex gap-4 py-12 px-2 md:gap-8 md:px-16 md:py-16">
-              <p className="my-2 text-3xl text-slate-400">{question.order}.</p>
-              <div>
-                {question.questionType == "MultipleChoiceQuestion" ? (
-                  <MultipleChoiceQuestion
-                    question={question.multipleChoiceQuestion}
+          <div key={question.id} className="my-4 md:mx-8 md:rounded-md">
+            <div className="bg-slate-50 shadow-sm">
+              <div className="relative">
+                <label className="absolute right-1 top-1 md:right-2 md:top-2">
+                  <DeleteQuestionButton
+                    id={question.id}
+                    order={question.order}
                     refetch={refetchWorksheet}
+                    questions={questions}
                   />
-                ) : (
-                  <></>
-                )}
-                {question.questionType == "ShortAnswerQuestion" ? (
-                  <ShortAnswerQuestion
-                    question={question.shortAnswerQuestion}
-                    refetch={refetchWorksheet}
-                  />
-                ) : (
-                  <></>
-                )}
-                {question.questionType == "LongAnswerQuestion" ? (
-                  <LongAnswerQuestion
-                    question={question.longAnswerQuestion}
-                    refetch={refetchWorksheet}
-                  />
-                ) : (
-                  <></>
-                )}
+                </label>
+              </div>
+              <div className="flex gap-4 py-12 px-2 md:gap-8 md:px-16 md:py-16">
+                <p className="my-2 text-3xl text-slate-400">
+                  {question.order}.
+                </p>
+                <div>
+                  {question.questionType == "MultipleChoiceQuestion" ? (
+                    <MultipleChoiceQuestion
+                      question={question.multipleChoiceQuestion}
+                      refetch={refetchWorksheet}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                  {question.questionType == "ShortAnswerQuestion" ? (
+                    <ShortAnswerQuestion
+                      question={question.shortAnswerQuestion}
+                      refetch={refetchWorksheet}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                  {question.questionType == "LongAnswerQuestion" ? (
+                    <LongAnswerQuestion
+                      question={question.longAnswerQuestion}
+                      refetch={refetchWorksheet}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                </div>
               </div>
             </div>
+            {/* <div className="flex justify-center">
+              <AddQuestionButton
+                id={worksheetId}
+                order={(questions?.length ?? 0) + 1}
+                refetch={refetchWorksheet}
+              />
+            </div> */}
           </div>
         ))}
         <div className="flex h-64 justify-center">
