@@ -36,7 +36,7 @@ export const longAnswerQuestionRouter = createTRPCRouter({
           questionType: "LongAnswerQuestion",
           worksheetId: input.worksheetId,
           publishedWorksheetId: input.publishedWorksheetId,
-          longAnswerQuestions: {
+          longAnswerQuestion: {
             create: {
               text: input.text,
               explanation: input.explanation,
