@@ -20,10 +20,10 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
   const addMultipleChoiceQuestion = () => {
     void toast.promise(
       createMultipleChoiceQuestion.mutateAsync({
-        order: order + 1,
+        order: order,
         worksheetId: id,
-        text: "text",
-        explanation: "explanation",
+        text: "This is the question text for the question. Please edit this.",
+        explanation: "",
         marks: 1,
         answer: 1,
         choices: [
@@ -65,8 +65,8 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
       createShortAnswerQuestion.mutateAsync({
         order: order + 1,
         worksheetId: id,
-        text: "text",
-        explanation: "explanation",
+        text: "This is the question text for the question. Please edit this.",
+        explanation: "",
         marks: 1,
         answer:
           "This is the exact answer that will be automatically checked to student answer",
@@ -91,8 +91,8 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
       createLongAnswerQuestion.mutateAsync({
         order: order + 1,
         worksheetId: id,
-        text: "text",
-        explanation: "explanation",
+        text: "This is the question text for the question. Please edit this.",
+        explanation: "",
         marks: 1,
         sampleAnswer: "This is the sample answer for feedback to student",
       }),
