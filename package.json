@@ -31,7 +31,6 @@
     "react": "18.2.0",
     "react-autosave": "^0.4.2",
     "react-dom": "18.2.0",
-    "react-katex": "^3.0.1",
     "react-markdown": "^8.0.6",
     "react-toastify": "^9.1.1",
     "remark-math": "^5.1.1",
