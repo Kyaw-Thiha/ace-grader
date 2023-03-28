@@ -326,6 +326,12 @@ const PublishQuestionButton: React.FC<PublishQuestionButtonProps> = (props) => {
     api.worksheet.getQuestions.useQuery({ id: props.worksheetId });
   const questions = worksheetWithQuestions?.questions ?? [];
 
+  //  Determining the version
+  const { data: publishedWorksheetCount } =
+    api.publishedWorksheet.getCount.useQuery({ profileId: props.worksheetId });
+  const count = publishedWorksheetCount ?? 0;
+  const version = count + 1;
+
   //Creating the published worksheet
   const createWorksheet = api.publishedWorksheet.create.useMutation({
     onSuccess: () => {
@@ -416,7 +422,7 @@ const PublishQuestionButton: React.FC<PublishQuestionButtonProps> = (props) => {
       createWorksheet.mutateAsync({
         title: worksheet?.title ?? "",
         totalMarks: calculateTotalMarks(),
-        version: 1,
+        version: version,
         profileId: worksheet?.profileId ?? "",
         worksheetId: worksheet?.id ?? "",
         questions: createQuestionsPayload(),
