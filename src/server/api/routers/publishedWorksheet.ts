@@ -1,9 +1,13 @@
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "@server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "@server/api/trpc";
 
 export const publishedWorksheetRouter = createTRPCRouter({
-  get: protectedProcedure
+  get: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.publishedWorksheet.findMany({
@@ -17,6 +21,16 @@ export const publishedWorksheetRouter = createTRPCRouter({
     .input(z.object({ profileId: z.string() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.publishedWorksheet.findMany({
+        where: {
+          profileId: input.profileId,
+        },
+      });
+    }),
+
+  getCount: protectedProcedure
+    .input(z.object({ profileId: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.publishedWorksheet.count({
         where: {
           profileId: input.profileId,
         },
