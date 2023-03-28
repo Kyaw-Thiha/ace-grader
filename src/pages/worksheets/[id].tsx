@@ -108,7 +108,10 @@ const WorksheetHeader: React.FC<WorksheetHeaderProps> = ({ worksheetId }) => {
           />
         </div>
         <div className="flex-none">
-          <button className="btn-primary btn">Publish</button>
+          <PublishQuestionButton
+            worksheetId={worksheetId}
+            refetch={refetchWorksheet}
+          />
         </div>
       </div>
     </>
@@ -298,6 +301,166 @@ const DeleteQuestionButton: React.FC<DeleteQuestionButtonProps> = (props) => {
               onClick={removeQuestion}
             >
               Delete Worksheet
+            </label>
+          </>
+        }
+      />
+    </>
+  );
+};
+
+interface PublishQuestionButtonProps {
+  worksheetId: string;
+  refetch: QueryObserverBaseResult["refetch"];
+}
+
+const PublishQuestionButton: React.FC<PublishQuestionButtonProps> = (props) => {
+  const dialogId = `pubilish-question`;
+
+  //Fetching the worksheet
+  const { data: worksheet, refetch: refetchWorksheet } =
+    api.worksheet.get.useQuery({ id: props.worksheetId });
+
+  //Fetching the questions
+  const { data: worksheetWithQuestions, refetch: refetchQuestions } =
+    api.worksheet.getQuestions.useQuery({ id: props.worksheetId });
+  const questions = worksheetWithQuestions?.questions ?? [];
+
+  //Creating the published worksheet
+  const createWorksheet = api.publishedWorksheet.create.useMutation({
+    onSuccess: () => {
+      void props.refetch();
+    },
+  });
+
+  const calculateTotalMarks = () => {
+    let totalMarks = 0;
+    for (const question of questions) {
+      if (question.questionType == "MultipleChoiceQuestion") {
+        const marks = question.multipleChoiceQuestion?.marks ?? 0;
+        totalMarks = totalMarks + marks;
+      } else if (question.questionType == "ShortAnswerQuestion") {
+        const marks = question.shortAnswerQuestion?.marks ?? 0;
+        totalMarks = totalMarks + marks;
+      }
+      if (question.questionType == "LongAnswerQuestion") {
+        const marks = question.longAnswerQuestion?.marks ?? 0;
+        totalMarks = totalMarks + marks;
+      }
+    }
+
+    return totalMarks;
+  };
+
+  const createQuestionsPayload = () => {
+    const questionsPayload = [];
+
+    for (const question of questions) {
+      const choices = [];
+      const originalChoices = question.multipleChoiceQuestion?.choices ?? [];
+      for (const choice of originalChoices) {
+        choices.push({ index: choice.index ?? 1, text: choice.text ?? "" });
+      }
+
+      if (question.questionType == "MultipleChoiceQuestion") {
+        questionsPayload.push({
+          order: question.order,
+          questionType: question.questionType,
+          multipleChoiceQuestion: {
+            create: {
+              text: question.multipleChoiceQuestion?.text ?? "",
+              explanation: question.multipleChoiceQuestion?.explanation ?? "",
+              marks: question.multipleChoiceQuestion?.marks ?? 1,
+              answer: question.multipleChoiceQuestion?.answer ?? 0,
+              choices: {
+                create: choices,
+              },
+            },
+          },
+        });
+      } else if (question.questionType == "ShortAnswerQuestion") {
+        questionsPayload.push({
+          order: question.order,
+          questionType: question.questionType,
+          shortAnswerQuestion: {
+            create: {
+              text: question.shortAnswerQuestion?.text ?? "",
+              explanation: question.shortAnswerQuestion?.explanation ?? "",
+              marks: question.shortAnswerQuestion?.marks ?? 1,
+              answer: question.shortAnswerQuestion?.answer ?? "",
+            },
+          },
+        });
+      } else if (question.questionType == "LongAnswerQuestion") {
+        questionsPayload.push({
+          order: question.order,
+          questionType: question.questionType,
+          longAnswerQuestion: {
+            create: {
+              text: question.longAnswerQuestion?.text ?? "",
+              explanation: question.longAnswerQuestion?.explanation ?? "",
+              marks: question.longAnswerQuestion?.marks ?? 1,
+              sampleAnswer: question.longAnswerQuestion?.sampleAnswer ?? "",
+            },
+          },
+        });
+      }
+    }
+
+    return questionsPayload;
+  };
+
+  //Publishing the worksheet
+  const publishWorksheet = () => {
+    void toast.promise(
+      createWorksheet.mutateAsync({
+        title: worksheet?.title ?? "",
+        totalMarks: calculateTotalMarks(),
+        version: 1,
+        profileId: worksheet?.profileId ?? "",
+        worksheetId: worksheet?.id ?? "",
+        questions: createQuestionsPayload(),
+      }),
+      {
+        pending: "Removing Question",
+        success: "Question Removed 👌",
+        error: "Error in Question Deletion 🤯",
+      }
+    );
+  };
+
+  return (
+    <>
+      <Dialog
+        id={dialogId}
+        openContainer={
+          <label htmlFor={dialogId} className="btn-ghost btn text-lg">
+            ✕
+          </label>
+        }
+        body={
+          <>
+            <h3 className="mb-4 text-2xl font-bold">Publish Worksheet</h3>
+            <h4 className="mb-2">
+              Note: Future students answering will use the latest version of
+              worksheet
+            </h4>
+            <p className="mb-6">
+              Are you sure you want to publish this worksheet?
+            </p>
+          </>
+        }
+        actions={
+          <>
+            <label htmlFor={dialogId} className="btn-ghost btn">
+              Cancel
+            </label>
+            <label
+              htmlFor={dialogId}
+              className="btn-warning btn"
+              onClick={publishWorksheet}
+            >
+              Publish Worksheet
             </label>
           </>
         }
