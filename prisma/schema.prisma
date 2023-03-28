@@ -119,6 +119,7 @@ model PublishedWorksheet {
     id             String    @id @default(cuid())
     title          String
     status         WorksheetStatus      @default(PRIVATE)
+    version        Int          
     createdTime    DateTime     @default(now())
     totalMarks     Int 
     questions                    Question[]
