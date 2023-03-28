@@ -71,6 +71,7 @@ export const publishedWorksheetRouter = createTRPCRouter({
       z.object({
         title: z.string(),
         totalMarks: z.number(),
+        version: z.number(),
         profileId: z.string(),
         worksheetId: z.string(),
         questions: z.array(
@@ -129,6 +130,7 @@ export const publishedWorksheetRouter = createTRPCRouter({
           title: input.title,
           status: "PRIVATE",
           totalMarks: input.totalMarks,
+          version: input.version,
           profileId: input.profileId,
           worksheetId: input.worksheetId,
           questions: {
