@@ -97,7 +97,7 @@ const WorksheetHeader: React.FC<WorksheetHeaderProps> = ({ worksheetId }) => {
 
   return (
     <>
-      <div className="navbar backdrop-blur-lg">
+      <div className="navbar">
         <div className="mt-4 flex-1">
           <input
             type="text"
@@ -107,7 +107,7 @@ const WorksheetHeader: React.FC<WorksheetHeaderProps> = ({ worksheetId }) => {
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
-        <div className="flex-none">
+        <div className="">
           <PublishQuestionButton
             worksheetId={worksheetId}
             refetch={refetchWorksheet}
@@ -440,8 +440,8 @@ const PublishQuestionButton: React.FC<PublishQuestionButtonProps> = (props) => {
       <Dialog
         id={dialogId}
         openContainer={
-          <label htmlFor={dialogId} className="btn-ghost btn text-lg">
-            ✕
+          <label htmlFor={dialogId} className="btn-primary btn text-lg">
+            Publish
           </label>
         }
         body={
@@ -452,7 +452,7 @@ const PublishQuestionButton: React.FC<PublishQuestionButtonProps> = (props) => {
               worksheet
             </h4>
             <p className="mb-6">
-              Are you sure you want to publish this worksheet?
+              Are you sure you want to publish this worksheet version?
             </p>
           </>
         }
@@ -463,10 +463,10 @@ const PublishQuestionButton: React.FC<PublishQuestionButtonProps> = (props) => {
             </label>
             <label
               htmlFor={dialogId}
-              className="btn-warning btn"
+              className="btn-success btn"
               onClick={publishWorksheet}
             >
-              Publish Worksheet
+              Publish
             </label>
           </>
         }
