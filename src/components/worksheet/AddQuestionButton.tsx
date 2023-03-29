@@ -63,7 +63,7 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
   const addShortAnswerQuestion = () => {
     void toast.promise(
       createShortAnswerQuestion.mutateAsync({
-        order: order + 1,
+        order: order,
         worksheetId: id,
         text: "This is the question text for the question. Please edit this.",
         explanation: "",
@@ -89,7 +89,7 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
   const addLongAnwerQuestion = () => {
     void toast.promise(
       createLongAnswerQuestion.mutateAsync({
-        order: order + 1,
+        order: order,
         worksheetId: id,
         text: "This is the question text for the question. Please edit this.",
         explanation: "",
