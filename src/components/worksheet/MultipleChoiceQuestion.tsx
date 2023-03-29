@@ -16,7 +16,7 @@ const MultipleChoiceQuestion: React.FC<Props> = (props) => {
   return (
     <div className="flex flex-col gap-6">
       <Text question={props.question} refetch={props.refetch} />
-      <div className="flex gap-16">
+      <div className="flex flex-col">
         {props.question?.choices.map((choice) => (
           <div key={choice.index} className="my-2">
             <Choice
