@@ -32,6 +32,7 @@
     "react-autosave": "^0.4.2",
     "react-dom": "18.2.0",
     "react-markdown": "^8.0.6",
+    "react-textarea-autosize": "^8.4.1",
     "react-toastify": "^9.1.1",
     "rehype-katex": "^6.0.2",
     "remark-math": "^5.1.1",
