@@ -428,9 +428,9 @@ const PublishQuestionButton: React.FC<PublishQuestionButtonProps> = (props) => {
         questions: createQuestionsPayload(),
       }),
       {
-        pending: "Removing Question",
-        success: "Question Removed 👌",
-        error: "Error in Question Deletion 🤯",
+        pending: "Publishing Worksheet",
+        success: "Worksheet Published 👌",
+        error: "Error in Worksheet Publishing 🤯",
       }
     );
   };
