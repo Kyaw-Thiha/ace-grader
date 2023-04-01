@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -49,27 +49,6 @@ const WorksheetList: React.FC = () => {
   // Automatically animate the list add and delete
   const [parent, enableAnimations] = useAutoAnimate(/* optional config */);
 
-  const deleteUser = api.user.delete.useMutation({
-    onSuccess: () => {
-      void signOut({
-        callbackUrl: `${window.location.origin}`,
-      });
-    },
-  });
-
-  const copyLink = (worksheetId: string) => {
-    // void signOut({
-    //   callbackUrl: `${window.location.origin}`,
-    // });
-    void navigator.clipboard.writeText(
-      `${window.location.origin}/answer-sheet/${worksheetId}`
-    );
-
-    // deleteUser.mutate();
-
-    return;
-  };
-
   //Fetching list of worksheets
   const {
     data: profiles,
@@ -81,6 +60,40 @@ const WorksheetList: React.FC = () => {
   );
 
   const worksheets = profiles?.at(0)?.worksheets ?? [];
+
+  const deleteUser = api.user.delete.useMutation({
+    onSuccess: () => {
+      void signOut({
+        callbackUrl: `${window.location.origin}`,
+      });
+    },
+  });
+
+  // Fetching the corresponding latest published worksheet
+  const [copyWorksheetId, setCopyWorksheetId] = useState("");
+  const { data: worksheet, refetch: refetchPublishedWorksheet } =
+    api.worksheet.getPublishedWorksheetLatestVersion.useQuery(
+      { id: copyWorksheetId },
+      { enabled: false }
+    );
+
+  const copyLink = async (worksheetId: string) => {
+    // void signOut({
+    //   callbackUrl: `${window.location.origin}`,
+    // });
+
+    // useEffect(() => setCopyWorksheetId(worksheetId))
+    setCopyWorksheetId(worksheetId);
+    await refetchPublishedWorksheet();
+
+    void navigator.clipboard.writeText(
+      `${window.location.origin}/published-worksheets/${
+        worksheet?.publishedWorksheets.at(0)?.id ?? ""
+      }`
+    );
+
+    toast.success("Link copied to your clipboard");
+  };
 
   if (isLoading) {
     return <Loading />;
@@ -126,9 +139,7 @@ const WorksheetList: React.FC = () => {
               {worksheet.publishedWorksheets.length > 0 && (
                 <button
                   className="btn-outline btn-primary btn-circle btn text-xl"
-                  onClick={() =>
-                    copyLink(worksheet.publishedWorksheets.at(-1)?.id ?? "")
-                  }
+                  onClick={() => void copyLink(worksheet.id)}
                 >
                   🔗
                 </button>
