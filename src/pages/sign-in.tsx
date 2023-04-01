@@ -21,7 +21,7 @@ const SignIn: NextPage = () => {
       </Head>
       <NavBar />
       <main className="flex min-h-screen items-center justify-center">
-        <div className="roun flex min-w-[40vw] flex-col items-center justify-center rounded-lg bg-gray-200 px-6 shadow-xl">
+        <div className="flex min-w-[40vw] flex-col items-center justify-center rounded-lg bg-gray-200 px-6 shadow-xl">
           <Image
             src="/images/logo-icon.png"
             alt="Logo"
