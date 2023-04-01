@@ -37,6 +37,24 @@ export const publishedWorksheetRouter = createTRPCRouter({
       });
     }),
 
+  getWorksheet: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.publishedWorksheet.findFirst({
+        where: {
+          id: input.id,
+        },
+        select: {
+          worksheet: {
+            select: {
+              id: true,
+              title: true,
+            },
+          },
+        },
+      });
+    }),
+
   getQuestions: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
