@@ -69,6 +69,24 @@ export const worksheetRouter = createTRPCRouter({
       });
     }),
 
+  getPublishedWorksheetLatestVersion: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.worksheet.findFirst({
+        where: {
+          id: input.id,
+        },
+        select: {
+          publishedWorksheets: {
+            orderBy: {
+              version: "desc",
+            },
+            take: 1,
+          },
+        },
+      });
+    }),
+
   create: protectedProcedure
     .input(z.object({ title: z.string(), profileId: z.string() }))
     .mutation(({ ctx, input }) => {
