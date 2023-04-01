@@ -12,7 +12,7 @@ const Toast: React.FC = () => {
   return (
     <ToastContainer
       position="bottom-center"
-      autoClose={5000}
+      autoClose={3000}
       hideProgressBar={false}
       newestOnTop={false}
       rtl={false}
