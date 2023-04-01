@@ -32,6 +32,24 @@ export const teacherProfileRouter = createTRPCRouter({
     });
   }),
 
+  getPublishedWorksheets: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.teacherProfile.findMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      select: {
+        publishedWorksheets: {
+          orderBy: { createdTime: "desc" },
+          select: {
+            id: true,
+            title: true,
+            createdTime: true,
+          },
+        },
+      },
+    });
+  }),
+
   create: protectedProcedure.mutation(({ ctx }) => {
     return ctx.prisma.teacherProfile.create({
       data: {
