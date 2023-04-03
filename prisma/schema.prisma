@@ -140,6 +140,7 @@ enum WorksheetStatus {
 
 model AnswerSheet {
     id                  String    @id @default(cuid())
+    studentName         String
     studentEmail        String
     studentPassword     String? 
     startTime           DateTime     @default(now())
