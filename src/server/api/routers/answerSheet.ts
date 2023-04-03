@@ -61,7 +61,7 @@ export const answerSheetRouter = createTRPCRouter({
       z.object({
         studentName: z.string(),
         studentEmail: z.string(),
-        worksheetId: z.string(),
+        publishedWorksheetId: z.string(),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -69,7 +69,7 @@ export const answerSheetRouter = createTRPCRouter({
         data: {
           studentName: input.studentName,
           studentEmail: input.studentEmail,
-          worksheetId: input.worksheetId,
+          publishedWorksheetId: input.publishedWorksheetId,
         },
       });
     }),

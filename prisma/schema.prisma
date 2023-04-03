@@ -147,10 +147,10 @@ model AnswerSheet {
     endTime             DateTime?
     totalMarks          Int?  
     answers             Answer[]   
-    worksheetId         String
-    worksheet           PublishedWorksheet @relation(fields: [worksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    publishedWorksheetId         String @map("worksheetId")
+    publishedWorksheet           PublishedWorksheet @relation(fields: [publishedWorksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-    @@index([worksheetId])
+    @@index([publishedWorksheetId])
 }
 
 
