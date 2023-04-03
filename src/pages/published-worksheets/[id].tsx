@@ -3,6 +3,11 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { api } from "@utils/api";
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import Toast from "@components/Toast";
+import { toast } from "react-toastify";
 
 const Answer: NextPage = () => {
   const router = useRouter();
@@ -37,19 +42,29 @@ const Answer: NextPage = () => {
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
       <main>
-        <main className="min-h-screen bg-slate-300">
-          {isReady ? (
-            <>
-              {isLoggedIn ? (
-                <StudentCredentialsForm id={id as string} />
-              ) : (
-                <StudentCredentialsForm id={id as string} />
-              )}
-            </>
-          ) : (
-            <></>
-          )}
-        </main>
+        <div className="navbar">
+          <Link href="/" className="btn-ghost btn text-2xl normal-case">
+            <Image
+              src="/images/logo-icon.png"
+              alt="Logo"
+              width="32"
+              height="32"
+            />
+            <h2 className="ml-2">Worksheesh</h2>
+          </Link>
+        </div>
+        {isReady ? (
+          <>
+            {isLoggedIn ? (
+              <RedirectIfUserCreatedWorksheet id={id as string} />
+            ) : (
+              <StudentCredentialsForm id={id as string} />
+            )}
+          </>
+        ) : (
+          <></>
+        )}
+        <Toast />
       </main>
     </>
   );
@@ -61,13 +76,12 @@ interface Props {
   id: string;
 }
 
-const RedirectIfLoggedIn: React.FC<Props> = (props) => {
+const RedirectIfUserCreatedWorksheet: React.FC<Props> = (props) => {
   const router = useRouter();
 
   //Fetching list of worksheets
   const {
     data: profiles,
-    refetch: refetchProfiles,
     isLoading,
     isError,
   } = api.teacherProfile.getPublishedWorksheets.useQuery(
@@ -77,7 +91,7 @@ const RedirectIfLoggedIn: React.FC<Props> = (props) => {
 
   if (publishedWorksheets.some((e) => e.id == props.id)) {
     // If the user is the teacher who created the worksheet, redirect to the sample answer paper
-    void router.replace(`published-worksheets/${props.id}/answer`);
+    void router.replace(`${props.id}/answer`);
     return <></>;
   } else {
     return <StudentCredentialsForm id={props.id} />;
@@ -85,7 +99,84 @@ const RedirectIfLoggedIn: React.FC<Props> = (props) => {
 };
 
 const StudentCredentialsForm: React.FC<Props> = (props) => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  const router = useRouter();
+  //Function for creating answer sheet
+  const createAnswerSheet = api.answerSheet.create.useMutation({
+    onSuccess: (answerSheet) => {
+      void router.push(
+        `published-worksheets/${props.id}/answer/${answerSheet.id}`
+      );
+    },
+  });
+
+  const addAnswerSheet = () => {
+    if (name.trim() == "") {
+      // If title is not entered
+      toast.error("Enter your name");
+    } else if (name.length > 250) {
+      // If title is above word limit
+      toast.error("Your name cannot have more than 500 characters");
+    } else if (email.length > 250) {
+      // If title is above character limit
+      toast.error("Your email cannot have more than 250 characters");
+    } else if (!email.includes("@")) {
+      // If title is above character limit
+      toast.error("Your email is in invalid format");
+    } else {
+      void toast.promise(
+        createAnswerSheet.mutateAsync({
+          studentName: name,
+          studentEmail: email,
+          publishedWorksheetId: props.id,
+        }),
+        {
+          pending: "Creating Answer Sheet",
+          success: "Answer Sheet Created 👌",
+          error: "Error in Answer Sheet Creation 🤯",
+        }
+      );
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center">Hi Hi</div>
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-w-[40vw] flex-col items-center justify-center rounded-lg bg-slate-200 px-6 py-12 shadow-xl">
+        <h2 className="mb-12 text-3xl">Student Credentials</h2>
+        <section className="flex flex-col gap-4">
+          <div className="flex items-center gap-4">
+            <p>Name: </p>
+            <input
+              type="text"
+              placeholder="Type your name"
+              className="input-bordered input"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div className="flex items-center gap-4">
+            <p>Email: </p>
+            <input
+              type="email"
+              placeholder="Type your email"
+              className="input-bordered input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <button className="btn-primary btn mt-4" onClick={addAnswerSheet}>
+            Confirm
+          </button>
+        </section>
+        <p className="mt-8 text-lg text-gray-800">
+          The email will be used to store your answer sheet in real-time
+        </p>
+        <p className="text-lg text-gray-800">
+          and to contact you once the teacher has handed back the worksheet.
+        </p>
+      </div>
+    </div>
   );
 };
