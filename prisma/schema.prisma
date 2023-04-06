@@ -142,7 +142,8 @@ model AnswerSheet {
     id                  String    @id @default(cuid())
     studentName         String
     studentEmail        String
-    studentPassword     String? 
+    studentPassword     String?
+    status              AnswerSheetStatus 
     startTime           DateTime     @default(now())
     endTime             DateTime?
     totalMarks          Int?  
@@ -153,6 +154,11 @@ model AnswerSheet {
     @@index([publishedWorksheetId])
 }
 
+enum AnswerSheetStatus {
+    answering
+    checking
+    returned
+}
 
 // ***      Questions     ***
 
