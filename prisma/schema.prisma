@@ -304,7 +304,7 @@ enum AnswerType {
 model MultipleChoiceQuestionAnswer {
     id                    String    @id @default(cuid())
     studentAnswer         Int   
-    feedback              String
+    feedback              String?
     answerId              String    @unique
     answer                Answer    @relation(fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
@@ -314,7 +314,7 @@ model MultipleChoiceQuestionAnswer {
 model ShortAnswerQuestionAnswer {
     id                    String    @id @default(cuid())
     studentAnswer         String   
-    feedback              String
+    feedback              String?
     answerId              String    @unique
     answer                Answer    @relation(fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
@@ -325,7 +325,7 @@ model LongAnswerQuestionAnswer {
     id                    String    @id @default(cuid())
     studentAnswer         String   
     studentImages         String
-    feedback              String
+    feedback              String?
     answerId              String    @unique 
     answer                Answer    @relation(fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
