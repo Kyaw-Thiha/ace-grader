@@ -62,6 +62,38 @@ export const answerSheetRouter = createTRPCRouter({
         studentName: z.string(),
         studentEmail: z.string(),
         publishedWorksheetId: z.string(),
+        answers: z.array(
+          z.object({
+            order: z.number(),
+            answerType: z.union([
+              z.literal("MultipleChoiceQuestionAnswer"),
+              z.literal("ShortAnswerQuestionAnswer"),
+              z.literal("LongAnswerQuestionAnswer"),
+            ]),
+            multipleChoiceQuestionAnswer: z
+              .object({
+                create: z.object({
+                  studentAnswer: z.number(),
+                }),
+              })
+              .optional(),
+            shortAnswerQuestionAnswer: z
+              .object({
+                create: z.object({
+                  studentAnswer: z.string(),
+                }),
+              })
+              .optional(),
+            LongAnswerQuestionAnswer: z
+              .object({
+                create: z.object({
+                  studentAnswer: z.string(),
+                  studentImage: z.string(),
+                }),
+              })
+              .optional(),
+          })
+        ),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -69,7 +101,11 @@ export const answerSheetRouter = createTRPCRouter({
         data: {
           studentName: input.studentName,
           studentEmail: input.studentEmail,
+          status: "answering",
           publishedWorksheetId: input.publishedWorksheetId,
+          answers: {
+            create: input.answers,
+          },
         },
       });
     }),

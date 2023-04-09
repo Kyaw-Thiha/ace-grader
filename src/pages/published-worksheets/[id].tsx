@@ -103,6 +103,14 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
   const [email, setEmail] = useState("");
 
   const router = useRouter();
+
+  //Fetching list of worksheets
+  const {
+    data: publishedWorksheet,
+    isLoading,
+    isError,
+  } = api.publishedWorksheet.get.useQuery({ id: props.id });
+
   //Function for creating answer sheet
   const createAnswerSheet = api.answerSheet.create.useMutation({
     onSuccess: (answerSheet) => {
@@ -131,6 +139,7 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
           studentName: name,
           studentEmail: email,
           publishedWorksheetId: props.id,
+          answers: [],
         }),
         {
           pending: "Creating Answer Sheet",
@@ -139,6 +148,33 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
         }
       );
     }
+  };
+
+  const getAnswers = () => {
+    const answers = [];
+    for (const question of publishedWorksheet?.questions ?? []) {
+      if (question.questionType == "MultipleChoiceQuestion") {
+        answers.push({
+          order: question.order,
+          answerType: "MultipleChoiceQuestionAnswer",
+          multipleChoiceQuestionAnswer: { studentAnswer: 0 },
+        });
+      } else if (question.questionType == "ShortAnswerQuestion") {
+        answers.push({
+          order: question.order,
+          answerType: "ShortAnswerQuestionAnswer",
+          shortAnswerQuestionAnswer: { studentAnswer: "" },
+        });
+      } else if (question.questionType == "LongAnswerQuestion") {
+        answers.push({
+          order: question.order,
+          answerType: "LongAnswerQuestion",
+          longAnswerQuestionAnswer: { studentAnswer: "", studentImage: "" },
+        });
+      }
+    }
+
+    return answers;
   };
 
   return (
