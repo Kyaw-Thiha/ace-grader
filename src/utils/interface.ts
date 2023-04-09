@@ -4,4 +4,5 @@ export type AnswerSheetStatus =
   | "checking-studentview"
   | "checking-teacherview"
   | "returned-studentview"
-  | "returned-teacherview";
+  | "returned-teacherview"
+  | "sample-teacherview";
