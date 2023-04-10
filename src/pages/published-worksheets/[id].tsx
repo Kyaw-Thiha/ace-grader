@@ -139,7 +139,7 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
           studentName: name,
           studentEmail: email,
           publishedWorksheetId: props.id,
-          answers: [],
+          answers: getAnswers(),
         }),
         {
           pending: "Creating Answer Sheet",
@@ -152,24 +152,33 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
 
   const getAnswers = () => {
     const answers = [];
-    for (const question of publishedWorksheet?.questions ?? []) {
+    const questions = publishedWorksheet?.questions ?? [];
+
+    type AnswerType =
+      | "MultipleChoiceQuestionAnswer"
+      | "ShortAnswerQuestionAnswer"
+      | "LongAnswerQuestionAnswer";
+
+    for (const question of questions) {
       if (question.questionType == "MultipleChoiceQuestion") {
         answers.push({
           order: question.order,
-          answerType: "MultipleChoiceQuestionAnswer",
-          multipleChoiceQuestionAnswer: { studentAnswer: 0 },
+          answerType: "MultipleChoiceQuestionAnswer" as AnswerType,
+          multipleChoiceQuestionAnswer: { create: { studentAnswer: 0 } },
         });
       } else if (question.questionType == "ShortAnswerQuestion") {
         answers.push({
           order: question.order,
-          answerType: "ShortAnswerQuestionAnswer",
-          shortAnswerQuestionAnswer: { studentAnswer: "" },
+          answerType: "ShortAnswerQuestionAnswer" as AnswerType,
+          shortAnswerQuestionAnswer: { create: { studentAnswer: "" } },
         });
       } else if (question.questionType == "LongAnswerQuestion") {
         answers.push({
           order: question.order,
-          answerType: "LongAnswerQuestion",
-          longAnswerQuestionAnswer: { studentAnswer: "", studentImage: "" },
+          answerType: "LongAnswerQuestion" as AnswerType,
+          longAnswerQuestionAnswer: {
+            create: { studentAnswer: "", studentImage: "" },
+          },
         });
       }
     }
