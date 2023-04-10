@@ -1,6 +1,6 @@
 import { type RouterOutputs } from "@utils/api";
-import { type QueryObserverBaseResult } from "@tanstack/react-query";
 import { type AnswerSheetStatus } from "@utils/interface";
+import MarkdownText from "@components/MarkdownText";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 type ShortAnswerQuestion = RouterOutputs["shortAnswerQuestion"]["get"];
@@ -40,7 +40,7 @@ const Explanation: React.FC<Props> = (props) => {
           Explanation
         </div>
         <div className="collapse-content">
-          <p>{props.question?.explanation}</p>
+          <MarkdownText text={props.question?.explanation ?? ""} />
         </div>
       </div>
     );
