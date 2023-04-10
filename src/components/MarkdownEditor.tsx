@@ -8,12 +8,21 @@ import ReactTextareaAutosize from "react-textarea-autosize";
 interface Props {
   label: string;
   text: string;
-  // onChange: ChangeEventHandler<HTMLInputElement>;
+  outlined?: boolean;
   onChange: ChangeEventHandler<HTMLTextAreaElement>;
 }
 
 const MarkdownEditor: React.FC<Props> = (props) => {
   const [isEditing, setIsEditing] = useState(false);
+
+  let markdownClassName = "";
+  if (props.outlined) {
+    markdownClassName =
+      "max-w-[80vw] rounded-md border-4 py-1 border-slate-300 px-4 transition-all min-h-[80px] hover:py-4";
+  } else {
+    markdownClassName =
+      "max-w-[80vw] rounded-md border-4 border-transparent py-1 transition-all hover:border-slate-200 hover:px-4";
+  }
 
   return (
     <div className="min-w-[12vw]">
@@ -32,7 +41,7 @@ const MarkdownEditor: React.FC<Props> = (props) => {
       ) : (
         <div
           key="markdown"
-          className="max-w-[80vw] rounded-md border-4 border-transparent py-1 transition-all hover:border-slate-200 hover:px-4"
+          className={markdownClassName}
           onClick={() => setIsEditing(true)}
         >
           <p className="text-slate-400">{props.label}</p>
