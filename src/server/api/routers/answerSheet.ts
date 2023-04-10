@@ -13,43 +13,22 @@ export const answerSheetRouter = createTRPCRouter({
       });
     }),
 
-  getQuestions: protectedProcedure
+  getAnswers: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
-      return ctx.prisma.worksheet.findFirst({
+      return ctx.prisma.answerSheet.findFirst({
         where: {
           id: input.id,
         },
         select: {
-          questions: {
+          answers: {
             orderBy: {
               order: "asc",
             },
             include: {
-              parentQuestions: {
-                // 1st Level
-                include: {
-                  // 2nd Level
-                  childrenQuestions: {
-                    include: {
-                      // 3rd Level
-                      childrenQuestions: {
-                        include: {
-                          // 4th Level
-                          childrenQuestions: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-              multipleChoiceQuestion: {
-                include: {
-                  choices: true,
-                },
-              },
-              shortAnswerQuestion: true,
-              longAnswerQuestion: true,
+              multipleChoiceQuestionAnswer: true,
+              shortAnswerQuestionAnswer: true,
+              longAnswerQuestionAnswer: true,
             },
           },
         },
