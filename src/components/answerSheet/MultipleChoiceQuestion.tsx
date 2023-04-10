@@ -6,9 +6,12 @@ import MarkdownText from "@components/MarkdownText";
 import { type AnswerSheetStatus } from "@utils/interface";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
+type MultipleChoiceQuestionAnswer =
+  RouterOutputs["multipleChoiceQuestionAnswer"]["get"];
 
 interface Props {
   question: MultipleChoiceQuestion;
+  answer?: MultipleChoiceQuestionAnswer;
   refetch: QueryObserverBaseResult["refetch"];
   status: AnswerSheetStatus;
 }
@@ -22,12 +25,14 @@ const MultipleChoiceQuestion: React.FC<Props> = (props) => {
       </div>
       <ChoiceGroup
         question={props.question}
+        answer={props.answer}
         refetch={props.refetch}
         status={props.status}
       />
 
       <Explanation
         question={props.question}
+        answer={props.answer}
         refetch={props.refetch}
         status={props.status}
       />
@@ -40,25 +45,30 @@ export default MultipleChoiceQuestion;
 const ChoiceGroup: React.FC<Props> = (props) => {
   const [chosenChoice, setChosenChoice] = useState(props.question?.answer);
 
-  // const editText = api.multipleChoiceQuestion.editChoice.useMutation({
-  //   onSuccess: () => {
-  //     void props.refetch();
-  //   },
-  // });
-  // const updateText = () => {
-  //   editText.mutate({
-  //     multipleChoiceQuestionOptionId:
-  //       props.question?.choices.at(props.index - 1)?.id ?? "",
-  //     text: text,
-  //     index: props.index,
-  //   });
-  // };
+  const editAnswer = api.multipleChoiceQuestionAnswer.editAnswer.useMutation({
+    onSuccess: () => {
+      void props.refetch();
+    },
+  });
 
   const updateChoice = (index: number) => {
     if (props.status == "answering-studentview") {
+      const choice = props.question?.choices.at(index);
+      editAnswer.mutate({
+        id: choice?.id ?? "",
+        studentAnswer: chosenChoice ?? 0,
+      });
       setChosenChoice(index);
     }
   };
+
+  /**
+   * Function to determine the class names of each radio button.
+   *
+   * Will be looped for each radio button.
+   *
+   * @param index of current choice
+   */
 
   const getRadioClass = (index: number) => {
     let className = "radio";
@@ -73,8 +83,14 @@ const ChoiceGroup: React.FC<Props> = (props) => {
       props.status == "returned-teacherview"
     ) {
       if (index == props.question?.answer) {
+        // For the correct answer, highlight the radio button as positive color
         className = className + " radio-success";
-      } else {
+      } else if (
+        index != props.question?.answer &&
+        index == props.answer?.studentAnswer
+      ) {
+        // If student chose the wrong answer, make the radio button have error color
+        className = className + " radio-error";
       }
     }
 
