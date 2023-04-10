@@ -3,65 +3,67 @@ import MarkdownEditor from "@components/MarkdownEditor";
 import { useAutosave } from "react-autosave";
 import { api, type RouterOutputs } from "@utils/api";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
+import MarkdownText from "@components/MarkdownText";
+import { type AnswerSheetStatus } from "@utils/interface";
+import Explanation from "./Explanation";
 
 type ShortAnswerQuestion = RouterOutputs["shortAnswerQuestion"]["get"];
+type ShortAnswerQuestionAnswer =
+  RouterOutputs["shortAnswerQuestionAnswer"]["get"];
 
 interface Props {
   question: ShortAnswerQuestion;
+  answer?: ShortAnswerQuestionAnswer;
   refetch: QueryObserverBaseResult["refetch"];
+  status: AnswerSheetStatus;
 }
 
 const ShortAnswerQuestion: React.FC<Props> = (props) => {
   return (
     <div className="flex flex-col gap-6">
-      <Text question={props.question} refetch={props.refetch} />
-      <Answer question={props.question} refetch={props.refetch} />
-      <Marks question={props.question} refetch={props.refetch} />
-      <Explanation question={props.question} refetch={props.refetch} />
+      <div className="mt-3">
+        <MarkdownText text={props.question?.text ?? ""} />
+        <p className="mt-6 ">
+          <span className="rounded-md border-2 border-slate-800 px-2 py-1">
+            Marks: {props.question?.marks}
+          </span>
+        </p>
+      </div>
+      <StudentAnswer
+        question={props.question}
+        answer={props.answer}
+        refetch={props.refetch}
+        status={props.status}
+      />
+      <CorrectAnswer
+        question={props.question}
+        answer={props.answer}
+        refetch={props.refetch}
+        status={props.status}
+      />
+      <div className="mt-8">
+        <Explanation question={props.question} status={props.status} />
+      </div>
     </div>
   );
 };
 
 export default ShortAnswerQuestion;
 
-const Text: React.FC<Props> = (props) => {
-  const [text, setText] = useState(props.question?.text ?? "");
+const StudentAnswer: React.FC<Props> = (props) => {
+  const [answer, setAnswer] = useState(props.answer?.studentAnswer ?? "");
 
-  const editText = api.shortAnswerQuestion.editText.useMutation({
-    onSuccess: () => {
-      void props.refetch();
-    },
-  });
-  const updateText = () => {
-    if (text != "") {
-      editText.mutate({ id: props.question?.id ?? "", text: text });
-    }
-  };
-  useAutosave({
-    data: text,
-    onSave: updateText,
-  });
-
-  return (
-    <MarkdownEditor
-      text={text}
-      label="Question"
-      onChange={(e) => setText(e.target.value)}
-    />
-  );
-};
-
-const Answer: React.FC<Props> = (props) => {
-  const [answer, setAnswer] = useState(props.question?.answer ?? "");
-
-  const editAnswer = api.shortAnswerQuestion.editAnswer.useMutation({
+  const editAnswer = api.shortAnswerQuestionAnswer.editAnswer.useMutation({
     onSuccess: () => {
       void props.refetch();
     },
   });
   const updateAnswer = () => {
-    if (answer != "") {
-      editAnswer.mutate({ id: props.question?.id ?? "", answer: answer });
+    if (answer != "" && props.status == "answering-studentview") {
+      editAnswer.mutate({
+        id: props.answer?.id ?? "",
+        studentAnswer: answer,
+      });
     }
   };
   useAutosave({ data: answer, onSave: updateAnswer });
@@ -70,74 +72,41 @@ const Answer: React.FC<Props> = (props) => {
     <MarkdownEditor
       text={answer}
       label="Answer"
+      outlined
       onChange={(e) => setAnswer(e.target.value)}
     />
   );
 };
 
-const Marks: React.FC<Props> = (props) => {
-  const [marks, setMarks] = useState(props.question?.marks.toString() ?? "");
+const CorrectAnswer: React.FC<Props> = (props) => {
+  let showCorrectAnswer = false;
 
-  const editMarks = api.shortAnswerQuestion.editMarks.useMutation({
-    onSuccess: () => {
-      void props.refetch();
-    },
-  });
-  const updateMarks = () => {
-    if (marks != "") {
-      const marksInt = parseInt(marks, 10);
-
-      if (marksInt > 0) {
-        editMarks.mutate({ id: props.question?.id ?? "", marks: marksInt });
-      }
+  if (props.status == "sample-teacherview") {
+    // Show the explanation if it is the sample answer
+    if (props.question?.explanation?.trim() != "") {
+      showCorrectAnswer = true;
     }
-  };
-  useAutosave({ data: marks, onSave: updateMarks });
+  } else if (
+    props.status == "checking-teacherview" ||
+    props.status == "returned-studentview" ||
+    props.status == "returned-teacherview"
+  ) {
+    // Show explanation if teacher is checking or the answer sheet has been returned
+    showCorrectAnswer = true;
+  } else {
+    showCorrectAnswer = false;
+  }
 
-  return (
-    <>
-      <p className="text-slate-400">Marks</p>
-      <input
-        type="text"
-        placeholder="Type here"
-        className="input-bordered input w-14 bg-gray-700 text-white transition-all"
-        value={marks.toString()}
-        onChange={(e) => {
-          setMarks(e.target.value);
-        }}
-      />
-    </>
-  );
-};
-
-const Explanation: React.FC<Props> = (props) => {
-  const [explanation, setExplanation] = useState(
-    props.question?.explanation ?? ""
-  );
-
-  const editText = api.shortAnswerQuestion.editExplanation.useMutation({
-    onSuccess: () => {
-      void props.refetch();
-    },
-  });
-  const updateExplanation = () => {
-    if (explanation != "") {
-      editText.mutate({
-        id: props.question?.id ?? "",
-        explanation: explanation,
-      });
-    }
-  };
-  useAutosave({
-    data: explanation,
-    onSave: updateExplanation,
-  });
-
-  return (
-    <MarkdownEditor
-      text={explanation}
-      label="Explanation"
-      onChange={(e) => setExplanation(e.target.value)}
-    />
-  );
+  if (showCorrectAnswer) {
+    return (
+      <div className="mt-8">
+        <div className="inline-block min-w-[80vw] rounded-lg border-2 border-slate-400 py-1 px-4">
+          <div className=" text-md text-slate-400">Correct Answer</div>
+          <MarkdownText text={props.question?.answer ?? ""} />
+        </div>
+      </div>
+    );
+  } else {
+    return <></>;
+  }
 };
