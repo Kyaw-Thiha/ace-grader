@@ -9,6 +9,9 @@ import { multipleChoiceQuestionRouter } from "./routers/multipleChoiceQuestion";
 import { shortAnswerQuestionRouter } from "./routers/shortAnswerQuestion";
 import { longAnswerQuestionRouter } from "./routers/longAnswerQuestion";
 import { answerSheetRouter } from "./routers/answerSheet";
+import { multipleChoiceQuestionAnswerRouter } from "./routers/multipleChoiceQuestionAnswer";
+import { shortAnswerQuestionAnswerRouter } from "./routers/shortAnswerQuestionAnswer";
+import { longAnswerQuestionAnswerRouter } from "./routers/longAnswerQuestionAnswer";
 
 /**
  * This is the primary router for your server.
@@ -26,6 +29,9 @@ export const appRouter = createTRPCRouter({
   shortAnswerQuestion: shortAnswerQuestionRouter,
   longAnswerQuestion: longAnswerQuestionRouter,
   answerSheet: answerSheetRouter,
+  multipleChoiceQuestionAnswer: multipleChoiceQuestionAnswerRouter,
+  shortAnswerQuestionAnswer: shortAnswerQuestionAnswerRouter,
+  longAnswerQuestionAnswer: longAnswerQuestionAnswerRouter,
 });
 
 // export type definition of API
