@@ -18,10 +18,10 @@ const MarkdownEditor: React.FC<Props> = (props) => {
   let markdownClassName = "";
   if (props.outlined) {
     markdownClassName =
-      "max-w-[80vw] rounded-md border-4 py-4 border-slate-300 px-4 transition-all min-h-[80px] hover:py-1";
+      "max-w-[80vw] min-w-[80vw] rounded-md border-4 py-4 border-slate-300 px-4 transition-all min-h-[80px] hover:py-1";
   } else {
     markdownClassName =
-      "max-w-[80vw] rounded-md border-4 border-transparent py-1 transition-all hover:border-slate-200 hover:px-4";
+      "max-w-[80vw] min-w-[80vw] rounded-md border-4 border-transparent py-1 transition-all hover:border-slate-200 hover:px-4";
   }
 
   return (
