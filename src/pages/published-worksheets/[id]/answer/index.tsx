@@ -123,6 +123,7 @@ const QuestionList: React.FC<Props> = ({ publishedWorksheetId }) => {
                     <ShortAnswerQuestion
                       question={question.shortAnswerQuestion}
                       refetch={refetchWorksheet}
+                      status="sample-teacherview"
                     />
                   ) : (
                     <></>
@@ -131,6 +132,7 @@ const QuestionList: React.FC<Props> = ({ publishedWorksheetId }) => {
                     <LongAnswerQuestion
                       question={question.longAnswerQuestion}
                       refetch={refetchWorksheet}
+                      status="sample-teacherview"
                     />
                   ) : (
                     <></>
