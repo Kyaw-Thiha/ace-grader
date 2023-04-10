@@ -4,6 +4,7 @@ import { convertIntegerToASCII } from "@utils/helper";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
 import MarkdownText from "@components/MarkdownText";
 import { type AnswerSheetStatus } from "@utils/interface";
+import Explanation from "./Explanation";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 type MultipleChoiceQuestionAnswer =
@@ -21,7 +22,11 @@ const MultipleChoiceQuestion: React.FC<Props> = (props) => {
     <div className="flex flex-col gap-6">
       <div className="mt-3">
         <MarkdownText text={props.question?.text ?? ""} />
-        <p className="mt-2">Marks: {props.question?.marks}</p>
+        <p className="mt-6 ">
+          <span className="rounded-md border-2 border-slate-800 px-2 py-1">
+            Marks: {props.question?.marks}
+          </span>
+        </p>
       </div>
       <ChoiceGroup
         question={props.question}
@@ -30,12 +35,9 @@ const MultipleChoiceQuestion: React.FC<Props> = (props) => {
         status={props.status}
       />
 
-      <Explanation
-        question={props.question}
-        answer={props.answer}
-        refetch={props.refetch}
-        status={props.status}
-      />
+      <div className="mt-8">
+        <Explanation question={props.question} status={props.status} />
+      </div>
     </div>
   );
 };
@@ -118,42 +120,4 @@ const ChoiceGroup: React.FC<Props> = (props) => {
       ))}
     </div>
   );
-};
-
-const Explanation: React.FC<Props> = (props) => {
-  let showExplanation = false;
-
-  if (props.status == "sample-teacherview") {
-    // Show the explanation if it is the sample answer
-    if (props.question?.explanation?.trim() != "") {
-      showExplanation = true;
-    }
-  } else if (
-    props.status == "checking-teacherview" ||
-    props.status == "returned-studentview" ||
-    props.status == "returned-teacherview"
-  ) {
-    // Show explanation if teacher is checking or the answer sheet has been returned
-    if (props.question?.explanation?.trim() != "") {
-      showExplanation = true;
-    }
-  } else {
-    showExplanation = false;
-  }
-
-  if (showExplanation) {
-    return (
-      <div className="collapse-arrow collapse border border-base-300 bg-base-100">
-        <input type="checkbox" />
-        <div className="collapse-title text-xl font-medium text-slate-800">
-          Explanation
-        </div>
-        <div className="collapse-content">
-          <p>{props.question?.explanation}</p>
-        </div>
-      </div>
-    );
-  } else {
-    return <></>;
-  }
 };
