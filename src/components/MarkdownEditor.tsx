@@ -9,6 +9,7 @@ interface Props {
   label: string;
   text: string;
   outlined?: boolean;
+  disabled?: boolean;
   onChange: ChangeEventHandler<HTMLTextAreaElement>;
 }
 
@@ -26,7 +27,7 @@ const MarkdownEditor: React.FC<Props> = (props) => {
 
   return (
     <div className="min-w-[12vw]">
-      {isEditing ? (
+      {isEditing && !props.disabled ? (
         <div key="input" className="">
           <p className="text-slate-400">{props.label}</p>
           <ReactTextareaAutosize

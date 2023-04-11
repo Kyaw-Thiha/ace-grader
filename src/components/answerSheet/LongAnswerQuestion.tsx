@@ -72,6 +72,7 @@ const StudentAnswer: React.FC<Props> = (props) => {
     <MarkdownEditor
       text={answer}
       label="Answer"
+      disabled={props.status != "answering-studentview"}
       outlined
       onChange={(e) => setAnswer(e.target.value)}
     />

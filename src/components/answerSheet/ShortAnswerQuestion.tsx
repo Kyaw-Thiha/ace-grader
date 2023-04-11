@@ -73,6 +73,7 @@ const StudentAnswer: React.FC<Props> = (props) => {
       text={answer}
       label="Answer"
       outlined
+      disabled={props.status != "answering-studentview"}
       onChange={(e) => setAnswer(e.target.value)}
     />
   );
