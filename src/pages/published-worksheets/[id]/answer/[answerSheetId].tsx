@@ -1,13 +1,14 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import { api } from "@utils/api";
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Toast from "@components/Toast";
 import { toast } from "react-toastify";
 import Loading from "@components/Loading";
+import { type AnswerSheetStatus } from "@utils/interface";
 import MultipleChoiceQuestion from "@components/answerSheet/MultipleChoiceQuestion";
 import ShortAnswerQuestion from "@components/answerSheet/ShortAnswerQuestion";
 import LongAnswerQuestion from "@components/answerSheet/LongAnswerQuestion";
@@ -16,6 +17,9 @@ const SampleAnswerSheet: NextPage = () => {
   const router = useRouter();
   const { isReady } = router;
   const { id, answerSheetId } = router.query;
+
+  const { data: sessionData } = useSession();
+  const isLoggedIn = sessionData?.user !== undefined;
 
   return (
     <>
@@ -54,10 +58,19 @@ const SampleAnswerSheet: NextPage = () => {
           </Link>
         </div>
         {isReady ? (
-          <QuestionList
-            publishedWorksheetId={id as string}
-            answerSheedId={answerSheetId as string}
-          />
+          <>
+            {isLoggedIn ? (
+              <CheckIfUserCreatedWorksheet
+                publishedWorksheetId={id as string}
+                answerSheedId={answerSheetId as string}
+              />
+            ) : (
+              <CheckIfUserCreatedWorksheet
+                publishedWorksheetId={id as string}
+                answerSheedId={answerSheetId as string}
+              />
+            )}
+          </>
         ) : (
           <></>
         )}
@@ -74,7 +87,38 @@ interface Props {
   answerSheedId: string;
 }
 
-const QuestionList: React.FC<Props> = ({ publishedWorksheetId }) => {
+const CheckIfUserCreatedWorksheet: React.FC<Props> = (props) => {
+  //Fetching list of worksheets
+  const {
+    data: teacherProfiles,
+    isLoading,
+    isError,
+  } = api.teacherProfile.getAll.useQuery();
+
+  const { data: publishedWorksheet } = api.publishedWorksheet.get.useQuery(
+    { id: props.publishedWorksheetId } // no input
+  );
+
+  const profileId = publishedWorksheet?.profileId ?? "";
+  const profiles = teacherProfiles ?? [];
+
+  let status = "";
+  if (profileId in profiles) {
+    status = `${status}-teacherview`;
+  } else {
+    status = `${status}-studentview`;
+  }
+
+  return <></>;
+};
+
+interface QuestionListProps {
+  publishedWorksheetId: string;
+  answerSheedId: string;
+  status?: AnswerSheetStatus;
+}
+
+const QuestionList: React.FC<QuestionListProps> = (props) => {
   //Fetching the worksheet
   const {
     data: publishedWorksheet,
@@ -82,9 +126,19 @@ const QuestionList: React.FC<Props> = ({ publishedWorksheetId }) => {
     isLoading,
     isError,
   } = api.publishedWorksheet.getQuestions.useQuery({
-    id: publishedWorksheetId,
+    id: props.publishedWorksheetId,
   });
   const questions = publishedWorksheet?.questions;
+
+  //Fetching the answer sheet
+  const { data: answerSheet, refetch: refetchAnswerSheet } =
+    api.answerSheet.getAnswers.useQuery({
+      id: props.answerSheedId,
+    });
+  const answers = answerSheet?.answers ?? [];
+
+  const status =
+    props.status ?? `${answerSheet?.status ?? "answering"}-studentview`;
 
   if (isLoading) {
     return <Loading />;
@@ -110,7 +164,7 @@ const QuestionList: React.FC<Props> = ({ publishedWorksheetId }) => {
   } else {
     return (
       <div className="mt-4">
-        {questions?.map((question) => (
+        {questions?.map((question, index) => (
           <div key={question.id} className="my-4 md:mx-8 md:rounded-md">
             <div className="bg-slate-50 shadow-sm">
               <div className="flex gap-4 py-12 px-2 md:gap-8 md:px-16 md:py-16">
@@ -121,8 +175,9 @@ const QuestionList: React.FC<Props> = ({ publishedWorksheetId }) => {
                   {question.questionType == "MultipleChoiceQuestion" ? (
                     <MultipleChoiceQuestion
                       question={question.multipleChoiceQuestion}
+                      answer={answers.at(index)?.multipleChoiceQuestionAnswer}
                       refetch={refetchWorksheet}
-                      status="sample-teacherview"
+                      status={status}
                     />
                   ) : (
                     <></>
@@ -130,8 +185,9 @@ const QuestionList: React.FC<Props> = ({ publishedWorksheetId }) => {
                   {question.questionType == "ShortAnswerQuestion" ? (
                     <ShortAnswerQuestion
                       question={question.shortAnswerQuestion}
+                      answer={answers.at(index)?.shortAnswerQuestionAnswer}
                       refetch={refetchWorksheet}
-                      status="sample-teacherview"
+                      status={status}
                     />
                   ) : (
                     <></>
@@ -139,8 +195,9 @@ const QuestionList: React.FC<Props> = ({ publishedWorksheetId }) => {
                   {question.questionType == "LongAnswerQuestion" ? (
                     <LongAnswerQuestion
                       question={question.longAnswerQuestion}
+                      answer={answers.at(index)?.longAnswerQuestionAnswer}
                       refetch={refetchWorksheet}
-                      status="sample-teacherview"
+                      status={status}
                     />
                   ) : (
                     <></>
