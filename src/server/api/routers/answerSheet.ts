@@ -1,9 +1,13 @@
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "@server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "@server/api/trpc";
 
 export const answerSheetRouter = createTRPCRouter({
-  get: protectedProcedure
+  get: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.answerSheet.findFirst({
@@ -13,7 +17,7 @@ export const answerSheetRouter = createTRPCRouter({
       });
     }),
 
-  getAnswers: protectedProcedure
+  getAnswers: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.answerSheet.findFirst({
@@ -35,7 +39,7 @@ export const answerSheetRouter = createTRPCRouter({
       });
     }),
 
-  create: protectedProcedure
+  create: publicProcedure
     .input(
       z.object({
         studentName: z.string(),
@@ -107,7 +111,7 @@ export const answerSheetRouter = createTRPCRouter({
       });
     }),
 
-  editStudentEmail: protectedProcedure
+  editStudentEmail: publicProcedure
     .input(
       z.object({
         id: z.string(),
@@ -125,7 +129,7 @@ export const answerSheetRouter = createTRPCRouter({
       });
     }),
 
-  delete: protectedProcedure
+  delete: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(({ ctx, input }) => {
       return ctx.prisma.answerSheet.delete({

@@ -40,7 +40,7 @@ export const publishedWorksheetRouter = createTRPCRouter({
       });
     }),
 
-  getWorksheet: protectedProcedure
+  getWorksheet: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.publishedWorksheet.findFirst({
@@ -58,7 +58,7 @@ export const publishedWorksheetRouter = createTRPCRouter({
       });
     }),
 
-  getQuestions: protectedProcedure
+  getQuestions: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.publishedWorksheet.findFirst({
