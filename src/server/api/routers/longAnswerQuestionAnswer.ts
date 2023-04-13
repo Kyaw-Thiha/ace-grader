@@ -17,7 +17,7 @@ export const longAnswerQuestionAnswerRouter = createTRPCRouter({
       });
     }),
 
-  create: protectedProcedure
+  create: publicProcedure
     .input(
       z.object({
         order: z.number(),
