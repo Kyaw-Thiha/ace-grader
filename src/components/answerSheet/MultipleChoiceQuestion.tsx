@@ -45,7 +45,11 @@ const MultipleChoiceQuestion: React.FC<Props> = (props) => {
 export default MultipleChoiceQuestion;
 
 const ChoiceGroup: React.FC<Props> = (props) => {
-  const [chosenChoice, setChosenChoice] = useState(props.question?.answer);
+  const [chosenChoice, setChosenChoice] = useState(
+    props.status == "sample-teacherview"
+      ? props.question?.answer
+      : props.answer?.studentAnswer
+  );
 
   const editAnswer = api.multipleChoiceQuestionAnswer.editAnswer.useMutation({
     onSuccess: () => {
@@ -55,10 +59,9 @@ const ChoiceGroup: React.FC<Props> = (props) => {
 
   const updateChoice = (index: number) => {
     if (props.status == "answering-studentview") {
-      const choice = props.question?.choices.at(index);
       editAnswer.mutate({
-        id: choice?.id ?? "",
-        studentAnswer: chosenChoice ?? 0,
+        id: props.answer?.id ?? "",
+        studentAnswer: index,
       });
       setChosenChoice(index);
     }
