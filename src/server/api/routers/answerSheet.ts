@@ -20,7 +20,7 @@ export const answerSheetRouter = createTRPCRouter({
         where: {
           id: input.id,
         },
-        select: {
+        include: {
           answers: {
             orderBy: {
               order: "asc",
