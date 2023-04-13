@@ -114,9 +114,7 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
   //Function for creating answer sheet
   const createAnswerSheet = api.answerSheet.create.useMutation({
     onSuccess: (answerSheet) => {
-      void router.push(
-        `published-worksheets/${props.id}/answer/${answerSheet.id}`
-      );
+      void router.push(`${props.id}/answer/${answerSheet.id}`);
     },
   });
 
@@ -175,7 +173,7 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
       } else if (question.questionType == "LongAnswerQuestion") {
         answers.push({
           order: question.order,
-          answerType: "LongAnswerQuestion" as AnswerType,
+          answerType: "LongAnswerQuestionAnswer" as AnswerType,
           longAnswerQuestionAnswer: {
             create: { studentAnswer: "", studentImage: "" },
           },
@@ -187,8 +185,8 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="flex min-w-[40vw] flex-col items-center justify-center rounded-lg bg-slate-200 px-6 py-12 shadow-xl">
+    <div className="mt-8 flex items-center justify-center sm:mt-0 sm:min-h-screen">
+      <div className="flex min-w-full flex-col items-center justify-center rounded-none bg-slate-200 px-6 py-12 shadow-xl sm:min-w-[50vw] sm:rounded-lg">
         <h2 className="mb-12 text-3xl">Student Credentials</h2>
         <section className="flex flex-col gap-4">
           <div className="flex items-center gap-4">
