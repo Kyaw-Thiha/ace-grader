@@ -175,7 +175,7 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
           order: question.order,
           answerType: "LongAnswerQuestionAnswer" as AnswerType,
           longAnswerQuestionAnswer: {
-            create: { studentAnswer: "", studentImage: "" },
+            create: { studentAnswer: "", studentImages: "" },
           },
         });
       }
