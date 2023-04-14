@@ -24,7 +24,13 @@ export const answerSheetRouter = createTRPCRouter({
         where: {
           id: input.id,
         },
-        include: {
+        select: {
+          studentName: true,
+          studentEmail: true,
+          status: true,
+          totalMarks: true,
+          startTime: true,
+          endTime: true,
           answers: {
             orderBy: {
               order: "asc",
@@ -37,6 +43,23 @@ export const answerSheetRouter = createTRPCRouter({
           },
         },
       });
+    }),
+
+  checkPassword: publicProcedure
+    .input(z.object({ id: z.string(), passwordHash: z.string() }))
+    .query(({ ctx, input }) => {
+      ctx.prisma.answerSheet
+        .findFirst({
+          where: {
+            id: input.id,
+          },
+        })
+        .then((answerSheet) => {
+          return answerSheet?.studentPassword == input.passwordHash;
+        })
+        .catch(() => {
+          return;
+        });
     }),
 
   create: publicProcedure
@@ -67,11 +90,11 @@ export const answerSheetRouter = createTRPCRouter({
                 }),
               })
               .optional(),
-            LongAnswerQuestionAnswer: z
+            longAnswerQuestionAnswer: z
               .object({
                 create: z.object({
                   studentAnswer: z.string(),
-                  studentImage: z.string(),
+                  studentImages: z.string(),
                 }),
               })
               .optional(),
