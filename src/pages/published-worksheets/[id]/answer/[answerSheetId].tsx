@@ -65,7 +65,7 @@ const SampleAnswerSheet: NextPage = () => {
                 answerSheedId={answerSheetId as string}
               />
             ) : (
-              <CheckIfUserCreatedWorksheet
+              <QuestionList
                 publishedWorksheetId={id as string}
                 answerSheedId={answerSheetId as string}
               />
@@ -109,7 +109,13 @@ const CheckIfUserCreatedWorksheet: React.FC<Props> = (props) => {
     status = `${status}-studentview`;
   }
 
-  return <></>;
+  return (
+    <QuestionList
+      publishedWorksheetId={props.publishedWorksheetId}
+      answerSheedId={props.answerSheedId}
+      status={status as AnswerSheetStatus}
+    />
+  );
 };
 
 interface QuestionListProps {
@@ -136,6 +142,7 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
       id: props.answerSheedId,
     });
   const answers = answerSheet?.answers ?? [];
+  console.log(answers);
 
   const status =
     props.status ?? `${answerSheet?.status ?? "answering"}-studentview`;
