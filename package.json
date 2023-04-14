@@ -36,6 +36,7 @@
     "react-toastify": "^9.1.1",
     "rehype-katex": "^6.0.2",
     "remark-math": "^5.1.1",
+    "remark-supersub": "^1.0.0",
     "superjson": "1.9.1",
     "zod": "^3.20.6"
   },

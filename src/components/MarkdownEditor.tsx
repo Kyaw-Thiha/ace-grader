@@ -1,6 +1,7 @@
 import { type ChangeEventHandler, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
+import supersub from "remark-supersub";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css"; // `rehype-katex` does not import the CSS for you
 import ReactTextareaAutosize from "react-textarea-autosize";
@@ -47,7 +48,7 @@ const MarkdownEditor: React.FC<Props> = (props) => {
         >
           <p className="text-slate-400">{props.label}</p>
           <ReactMarkdown
-            remarkPlugins={[remarkMath]}
+            remarkPlugins={[remarkMath, supersub]}
             rehypePlugins={[rehypeKatex]}
           >
             {props.text}
