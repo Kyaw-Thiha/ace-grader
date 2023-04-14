@@ -139,10 +139,10 @@ enum WorksheetStatus {
 }
 
 model AnswerSheet {
-    id                  String    @id @default(cuid())
+    id                  String      @id @default(cuid())
     studentName         String
     studentEmail        String
-    studentPassword     String?
+    studentPassword     String?     //This should be stored in hash.
     status              AnswerSheetStatus 
     startTime           DateTime     @default(now())
     endTime             DateTime?
@@ -305,6 +305,7 @@ model MultipleChoiceQuestionAnswer {
     id                    String    @id @default(cuid())
     studentAnswer         Int   
     feedback              String?
+    marks                 Int       @default(0)
     answerId              String    @unique
     answer                Answer    @relation(fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
@@ -315,6 +316,7 @@ model ShortAnswerQuestionAnswer {
     id                    String    @id @default(cuid())
     studentAnswer         String   
     feedback              String?
+    marks                 Int       @default(0)
     answerId              String    @unique
     answer                Answer    @relation(fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
@@ -326,6 +328,7 @@ model LongAnswerQuestionAnswer {
     studentAnswer         String   
     studentImages         String
     feedback              String?
+    marks                 Int       @default(0)
     answerId              String    @unique 
     answer                Answer    @relation(fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
