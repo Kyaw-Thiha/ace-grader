@@ -315,7 +315,7 @@ interface PublishQuestionButtonProps {
 }
 
 const PublishQuestionButton: React.FC<PublishQuestionButtonProps> = (props) => {
-  const dialogId = `pubilish-question`;
+  const dialogId = `publish-question`;
 
   //Fetching the worksheet
   const { data: worksheet, refetch: refetchWorksheet } =

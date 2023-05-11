@@ -116,7 +116,29 @@ export const answerSheetRouter = createTRPCRouter({
       });
     }),
 
-  editStudentName: protectedProcedure
+  editStatus: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        status: z.union([
+          z.literal("answering"),
+          z.literal("checking"),
+          z.literal("returned"),
+        ]),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.answerSheet.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          status: input.status,
+        },
+      });
+    }),
+
+  editStudentName: publicProcedure
     .input(
       z.object({
         id: z.string(),

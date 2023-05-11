@@ -12,6 +12,7 @@ import { type AnswerSheetStatus } from "@utils/interface";
 import MultipleChoiceQuestion from "@components/answerSheet/MultipleChoiceQuestion";
 import ShortAnswerQuestion from "@components/answerSheet/ShortAnswerQuestion";
 import LongAnswerQuestion from "@components/answerSheet/LongAnswerQuestion";
+import Dialog from "@components/Dialog";
 
 const SampleAnswerSheet: NextPage = () => {
   const router = useRouter();
@@ -142,7 +143,6 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
       id: props.answerSheedId,
     });
   const answers = answerSheet?.answers ?? [];
-  console.log(answers);
 
   const status =
     props.status ?? `${answerSheet?.status ?? "answering"}-studentview`;
@@ -231,4 +231,52 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
       </div>
     );
   }
+};
+
+const SubmitAnswerSheetButton: React.FC<Props> = (props) => {
+  const dialogId = `submit-answer`;
+
+  const editStatus = api.answerSheet.editStatus.useMutation({
+    onSuccess: () => {
+      // void props.refetch();
+    },
+  });
+
+  const submitAnswer = () => {
+    void editStatus.mutate({ id: props.answerSheedId, status: "checking" });
+  };
+
+  return (
+    <>
+      <Dialog
+        id={dialogId}
+        openContainer={
+          <label htmlFor={dialogId} className="btn-primary btn text-lg">
+            Submit
+          </label>
+        }
+        body={
+          <>
+            <h3 className="mb-4 text-2xl font-bold">Submit Answer Sheet</h3>
+            <h4 className="mb-2">
+              Once submitted, your teacher can now check the answers
+            </h4>
+            <p className="mb-6">
+              You will be informed once your teacher finishes checking
+            </p>
+          </>
+        }
+        actions={
+          <>
+            <label htmlFor={dialogId} className="btn-ghost btn">
+              Cancel
+            </label>
+            <label htmlFor={dialogId} className="btn-success btn">
+              Publish
+            </label>
+          </>
+        }
+      />
+    </>
+  );
 };
