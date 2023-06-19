@@ -14,7 +14,7 @@ const NavBar: NextPage = () => {
             width="32"
             height="32"
           />
-          <h2 className="ml-2">Worksheesh</h2>
+          <h2 className="ml-2">SmartGrader</h2>
         </Link>
       </div>
       <div className="flex-none">

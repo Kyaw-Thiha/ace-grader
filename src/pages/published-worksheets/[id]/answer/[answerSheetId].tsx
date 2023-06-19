@@ -25,7 +25,7 @@ const SampleAnswerSheet: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Worksheesh</title>
+        <title>SmartGrader</title>
         <meta name="description" content="Worksheeet Editor" />
         <link
           rel="apple-touch-icon"
@@ -55,7 +55,7 @@ const SampleAnswerSheet: NextPage = () => {
               width="32"
               height="32"
             />
-            <h2 className="ml-2">Worksheesh</h2>
+            <h2 className="ml-2">SmartGrader</h2>
           </Link>
         </div>
         {isReady ? (

@@ -24,7 +24,7 @@ const WorksheetEditor: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Worksheesh</title>
+        <title>SmartGrader</title>
         <meta name="description" content="Worksheeet Editor" />
         <link
           rel="apple-touch-icon"
