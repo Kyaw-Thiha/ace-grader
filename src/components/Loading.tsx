@@ -1,6 +1,6 @@
 import Lottie from "lottie-react";
-import loadingPlane from "@public/lotties/loading-plane.json";
-import loadingFile from "@public/lotties/loading-files.json";
+import loadingPlane from "public/lotties/loading-plane.json";
+import loadingFile from "public/lotties/loading-files.json";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 // https://lottiereact.com/

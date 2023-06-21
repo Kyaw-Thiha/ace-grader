@@ -1,17 +1,15 @@
 import { useState } from "react";
 import { type NextPage } from "next";
-import Head from "next/head";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { Autosave, useAutosave } from "react-autosave";
-import { api, type RouterOutputs } from "@utils/api";
-import Toast from "@components/Toast";
-import AddQuestionButton from "@components/worksheet/AddQuestionButton";
-import Loading from "@components/Loading";
-import MultipleChoiceQuestion from "@components/worksheet/MultipleChoiceQuestion";
-import ShortAnswerQuestion from "@components/worksheet/ShortAnswerQuestion";
-import LongAnswerQuestion from "@components/worksheet/LongAnswerQuestion";
-import Dialog from "@components/Dialog";
+import { api, type RouterOutputs } from "@/utils/api";
+import AddQuestionButton from "@/components/worksheet/AddQuestionButton";
+import Loading from "@/components/Loading";
+import MultipleChoiceQuestion from "@/components/worksheet/MultipleChoiceQuestion";
+import ShortAnswerQuestion from "@/components/worksheet/ShortAnswerQuestion";
+import LongAnswerQuestion from "@/components/worksheet/LongAnswerQuestion";
+import Dialog from "@/components/Dialog";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
@@ -23,40 +21,14 @@ const WorksheetEditor: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>SmartGrader</title>
-        <meta name="description" content="Worksheeet Editor" />
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/apple-touch-icon.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon-16x16.png"
-        />
-        <link rel="manifest" href="/site.webmanifest" />
-      </Head>
-      <main className="min-h-screen bg-slate-300">
-        {isReady ? (
-          <>
-            <WorksheetHeader worksheetId={id as string} />
-            <QuestionList worksheetId={id as string} />
-          </>
-        ) : (
-          <></>
-        )}
-
-        <Toast />
-      </main>
+      {isReady ? (
+        <>
+          <WorksheetHeader worksheetId={id as string} />
+          <QuestionList worksheetId={id as string} />
+        </>
+      ) : (
+        <></>
+      )}
     </>
   );
 };
@@ -172,7 +144,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
                   />
                 </label>
               </div>
-              <div className="flex gap-4 py-12 px-2 md:gap-8 md:px-16 md:py-16">
+              <div className="flex gap-4 px-2 py-12 md:gap-8 md:px-16 md:py-16">
                 <p className="my-2 text-3xl text-slate-400">
                   {question.order}.
                 </p>

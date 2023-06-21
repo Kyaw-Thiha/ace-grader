@@ -1,8 +1,8 @@
 import { useState } from "react";
-import MarkdownEditor from "@components/MarkdownEditor";
+import MarkdownEditor from "@/components/MarkdownEditor";
 import { useAutosave } from "react-autosave";
-import { api, type RouterOutputs } from "@utils/api";
-import { convertIntegerToASCII } from "@utils/helper";
+import { api, type RouterOutputs } from "@/utils/api";
+import { convertIntegerToASCII } from "@/utils/helper";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
@@ -132,7 +132,7 @@ const Answer: React.FC<Props> = (props) => {
         </label>
         <ul
           tabIndex={0}
-          className="dropdown-content menu rounded-box w-52 bg-base-100 p-2 shadow"
+          className="dropdown-content menu rounded-box bg-base-100 w-52 p-2 shadow"
         >
           {props.question?.choices.map((choice) => (
             <li key={choice.index} onClick={() => updateAnswer(choice.index)}>

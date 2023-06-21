@@ -1,4 +1,4 @@
-import { createTRPCRouter } from "@server/api/trpc";
+import { createTRPCRouter } from "@/server/api/trpc";
 import { teacherProfileRouter } from "./routers/teacherProfile";
 import { userRouter } from "./routers/user";
 import { publishedWorksheetRouter } from "./routers/publishedWorksheet";

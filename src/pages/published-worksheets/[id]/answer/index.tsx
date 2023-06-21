@@ -1,14 +1,13 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { api } from "@utils/api";
+import { api } from "@/utils/api";
 import Link from "next/link";
 import Image from "next/image";
-import Toast from "@components/Toast";
-import Loading from "@components/Loading";
-import MultipleChoiceQuestion from "@components/answerSheet/MultipleChoiceQuestion";
-import ShortAnswerQuestion from "@components/answerSheet/ShortAnswerQuestion";
-import LongAnswerQuestion from "@components/answerSheet/LongAnswerQuestion";
+import Loading from "@/components/Loading";
+import MultipleChoiceQuestion from "@/components/answerSheet/MultipleChoiceQuestion";
+import ShortAnswerQuestion from "@/components/answerSheet/ShortAnswerQuestion";
+import LongAnswerQuestion from "@/components/answerSheet/LongAnswerQuestion";
 
 const SampleAnswerSheet: NextPage = () => {
   const router = useRouter();
@@ -17,43 +16,18 @@ const SampleAnswerSheet: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>SmartGrader</title>
-        <meta name="description" content="Worksheeet Editor" />
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/apple-touch-icon.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon-16x16.png"
-        />
-        <link rel="manifest" href="/site.webmanifest" />
-      </Head>
-      <main>
-        <div className="navbar">
-          <Link href="/" className="btn-ghost btn text-2xl normal-case">
-            <Image
-              src="/images/logo-icon.png"
-              alt="Logo"
-              width="32"
-              height="32"
-            />
-            <h2 className="ml-2">SmartGrader</h2>
-          </Link>
-        </div>
-        {isReady ? <QuestionList publishedWorksheetId={id as string} /> : <></>}
-        <Toast />
-      </main>
+      <div className="navbar">
+        <Link href="/" className="btn-ghost btn text-2xl normal-case">
+          <Image
+            src="/images/logo-icon.png"
+            alt="Logo"
+            width="32"
+            height="32"
+          />
+          <h2 className="ml-2">SmartGrader</h2>
+        </Link>
+      </div>
+      {isReady ? <QuestionList publishedWorksheetId={id as string} /> : <></>}
     </>
   );
 };
@@ -103,7 +77,7 @@ const QuestionList: React.FC<Props> = ({ publishedWorksheetId }) => {
         {questions?.map((question) => (
           <div key={question.id} className="my-4 md:mx-8 md:rounded-md">
             <div className="bg-slate-50 shadow-sm">
-              <div className="flex gap-4 py-12 px-2 md:gap-8 md:px-16 md:py-16">
+              <div className="flex gap-4 px-2 py-12 md:gap-8 md:px-16 md:py-16">
                 <p className="my-2 text-3xl text-slate-400">
                   {question.order}.
                 </p>

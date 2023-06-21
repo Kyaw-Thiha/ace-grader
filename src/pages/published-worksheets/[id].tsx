@@ -1,71 +1,44 @@
 import { type NextPage } from "next";
-import Head from "next/head";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
-import { api } from "@utils/api";
+import { api } from "@/utils/api";
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Toast from "@components/Toast";
 import { toast } from "react-toastify";
+import { useUser } from "@clerk/nextjs";
 
 const Answer: NextPage = () => {
   const router = useRouter();
   const { isReady } = router;
   const { id } = router.query;
 
-  const { data: sessionData } = useSession();
-  const isLoggedIn = sessionData?.user !== undefined;
+  const auth = useUser();
+  const isLoggedIn = auth.isSignedIn;
 
   return (
     <>
-      <Head>
-        <title>SmartGrader</title>
-        <meta name="description" content="Worksheeet Editor" />
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/apple-touch-icon.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon-16x16.png"
-        />
-        <link rel="manifest" href="/site.webmanifest" />
-      </Head>
-      <main>
-        <div className="navbar">
-          <Link href="/" className="btn-ghost btn text-2xl normal-case">
-            <Image
-              src="/images/logo-icon.png"
-              alt="Logo"
-              width="32"
-              height="32"
-            />
-            <h2 className="ml-2">SmartGrader</h2>
-          </Link>
-        </div>
-        {isReady ? (
-          <>
-            {isLoggedIn ? (
-              <RedirectIfUserCreatedWorksheet id={id as string} />
-            ) : (
-              <StudentCredentialsForm id={id as string} />
-            )}
-          </>
-        ) : (
-          <></>
-        )}
-        <Toast />
-      </main>
+      <div className="navbar">
+        <Link href="/" className="btn-ghost btn text-2xl normal-case">
+          <Image
+            src="/images/logo-icon.png"
+            alt="Logo"
+            width="32"
+            height="32"
+          />
+          <h2 className="ml-2">SmartGrader</h2>
+        </Link>
+      </div>
+      {isReady ? (
+        <>
+          {isLoggedIn ? (
+            <RedirectIfUserCreatedWorksheet id={id as string} />
+          ) : (
+            <StudentCredentialsForm id={id as string} />
+          )}
+        </>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

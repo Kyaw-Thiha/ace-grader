@@ -1,24 +1,18 @@
 import { type AppType } from "next/app";
-import { type Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
+import { api } from "@/utils/api";
+import "@/styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import Toast from "@/components/Toast";
+import TopNavLayout from "@/components/TopNavLayout";
 
-import { api } from "@utils/api";
-
-import { ChakraProvider } from "@chakra-ui/react";
-
-import "src/styles/globals.css";
-
-const MyApp: AppType<{ session: Session | null }> = ({
-  Component,
-  pageProps: { session, ...pageProps },
-}) => {
+const MyApp: AppType = ({ Component, pageProps }) => {
   return (
-    <SessionProvider session={session}>
-      <ClerkProvider>
+    <ClerkProvider {...pageProps}>
+      <TopNavLayout>
         <Component {...pageProps} />
-      </ClerkProvider>
-    </SessionProvider>
+        <Toast />
+      </TopNavLayout>
+    </ClerkProvider>
   );
 };
 

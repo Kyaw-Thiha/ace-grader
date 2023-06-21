@@ -1,4 +1,4 @@
-import { api } from "@utils/api";
+import { api } from "@/utils/api";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
@@ -130,7 +130,7 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
         </label>
         <ul
           tabIndex={0}
-          className="dropdown-content menu rounded-box w-52 gap-3 bg-base-100 p-2 shadow"
+          className="dropdown-content menu rounded-box bg-base-100 w-52 gap-3 p-2 shadow"
         >
           {questionTypes.map((questionType) => {
             return (

@@ -1,10 +1,11 @@
-import { createTRPCRouter, protectedProcedure } from "@server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import { z } from "zod";
 
 export const teacherProfileRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.teacherProfile.findMany({
       where: {
-        userId: ctx.session.user.id,
+        userId: ctx.userId,
       },
     });
   }),
@@ -12,7 +13,7 @@ export const teacherProfileRouter = createTRPCRouter({
   getWorksheets: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.teacherProfile.findMany({
       where: {
-        userId: ctx.session.user.id,
+        userId: ctx.userId,
       },
       select: {
         worksheets: {
@@ -35,7 +36,7 @@ export const teacherProfileRouter = createTRPCRouter({
   getPublishedWorksheets: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.teacherProfile.findMany({
       where: {
-        userId: ctx.session.user.id,
+        userId: ctx.userId,
       },
       select: {
         publishedWorksheets: {
@@ -50,12 +51,14 @@ export const teacherProfileRouter = createTRPCRouter({
     });
   }),
 
-  create: protectedProcedure.mutation(({ ctx }) => {
-    return ctx.prisma.teacherProfile.create({
-      data: {
-        username: ctx.session.user.name ?? "",
-        userId: ctx.session.user.id,
-      },
-    });
-  }),
+  create: protectedProcedure
+    .input(z.object({ username: z.string(), userId: z.string() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.teacherProfile.create({
+        data: {
+          userId: input.userId,
+          username: input.username,
+        },
+      });
+    }),
 });

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "@server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { publicProcedure } from "../trpc";
 
 export const teacherNotificationRouter = createTRPCRouter({
@@ -21,7 +21,7 @@ export const teacherNotificationRouter = createTRPCRouter({
         where: {
           isRead: false,
           profile: {
-            userId: ctx.session.user.id,
+            userId: ctx.userId,
           },
         },
         orderBy: {
