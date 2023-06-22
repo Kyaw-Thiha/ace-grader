@@ -3,34 +3,51 @@ import { z } from "zod";
 
 export const teacherProfileRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.teacherProfile.findMany({
+    return ctx.prisma.teacherProfile.findFirst({
       where: {
         userId: ctx.userId,
       },
     });
   }),
 
-  getWorksheets: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.teacherProfile.findMany({
-      where: {
-        userId: ctx.userId,
-      },
-      select: {
-        worksheets: {
-          orderBy: { lastEdited: "desc" },
-          select: {
-            id: true,
-            title: true,
-            lastEdited: true,
-            publishedWorksheets: {
-              select: {
-                id: true,
+  getWorksheets: protectedProcedure.query(async ({ ctx }) => {
+    const fetchWorksheets = () => {
+      return ctx.prisma.teacherProfile.findFirst({
+        where: {
+          userId: ctx.userId,
+        },
+        select: {
+          worksheets: {
+            orderBy: { lastEdited: "desc" },
+            select: {
+              id: true,
+              title: true,
+              lastEdited: true,
+              publishedWorksheets: {
+                select: {
+                  id: true,
+                },
               },
             },
           },
         },
-      },
-    });
+      });
+    };
+
+    const profile = await fetchWorksheets();
+
+    if (!profile) {
+      await ctx.prisma.teacherProfile.create({
+        data: {
+          userId: ctx.userId,
+        },
+      });
+      const newProfile = await fetchWorksheets();
+
+      return newProfile;
+    }
+
+    return profile;
   }),
 
   getPublishedWorksheets: protectedProcedure.query(({ ctx }) => {
@@ -57,7 +74,6 @@ export const teacherProfileRouter = createTRPCRouter({
       return ctx.prisma.teacherProfile.create({
         data: {
           userId: input.userId,
-          username: input.username,
         },
       });
     }),

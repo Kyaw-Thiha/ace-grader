@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { type NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -45,7 +45,7 @@ const WorksheetList: React.FC = () => {
     undefined // no input
   );
 
-  const worksheets = profiles?.at(0)?.worksheets ?? [];
+  const worksheets = profiles?.worksheets ?? [];
 
   // Fetching the corresponding latest published worksheet
   const [copyWorksheetId, setCopyWorksheetId] = useState("");
@@ -164,7 +164,7 @@ const AddWorksheetButton: React.FC = () => {
       void toast.promise(
         createWorksheet.mutateAsync({
           title: title,
-          profileId: profiles?.at(0)?.id ?? "",
+          profileId: profiles?.id ?? "",
         }),
         {
           pending: "Creating Worksheet",

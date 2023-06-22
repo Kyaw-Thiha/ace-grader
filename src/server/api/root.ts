@@ -11,6 +11,7 @@ import { answerSheetRouter } from "./routers/answerSheet";
 import { multipleChoiceQuestionAnswerRouter } from "./routers/multipleChoiceQuestionAnswer";
 import { shortAnswerQuestionAnswerRouter } from "./routers/shortAnswerQuestionAnswer";
 import { longAnswerQuestionAnswerRouter } from "./routers/longAnswerQuestionAnswer";
+import { userRouter } from "./routers/user";
 
 /**
  * This is the primary router for your server.
@@ -18,6 +19,7 @@ import { longAnswerQuestionAnswerRouter } from "./routers/longAnswerQuestionAnsw
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
+  user: userRouter,
   teacherProfile: teacherProfileRouter,
   teacherNotification: teacherNotificationRouter,
   worksheet: worksheetRouter,
