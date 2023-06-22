@@ -12,11 +12,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import { api } from "@/utils/api";
+import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
 export const AddWorksheetButton: React.FC = () => {
   const [title, setTitle] = useState("");
+  const [open, setOpen] = useState(false);
 
   const { data, refetch: refetchProfiles } =
     api.teacherProfile.getWorksheets.useQuery(
@@ -46,6 +48,8 @@ export const AddWorksheetButton: React.FC = () => {
       // If title is above character limit
       toast.error("Your title cannot have more than 250 characters");
     } else {
+      setOpen(false);
+
       void toast.promise(
         createWorksheet.mutateAsync({
           title: title,
@@ -63,7 +67,7 @@ export const AddWorksheetButton: React.FC = () => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>Create Worksheet</Button>
       </DialogTrigger>
@@ -79,11 +83,18 @@ export const AddWorksheetButton: React.FC = () => {
             <Label htmlFor="title" className="text-right">
               Title
             </Label>
-            <Input id="title" value={title} className="col-span-3" />
+            <Input
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="col-span-3"
+            />
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit">Create Worksheet</Button>
+          <Button type="submit" onClick={() => addWorksheet()}>
+            Create Worksheet
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -99,6 +110,7 @@ export const DeleteWorksheetButton: React.FC<DeleteWorksheetButtonProps> = ({
   worksheetTitle,
 }) => {
   const [text, setText] = useState("");
+  const [open, setOpen] = useState(false);
 
   const { data, refetch: refetchProfiles } =
     api.teacherProfile.getWorksheets.useQuery(
@@ -117,6 +129,8 @@ export const DeleteWorksheetButton: React.FC<DeleteWorksheetButtonProps> = ({
       // If title is not entered
       toast.error("Your input text is incorrect");
     } else {
+      setOpen(false);
+
       void toast.promise(
         deleteWorksheet.mutateAsync({
           id: worksheetId,
@@ -133,28 +147,40 @@ export const DeleteWorksheetButton: React.FC<DeleteWorksheetButtonProps> = ({
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Delete Worksheet</Button>
+        <Button>
+          <Trash2 className="h-4 w-4" />
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Delete Worksheet</DialogTitle>
           <DialogDescription>
-            Note: This process is irreversible.
+            <p>
+              Please type in <b>{worksheetTitle}</b> below to proceed with
+              worksheet removal
+            </p>
+            <p>Note: This process is irreversible.</p>
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="text" className="text-right">
-              Please type in<b className="ml-2">{worksheetTitle}</b> below to
-              proceed with worksheet removal
+              Text
             </Label>
-            <Input id="text" value={text} className="col-span-3" />
+            <Input
+              id="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              className="col-span-3"
+            />
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit">Delete Worksheet</Button>
+          <Button type="submit" onClick={() => removeWorksheet()}>
+            Delete Worksheet
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -94,7 +94,7 @@ const WorksheetList: React.FC = () => {
     );
   } else {
     return (
-      <div className="mx-8 mt-8" ref={parent}>
+      <div className="mt-8" ref={parent}>
         {worksheets.map((worksheet) => (
           <div
             key={worksheet.id}

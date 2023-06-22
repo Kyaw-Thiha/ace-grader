@@ -9,7 +9,6 @@ import Loading from "@/components/Loading";
 import MultipleChoiceQuestion from "@/components/worksheet/MultipleChoiceQuestion";
 import ShortAnswerQuestion from "@/components/worksheet/ShortAnswerQuestion";
 import LongAnswerQuestion from "@/components/worksheet/LongAnswerQuestion";
-import Dialog from "@/components/Dialog";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
@@ -246,7 +245,7 @@ const DeleteQuestionButton: React.FC<DeleteQuestionButtonProps> = (props) => {
 
   return (
     <>
-      <Dialog
+      {/* <Dialog
         id={dialogId}
         openContainer={
           <label htmlFor={dialogId} className="btn-ghost btn text-lg">
@@ -276,7 +275,7 @@ const DeleteQuestionButton: React.FC<DeleteQuestionButtonProps> = (props) => {
             </label>
           </>
         }
-      />
+      /> */}
     </>
   );
 };
@@ -409,7 +408,7 @@ const PublishQuestionButton: React.FC<PublishQuestionButtonProps> = (props) => {
 
   return (
     <>
-      <Dialog
+      {/* <Dialog
         id={dialogId}
         openContainer={
           <label htmlFor={dialogId} className="btn-primary btn text-lg">
@@ -442,7 +441,7 @@ const PublishQuestionButton: React.FC<PublishQuestionButtonProps> = (props) => {
             </label>
           </>
         }
-      />
+      /> */}
     </>
   );
 };
