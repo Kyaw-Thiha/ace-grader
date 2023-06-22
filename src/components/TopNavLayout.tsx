@@ -46,11 +46,13 @@ const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
 
             <SignedOut>
               <Button asChild>
-                <SignInButton />
+                <Link href="/sign-in">Sign In</Link>
               </Button>
             </SignedOut>
             <SignedIn>
-              <UserButton />
+              <Button asChild>
+                <UserButton />
+              </Button>
             </SignedIn>
           </nav>
         </header>
