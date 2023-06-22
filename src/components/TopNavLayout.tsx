@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Head from "next/head";
 import { SignedOut, SignedIn, SignInButton, UserButton } from "@clerk/nextjs";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "SmartGrader",
@@ -31,15 +32,18 @@ const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="flex min-h-screen flex-col">
         <header className="border-b">
           <nav className="container mx-auto flex justify-between px-4 py-4">
-            <Link href="/" className="btn-ghost btn text-2xl normal-case">
-              <Image
-                src="/images/logo-icon.png"
-                alt="Logo"
-                width="32"
-                height="32"
-              />
-              <span className="text-2xl font-bold">SmartGrader</span>{" "}
-            </Link>
+            <Button asChild>
+              <Link href="/" className="btn-ghost btn text-2xl normal-case">
+                <Image
+                  src="/images/logo-icon.png"
+                  alt="Logo"
+                  width="32"
+                  height="32"
+                />
+                <span className="text-2xl font-bold">SmartGrader</span>{" "}
+              </Link>
+            </Button>
+
             <SignedOut>
               <SignInButton />
             </SignedOut>
