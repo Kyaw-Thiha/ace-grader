@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import Head from "next/head";
 import { SignedOut, SignedIn, SignInButton, UserButton } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
@@ -19,28 +20,39 @@ export const metadata: Metadata = {
 
 const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="border-b">
-        <nav className="container mx-auto flex justify-between px-4 py-4">
-          <Link href="/" className="btn-ghost btn text-2xl normal-case">
-            <Image
-              src="/images/logo-icon.png"
-              alt="Logo"
-              width="32"
-              height="32"
-            />
-            <span className="text-2xl font-bold">SmartGrader</span>{" "}
-          </Link>
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-        </nav>
-      </header>
-      <main className="container mx-auto flex-grow px-4 py-8">{children}</main>
-    </div>
+    <>
+      <Head>
+        <title>Smart Grader</title>
+        <meta
+          name="description"
+          content="A website where teachers can automate their workflow"
+        />
+      </Head>
+      <div className="flex min-h-screen flex-col">
+        <header className="border-b">
+          <nav className="container mx-auto flex justify-between px-4 py-4">
+            <Link href="/" className="btn-ghost btn text-2xl normal-case">
+              <Image
+                src="/images/logo-icon.png"
+                alt="Logo"
+                width="32"
+                height="32"
+              />
+              <span className="text-2xl font-bold">SmartGrader</span>{" "}
+            </Link>
+            <SignedOut>
+              <SignInButton />
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </nav>
+        </header>
+        <main className="container mx-auto flex-grow px-4 py-8">
+          {children}
+        </main>
+      </div>
+    </>
   );
 };
 
