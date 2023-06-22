@@ -32,8 +32,8 @@ const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="flex min-h-screen flex-col">
         <header className="border-b">
           <nav className="container mx-auto flex justify-between px-4 py-4">
-            <Button asChild>
-              <Link href="/" className="btn-ghost btn text-2xl normal-case">
+            <Button asChild className="flex gap-2 px-4 py-6" variant="outline">
+              <Link href="/">
                 <Image
                   src="/images/logo-icon.png"
                   alt="Logo"
@@ -45,7 +45,9 @@ const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
             </Button>
 
             <SignedOut>
-              <SignInButton />
+              <Button asChild>
+                <SignInButton />
+              </Button>
             </SignedOut>
             <SignedIn>
               <UserButton />
