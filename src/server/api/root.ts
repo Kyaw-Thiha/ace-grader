@@ -1,6 +1,5 @@
 import { createTRPCRouter } from "@/server/api/trpc";
 import { teacherProfileRouter } from "./routers/teacherProfile";
-import { userRouter } from "./routers/user";
 import { publishedWorksheetRouter } from "./routers/publishedWorksheet";
 import { teacherNotificationRouter } from "./routers/teacherNotification";
 import { worksheetRouter } from "./routers/worksheet";
@@ -19,7 +18,6 @@ import { longAnswerQuestionAnswerRouter } from "./routers/longAnswerQuestionAnsw
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  user: userRouter,
   teacherProfile: teacherProfileRouter,
   teacherNotification: teacherNotificationRouter,
   worksheet: worksheetRouter,
