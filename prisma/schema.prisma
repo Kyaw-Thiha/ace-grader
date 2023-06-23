@@ -1,5 +1,7 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
+// https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#mysql
+// https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields
 
 generator client {
     provider = "prisma-client-js"
@@ -10,12 +12,6 @@ datasource db {
     provider = "mysql"
     url      = env("DATABASE_URL")
     relationMode = "prisma"
-}
-
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
 }
 
 // https://clerk.com/docs/users/sync-data-to-your-backend
@@ -31,15 +27,36 @@ model TeacherProfile {
 }
 
 model TeacherNotification {
-    id            String    @id @default(cuid())
+    id            String            @id @default(cuid())
     text          String?
-    time          DateTime?  @default(now())
-    isRead        Boolean  @default(false)
+    time          DateTime?         @default(now())
+    isRead        Boolean           @default(false)
     resource      String   
     profileId     String
-    profile       TeacherProfile @relation(fields: [profileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    profile       TeacherProfile    @relation(fields: [profileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([profileId])
+}
+
+//  Utils Table
+//  Image
+model Image {
+    id              String          @id @default(cuid())
+    url             String          @db.VarChar(1024)
+    caption         String          @db.VarChar(1024)    
+    multipleChoiceQuestionId        String? 
+    multipleChoiceQuestion          MultipleChoiceQuestion? @relation(fields: [multipleChoiceQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    shortAnswerQuestionId           String? 
+    shortAnswerQuestion             ShortAnswerQuestion?    @relation(fields: [shortAnswerQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    longAnswerQuestionId            String? 
+    longAnswerQuestion              LongAnswerQuestion?     @relation(fields: [longAnswerQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    longAnswerQuestionAnswerId      String? 
+    longAnswerQuestionAnswer        LongAnswerQuestionAnswer?     @relation(fields: [longAnswerQuestionAnswerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+   
+    @@index([multipleChoiceQuestionId])
+    @@index([shortAnswerQuestionId])
+    @@index([longAnswerQuestionId])
+    @@index([longAnswerQuestionAnswerId])
 }
 
 //  Worksheet, Published Worksheet and Answer Sheet
@@ -50,31 +67,30 @@ model TeacherNotification {
 //  Answer Sheet - The table that stores the user's answer to its corresponding questions
 
 model Worksheet {
-    id             String    @id @default(cuid())
-    title          String
-    lastEdited     DateTime      @updatedAt
-    questions                    Question[]
-    publishedWorksheets          PublishedWorksheet[]
+    id             String           @id @default(cuid())
+    title          String           @db.TinyText
+    lastEdited     DateTime         @updatedAt
+    questions                       Question[]
+    publishedWorksheets             PublishedWorksheet[]
     profileId      String
-    profile        TeacherProfile @relation(fields: [profileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    profile        TeacherProfile   @relation(fields: [profileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
    
     @@index([profileId])
-	
 }
 
 model PublishedWorksheet {
-    id             String    @id @default(cuid())
-    title          String
+    id             String               @id @default(cuid())
+    title          String               @db.TinyText
     status         WorksheetStatus      @default(PRIVATE)
     version        Int          
-    createdTime    DateTime     @default(now())
+    createdTime    DateTime             @default(now())
     totalMarks     Int 
     questions                    Question[]
     answerSheets                 AnswerSheet[]
     worksheetId      String
-    worksheet        Worksheet @relation(fields: [worksheetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+    worksheet        Worksheet          @relation(fields: [worksheetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
     profileId        String
-    profile          TeacherProfile @relation(fields: [profileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    profile          TeacherProfile     @relation(fields: [profileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([worksheetId])
     @@index([profileId])
@@ -86,12 +102,12 @@ enum WorksheetStatus {
 }
 
 model AnswerSheet {
-    id                  String      @id @default(cuid())
-    studentName         String
-    studentEmail        String
-    studentPassword     String?     //This should be stored in hash.
+    id                  String          @id @default(cuid())
+    studentName         String          @db.TinyText
+    studentEmail        String          @db.TinyText
+    studentPassword     String?         //This should be stored in hash.
     status              AnswerSheetStatus 
-    startTime           DateTime     @default(now())
+    startTime           DateTime        @default(now())
     endTime             DateTime?
     totalMarks          Int?  
     answers             Answer[]   
@@ -110,17 +126,17 @@ enum AnswerSheetStatus {
 // ***      Questions     ***
 
 model Question {
-    id                  String    @id @default(cuid())
-    order               Int   
-    questionType        QuestionType
-    parentQuestions              ParentQuestion?
-    multipleChoiceQuestion       MultipleChoiceQuestion?
-    shortAnswerQuestion          ShortAnswerQuestion?
-    longAnswerQuestion          LongAnswerQuestion? 
-    worksheetId         String?
-    worksheet           Worksheet? @relation(fields: [worksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    publishedWorksheetId         String?
-    publishedWorksheet           PublishedWorksheet? @relation(fields: [publishedWorksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    id                          String    @id @default(cuid())
+    order                       Int   
+    questionType                    QuestionType
+    parentQuestions                 ParentQuestion?
+    multipleChoiceQuestion          MultipleChoiceQuestion?
+    shortAnswerQuestion             ShortAnswerQuestion?
+    longAnswerQuestion              LongAnswerQuestion? 
+    worksheetId                 String?
+    worksheet                   Worksheet? @relation(fields: [worksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    publishedWorksheetId        String?
+    publishedWorksheet          PublishedWorksheet? @relation(fields: [publishedWorksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([worksheetId])
     @@index([publishedWorksheetId])
@@ -147,9 +163,9 @@ enum QuestionType {
 //  Long Answer Question - A question that student has to type in. Cannot be checked automatically. Only contains sample answer
 
 model ParentQuestion {
-    id                  String    @id @default(cuid())
-    text                String?
-    images              String?
+    id                  String      @id @default(cuid())
+    text                String      @db.Text
+    // images              Image[]
     multipleChoiceQuestion       MultipleChoiceQuestion[]
     shortAnswerQuestion          ShortAnswerQuestion[]
     longAnswerQuestions          LongAnswerQuestion[] 
@@ -168,11 +184,11 @@ model ParentQuestion {
 }
 
 model MultipleChoiceQuestion {
-    id                  String    @id @default(cuid())
-    text                String?
-    images              String? 
-    answer              Int?
-    explanation         String?
+    id                  String      @id @default(cuid())
+    text                String      @db.Text
+    images              Image[]     
+    answer              Int
+    explanation         String      @db.Text
     marks               Int    
     choices             MultipleChoiceQuestionOption[]
     parentQuestionId    String?
@@ -185,23 +201,23 @@ model MultipleChoiceQuestion {
 }
 
 model MultipleChoiceQuestionOption {
-    id                  String    @id @default(cuid())
+    id                  String          @id @default(cuid())
     index               Int
-    text                String? 
-    multipleChoiceQuestionChoiceId         String
-    multipleChoiceQuestionChoice           MultipleChoiceQuestion @relation(fields: [multipleChoiceQuestionChoiceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    text                String          @db.Text
+    multipleChoiceQuestionChoiceId      String
+    multipleChoiceQuestionChoice        MultipleChoiceQuestion @relation(fields: [multipleChoiceQuestionChoiceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([multipleChoiceQuestionChoiceId])
 }
 
 model ShortAnswerQuestion {
-    id                  String    @id @default(cuid())
-    text                String?
-    images              String? 
-    answer              String?
-    explanation         String?
+    id                  String          @id @default(cuid())
+    text                String          @db.Text
+    images              Image[]
+    markingScheme       Json            @default("[]") 
+    explanation         String          @db.Text
     marks               Int    
-    parentQuestionId    String?
+    parentQuestionId    String
     parentQuestion      ParentQuestion?  @relation(fields: [parentQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     questionId         String   @unique
     question           Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -211,16 +227,17 @@ model ShortAnswerQuestion {
 }
 
 model LongAnswerQuestion {
-    id                  String    @id @default(cuid())
-    text                String?
-    images              String? 
-    sampleAnswer        String?
-    explanation         String?
+    id                  String      @id @default(cuid())
+    text                String      @db.Text
+    images              Image[]
+    sampleAnswer        String      @db.MediumText
+    keywords            Json        @default("[]")  
+    explanation         String      @db.Text
     marks               Int    
     parentQuestionId    String?
     parentQuestion      ParentQuestion?  @relation(fields: [parentQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    questionId         String   @unique
-    question           Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    questionId          String   @unique
+    question            Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([parentQuestionId])
     @@index([questionId])
@@ -251,7 +268,7 @@ enum AnswerType {
 model MultipleChoiceQuestionAnswer {
     id                    String    @id @default(cuid())
     studentAnswer         Int   
-    feedback              String?
+    feedback              String    @db.Text
     marks                 Int       @default(0)
     answerId              String    @unique
     answer                Answer    @relation(fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -261,8 +278,8 @@ model MultipleChoiceQuestionAnswer {
 
 model ShortAnswerQuestionAnswer {
     id                    String    @id @default(cuid())
-    studentAnswer         String   
-    feedback              String?
+    studentAnswer         String    @db.Text
+    feedback              String    @db.Text
     marks                 Int       @default(0)
     answerId              String    @unique
     answer                Answer    @relation(fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -272,9 +289,9 @@ model ShortAnswerQuestionAnswer {
 
 model LongAnswerQuestionAnswer {
     id                    String    @id @default(cuid())
-    studentAnswer         String   
-    studentImages         String
-    feedback              String?
+    studentAnswer         String    @db.MediumText
+    studentImages         Image[]    
+    feedback              String    @db.Text
     marks                 Int       @default(0)
     answerId              String    @unique 
     answer                Answer    @relation(fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
