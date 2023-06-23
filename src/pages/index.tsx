@@ -2,6 +2,7 @@ import { type NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 
 const Home: NextPage = () => {
   return (
@@ -16,9 +17,17 @@ const Home: NextPage = () => {
               et a id nisi.
             </p>
             <div>
-              <Button asChild>
-                <Link href="/sign-in">Get Started</Link>
-              </Button>
+              <SignedOut>
+                <Button asChild>
+                  <Link href="/sign-in">Sign In</Link>
+                </Button>
+              </SignedOut>
+
+              <SignedIn>
+                <Button asChild>
+                  <Link href="/my-worksheets">Go to My Worksheets</Link>
+                </Button>
+              </SignedIn>
             </div>
           </div>
           <Image
