@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import {
   AddWorksheetButton,
   DeleteWorksheetButton,
-} from "@/components/worksheet/worksheetDialogs";
+} from "@/components/worksheet/WorksheetDialogs";
 import { Button } from "@/components/ui/button";
 
 // https://github.com/jherr/notetaker

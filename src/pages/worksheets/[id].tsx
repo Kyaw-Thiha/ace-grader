@@ -9,9 +9,11 @@ import Loading from "@/components/Loading";
 import MultipleChoiceQuestion from "@/components/worksheet/MultipleChoiceQuestion";
 import ShortAnswerQuestion from "@/components/worksheet/ShortAnswerQuestion";
 import LongAnswerQuestion from "@/components/worksheet/LongAnswerQuestion";
-import { type QueryObserverBaseResult } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import {
+  DeleteQuestionButton,
+  PublishWorksheetButton,
+} from "@/components/worksheet/QuestionDialogs";
 
 const WorksheetEditor: NextPage = () => {
   const router = useRouter();
@@ -79,7 +81,7 @@ const WorksheetHeader: React.FC<WorksheetHeaderProps> = ({ worksheetId }) => {
           />
         </div>
         <div className="">
-          <PublishQuestionButton
+          <PublishWorksheetButton
             worksheetId={worksheetId}
             refetch={refetchWorksheet}
           />
@@ -196,252 +198,255 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
   }
 };
 
-type Questions = RouterOutputs["question"]["getAll"];
+// type Questions = RouterOutputs["question"]["getAll"];
 
-interface DeleteQuestionButtonProps {
-  id: string;
-  order: number;
-  questions: Questions;
-  refetch: QueryObserverBaseResult["refetch"];
-}
+// interface DeleteQuestionButtonProps {
+//   id: string;
+//   order: number;
+//   questions: Questions;
+//   refetch: QueryObserverBaseResult["refetch"];
+// }
 
-const DeleteQuestionButton: React.FC<DeleteQuestionButtonProps> = (props) => {
-  const dialogId = `delete-question-${props.order}`;
+// const DeleteQuestionButton: React.FC<DeleteQuestionButtonProps> = (props) => {
+//   //Function for deleting question
+//   const deleteQuestion = api.question.delete.useMutation({
+//     onSuccess: () => {
+//       void props.refetch();
+//     },
+//   });
 
-  //Function for deleting question
-  const deleteQuestion = api.question.delete.useMutation({
-    onSuccess: () => {
-      void props.refetch();
-    },
-  });
+//   //Function for editing question
+//   const editQuestion = api.question.editOrder.useMutation({
+//     onSuccess: () => {
+//       void props.refetch();
+//     },
+//   });
 
-  //Function for editing question
-  const editQuestion = api.question.editOrder.useMutation({
-    onSuccess: () => {
-      void props.refetch();
-    },
-  });
+//   const removeQuestion = () => {
+//     void toast
+//       .promise(
+//         deleteQuestion.mutateAsync({
+//           id: props.id,
+//         }),
+//         {
+//           pending: "Removing Question",
+//           success: "Question Removed 👌",
+//           error: "Error in Question Deletion 🤯",
+//         }
+//       )
+//       .then(() => {
+//         for (const question of props.questions) {
+//           if (question.order > props.order) {
+//             editQuestion.mutate({ id: question.id, order: question.order - 1 });
+//           }
+//         }
+//       });
+//   };
 
-  const removeQuestion = () => {
-    void toast
-      .promise(
-        deleteQuestion.mutateAsync({
-          id: props.id,
-        }),
-        {
-          pending: "Removing Question",
-          success: "Question Removed 👌",
-          error: "Error in Question Deletion 🤯",
-        }
-      )
-      .then(() => {
-        for (const question of props.questions) {
-          if (question.order > props.order) {
-            editQuestion.mutate({ id: question.id, order: question.order - 1 });
-          }
-        }
-      });
-  };
+//   return (
+//     <>
+//       {/* <Dialog
+//         id={dialogId}
+//         openContainer={
+//           <label htmlFor={dialogId} className="btn-ghost btn text-lg">
+//             ✕
+//           </label>
+//         }
+//         body={
+//           <>
+//             <h3 className="mb-4 text-2xl font-bold">Delete Question</h3>
+//             <h4 className="mb-2">Note: This process is irreversible</h4>
+//             <p className="mb-6">
+//               Are you sure you want to delete this question?
+//             </p>
+//           </>
+//         }
+//         actions={
+//           <>
+//             <label htmlFor={dialogId} className="btn-ghost btn">
+//               Cancel
+//             </label>
+//             <label
+//               htmlFor={dialogId}
+//               className="btn-warning btn"
+//               onClick={removeQuestion}
+//             >
+//               Delete Worksheet
+//             </label>
+//           </>
+//         }
+//       /> */}
+//     </>
+//   );
+// };
 
-  return (
-    <>
-      {/* <Dialog
-        id={dialogId}
-        openContainer={
-          <label htmlFor={dialogId} className="btn-ghost btn text-lg">
-            ✕
-          </label>
-        }
-        body={
-          <>
-            <h3 className="mb-4 text-2xl font-bold">Delete Question</h3>
-            <h4 className="mb-2">Note: This process is irreversible</h4>
-            <p className="mb-6">
-              Are you sure you want to delete this question?
-            </p>
-          </>
-        }
-        actions={
-          <>
-            <label htmlFor={dialogId} className="btn-ghost btn">
-              Cancel
-            </label>
-            <label
-              htmlFor={dialogId}
-              className="btn-warning btn"
-              onClick={removeQuestion}
-            >
-              Delete Worksheet
-            </label>
-          </>
-        }
-      /> */}
-    </>
-  );
-};
+// interface PublishQuestionButtonProps {
+//   worksheetId: string;
+//   refetch: QueryObserverBaseResult["refetch"];
+// }
 
-interface PublishQuestionButtonProps {
-  worksheetId: string;
-  refetch: QueryObserverBaseResult["refetch"];
-}
+// const PublishWorksheetButton: React.FC<PublishQuestionButtonProps> = (
+//   props
+// ) => {
+//   const dialogId = `publish-question`;
 
-const PublishQuestionButton: React.FC<PublishQuestionButtonProps> = (props) => {
-  const dialogId = `publish-question`;
+//   //Fetching the worksheet
+//   const { data: worksheet, refetch: refetchWorksheet } =
+//     api.worksheet.get.useQuery({ id: props.worksheetId });
 
-  //Fetching the worksheet
-  const { data: worksheet, refetch: refetchWorksheet } =
-    api.worksheet.get.useQuery({ id: props.worksheetId });
+//   //Fetching the questions
+//   const { data: worksheetWithQuestions, refetch: refetchQuestions } =
+//     api.worksheet.getQuestions.useQuery({ id: props.worksheetId });
+//   const questions = worksheetWithQuestions?.questions ?? [];
 
-  //Fetching the questions
-  const { data: worksheetWithQuestions, refetch: refetchQuestions } =
-    api.worksheet.getQuestions.useQuery({ id: props.worksheetId });
-  const questions = worksheetWithQuestions?.questions ?? [];
+//   //  Determining the version
+//   const { data: publishedWorksheetCount } =
+//     api.publishedWorksheet.getCount.useQuery({ profileId: props.worksheetId });
+//   const count = publishedWorksheetCount ?? 0;
+//   const version = count + 1;
 
-  //  Determining the version
-  const { data: publishedWorksheetCount } =
-    api.publishedWorksheet.getCount.useQuery({ profileId: props.worksheetId });
-  const count = publishedWorksheetCount ?? 0;
-  const version = count + 1;
+//   //Creating the published worksheet
+//   const createWorksheet = api.publishedWorksheet.create.useMutation({
+//     onSuccess: () => {
+//       void props.refetch();
+//     },
+//   });
 
-  //Creating the published worksheet
-  const createWorksheet = api.publishedWorksheet.create.useMutation({
-    onSuccess: () => {
-      void props.refetch();
-    },
-  });
+//   const calculateTotalMarks = () => {
+//     let totalMarks = 0;
+//     for (const question of questions) {
+//       if (question.questionType == "MultipleChoiceQuestion") {
+//         const marks = question.multipleChoiceQuestion?.marks ?? 0;
+//         totalMarks = totalMarks + marks;
+//       }
+//       // else if (question.questionType == "ShortAnswerQuestion") {
+//       //   const marks = question.shortAnswerQuestion?.marks ?? 0;
+//       //   totalMarks = totalMarks + marks;
+//       // }
+//       if (question.questionType == "LongAnswerQuestion") {
+//         const marks = question.longAnswerQuestion?.marks ?? 0;
+//         totalMarks = totalMarks + marks;
+//       }
+//     }
 
-  const calculateTotalMarks = () => {
-    let totalMarks = 0;
-    for (const question of questions) {
-      if (question.questionType == "MultipleChoiceQuestion") {
-        const marks = question.multipleChoiceQuestion?.marks ?? 0;
-        totalMarks = totalMarks + marks;
-      } else if (question.questionType == "ShortAnswerQuestion") {
-        const marks = question.shortAnswerQuestion?.marks ?? 0;
-        totalMarks = totalMarks + marks;
-      }
-      if (question.questionType == "LongAnswerQuestion") {
-        const marks = question.longAnswerQuestion?.marks ?? 0;
-        totalMarks = totalMarks + marks;
-      }
-    }
+//     return totalMarks;
+//   };
 
-    return totalMarks;
-  };
+//   const createQuestionsPayload = () => {
+//     const questionsPayload = [];
 
-  const createQuestionsPayload = () => {
-    const questionsPayload = [];
+//     for (const question of questions) {
+//       const choices = [];
+//       const originalChoices = question.multipleChoiceQuestion?.choices ?? [];
+//       for (const choice of originalChoices) {
+//         choices.push({ index: choice.index ?? 1, text: choice.text ?? "" });
+//       }
 
-    for (const question of questions) {
-      const choices = [];
-      const originalChoices = question.multipleChoiceQuestion?.choices ?? [];
-      for (const choice of originalChoices) {
-        choices.push({ index: choice.index ?? 1, text: choice.text ?? "" });
-      }
+//       if (question.questionType == "MultipleChoiceQuestion") {
+//         questionsPayload.push({
+//           order: question.order,
+//           questionType: question.questionType,
+//           multipleChoiceQuestion: {
+//             create: {
+//               text: question.multipleChoiceQuestion?.text ?? "",
+//               explanation: question.multipleChoiceQuestion?.explanation ?? "",
+//               marks: question.multipleChoiceQuestion?.marks ?? 1,
+//               answer: question.multipleChoiceQuestion?.answer ?? 0,
+//               choices: {
+//                 create: choices,
+//               },
+//             },
+//           },
+//         });
+//       }
+//       // else if (question.questionType == "ShortAnswerQuestion") {
+//       //   questionsPayload.push({
+//       //     order: question.order,
+//       //     questionType: question.questionType,
+//       //     shortAnswerQuestion: {
+//       //       create: {
+//       //         text: question.shortAnswerQuestion?.text ?? "",
+//       //         marks: question.shortAnswerQuestion?.marks ?? 1,
+//       //         answer: question.shortAnswerQuestion?.answer ?? "",
+//       //       },
+//       //     },
+//       //   });
+//       // }
+//       else if (question.questionType == "LongAnswerQuestion") {
+//         questionsPayload.push({
+//           order: question.order,
+//           questionType: question.questionType,
+//           longAnswerQuestion: {
+//             create: {
+//               text: question.longAnswerQuestion?.text ?? "",
+//               marks: question.longAnswerQuestion?.marks ?? 1,
+//               markingScheme: question.longAnswerQuestion
+//                 ?.markingScheme as string[],
+//               sampleAnswer: question.longAnswerQuestion?.sampleAnswer ?? "",
+//             },
+//           },
+//         });
+//       }
+//     }
 
-      if (question.questionType == "MultipleChoiceQuestion") {
-        questionsPayload.push({
-          order: question.order,
-          questionType: question.questionType,
-          multipleChoiceQuestion: {
-            create: {
-              text: question.multipleChoiceQuestion?.text ?? "",
-              explanation: question.multipleChoiceQuestion?.explanation ?? "",
-              marks: question.multipleChoiceQuestion?.marks ?? 1,
-              answer: question.multipleChoiceQuestion?.answer ?? 0,
-              choices: {
-                create: choices,
-              },
-            },
-          },
-        });
-      } else if (question.questionType == "ShortAnswerQuestion") {
-        questionsPayload.push({
-          order: question.order,
-          questionType: question.questionType,
-          shortAnswerQuestion: {
-            create: {
-              text: question.shortAnswerQuestion?.text ?? "",
-              explanation: question.shortAnswerQuestion?.explanation ?? "",
-              marks: question.shortAnswerQuestion?.marks ?? 1,
-              answer: question.shortAnswerQuestion?.answer ?? "",
-            },
-          },
-        });
-      } else if (question.questionType == "LongAnswerQuestion") {
-        questionsPayload.push({
-          order: question.order,
-          questionType: question.questionType,
-          longAnswerQuestion: {
-            create: {
-              text: question.longAnswerQuestion?.text ?? "",
-              explanation: question.longAnswerQuestion?.explanation ?? "",
-              marks: question.longAnswerQuestion?.marks ?? 1,
-              sampleAnswer: question.longAnswerQuestion?.sampleAnswer ?? "",
-            },
-          },
-        });
-      }
-    }
+//     return questionsPayload;
+//   };
 
-    return questionsPayload;
-  };
+//   //Publishing the worksheet
+//   const publishWorksheet = () => {
+//     void toast.promise(
+//       createWorksheet.mutateAsync({
+//         title: worksheet?.title ?? "",
+//         totalMarks: calculateTotalMarks(),
+//         version: version,
+//         profileId: worksheet?.profileId ?? "",
+//         worksheetId: worksheet?.id ?? "",
+//         questions: createQuestionsPayload(),
+//       }),
+//       {
+//         pending: "Publishing Worksheet",
+//         success: "Worksheet Published 👌",
+//         error: "Error in Worksheet Publishing 🤯",
+//       }
+//     );
+//   };
 
-  //Publishing the worksheet
-  const publishWorksheet = () => {
-    void toast.promise(
-      createWorksheet.mutateAsync({
-        title: worksheet?.title ?? "",
-        totalMarks: calculateTotalMarks(),
-        version: version,
-        profileId: worksheet?.profileId ?? "",
-        worksheetId: worksheet?.id ?? "",
-        questions: createQuestionsPayload(),
-      }),
-      {
-        pending: "Publishing Worksheet",
-        success: "Worksheet Published 👌",
-        error: "Error in Worksheet Publishing 🤯",
-      }
-    );
-  };
-
-  return (
-    <>
-      {/* <Dialog
-        id={dialogId}
-        openContainer={
-          <label htmlFor={dialogId} className="btn-primary btn text-lg">
-            Publish
-          </label>
-        }
-        body={
-          <>
-            <h3 className="mb-4 text-2xl font-bold">Publish Worksheet</h3>
-            <h4 className="mb-2">
-              Note: Future students answering will use the latest version of
-              worksheet
-            </h4>
-            <p className="mb-6">
-              Are you sure you want to publish this worksheet version?
-            </p>
-          </>
-        }
-        actions={
-          <>
-            <label htmlFor={dialogId} className="btn-ghost btn">
-              Cancel
-            </label>
-            <label
-              htmlFor={dialogId}
-              className="btn-success btn"
-              onClick={publishWorksheet}
-            >
-              Publish
-            </label>
-          </>
-        }
-      /> */}
-    </>
-  );
-};
+//   return (
+//     <>
+//       {/* <Dialog
+//         id={dialogId}
+//         openContainer={
+//           <label htmlFor={dialogId} className="btn-primary btn text-lg">
+//             Publish
+//           </label>
+//         }
+//         body={
+//           <>
+//             <h3 className="mb-4 text-2xl font-bold">Publish Worksheet</h3>
+//             <h4 className="mb-2">
+//               Note: Future students answering will use the latest version of
+//               worksheet
+//             </h4>
+//             <p className="mb-6">
+//               Are you sure you want to publish this worksheet version?
+//             </p>
+//           </>
+//         }
+//         actions={
+//           <>
+//             <label htmlFor={dialogId} className="btn-ghost btn">
+//               Cancel
+//             </label>
+//             <label
+//               htmlFor={dialogId}
+//               className="btn-success btn"
+//               onClick={publishWorksheet}
+//             >
+//               Publish
+//             </label>
+//           </>
+//         }
+//       /> */}
+//     </>
+//   );
+// };

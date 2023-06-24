@@ -120,10 +120,10 @@ export const publishedWorksheetRouter = createTRPCRouter({
             multipleChoiceQuestion: z
               .object({
                 create: z.object({
-                  text: z.string().optional(),
-                  explanation: z.string().optional(),
+                  text: z.string(),
+                  explanation: z.string(),
                   marks: z.number(),
-                  answer: z.number().optional(),
+                  answer: z.number(),
                   choices: z.object({
                     create: z.array(
                       z.object({
@@ -135,23 +135,23 @@ export const publishedWorksheetRouter = createTRPCRouter({
                 }),
               })
               .optional(),
-            shortAnswerQuestion: z
-              .object({
-                create: z.object({
-                  text: z.string().optional(),
-                  explanation: z.string().optional(),
-                  marks: z.number(),
-                  answer: z.string().optional(),
-                }),
-              })
-              .optional(),
+            // shortAnswerQuestion: z
+            //   .object({
+            //     create: z.object({
+            //       text: z.string().optional(),
+            //       explanation: z.string().optional(),
+            //       marks: z.number(),
+            //       answer: z.string().optional(),
+            //     }),
+            //   })
+            //   .optional(),
             longAnswerQuestion: z
               .object({
                 create: z.object({
-                  text: z.string().optional(),
-                  explanation: z.string().optional(),
+                  text: z.string(),
                   marks: z.number(),
-                  sampleAnswer: z.string().optional(),
+                  markingScheme: z.array(z.string()),
+                  sampleAnswer: z.string(),
                 }),
               })
               .optional(),

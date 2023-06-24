@@ -214,7 +214,7 @@ model ShortAnswerQuestion {
     id                  String          @id @default(cuid())
     text                String          @db.Text
     images              Image[]
-    markingScheme       Json            @default("[]") 
+    answer              String
     marks               Int    
     parentQuestionId    String
     parentQuestion      ParentQuestion?  @relation(fields: [parentQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)

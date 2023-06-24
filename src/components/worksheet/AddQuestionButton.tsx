@@ -92,7 +92,6 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
         order: order,
         worksheetId: id,
         text: "This is the question text for the question. Please edit this.",
-        explanation: "",
         marks: 1,
         sampleAnswer: "This is the sample answer for feedback to student",
       }),
