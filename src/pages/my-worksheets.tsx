@@ -12,12 +12,13 @@ import {
   DeleteWorksheetButton,
 } from "@/components/worksheet/WorksheetDialogs";
 import { Button } from "@/components/ui/button";
+import TopNavLayout from "@/components/TopNavLayout";
 
 // https://github.com/jherr/notetaker
 
 const MyWorksheets: NextPage = () => {
   return (
-    <>
+    <TopNavLayout>
       <div className="flex items-center justify-between">
         <h1 className="text-4xl">My Worksheets</h1>
         <div className="flex gap-4">
@@ -32,7 +33,7 @@ const MyWorksheets: NextPage = () => {
       </div>
 
       <WorksheetList />
-    </>
+    </TopNavLayout>
   );
 };
 

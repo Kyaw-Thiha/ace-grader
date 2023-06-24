@@ -3,10 +3,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
+import TopNavLayout from "@/components/TopNavLayout";
 
 const Home: NextPage = () => {
   return (
-    <>
+    <TopNavLayout>
       <div className="bg-base-200 min-h-screen">
         <div className="flex flex-col-reverse gap-8 lg:flex-row">
           <div className="flex flex-col justify-center">
@@ -40,7 +41,7 @@ const Home: NextPage = () => {
           />
         </div>
       </div>
-    </>
+    </TopNavLayout>
   );
 };
 

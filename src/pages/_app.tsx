@@ -8,10 +8,8 @@ import TopNavLayout from "@/components/TopNavLayout";
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <ClerkProvider {...pageProps}>
-      <TopNavLayout>
-        <Component {...pageProps} />
-        <Toast />
-      </TopNavLayout>
+      <Component {...pageProps} />
+      <Toast />
     </ClerkProvider>
   );
 };

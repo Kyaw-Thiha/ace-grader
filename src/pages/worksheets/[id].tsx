@@ -14,6 +14,9 @@ import {
   DeleteQuestionButton,
   PublishWorksheetButton,
 } from "@/components/worksheet/QuestionDialogs";
+import Head from "next/head";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const WorksheetEditor: NextPage = () => {
   const router = useRouter();
@@ -24,8 +27,9 @@ const WorksheetEditor: NextPage = () => {
     <>
       {isReady ? (
         <>
-          <WorksheetHeader worksheetId={id as string} />
-          <QuestionList worksheetId={id as string} />
+          <WorksheetLayout worksheetId={id as string}>
+            <QuestionList worksheetId={id as string} />
+          </WorksheetLayout>
         </>
       ) : (
         <></>
@@ -39,9 +43,13 @@ export default WorksheetEditor;
 // https://www.npmjs.com/package/react-autosave
 interface WorksheetHeaderProps {
   worksheetId: string;
+  children: React.ReactNode;
 }
 
-const WorksheetHeader: React.FC<WorksheetHeaderProps> = ({ worksheetId }) => {
+const WorksheetLayout: React.FC<WorksheetHeaderProps> = ({
+  worksheetId,
+  children,
+}) => {
   const [title, setTitle] = useState("");
 
   //Fetching the worksheet
@@ -70,7 +78,34 @@ const WorksheetHeader: React.FC<WorksheetHeaderProps> = ({ worksheetId }) => {
 
   return (
     <>
-      <div className="navbar">
+      <Head>
+        <title>Smart Grader</title>
+        <meta
+          name="description"
+          content="A website where teachers can automate their workflow"
+        />
+      </Head>
+      <div className="flex min-h-screen flex-col">
+        <header className="border-b">
+          <nav className="container mx-auto flex justify-between px-4 py-4">
+            <input
+              type="text"
+              placeholder="Type here"
+              className="input-bordered input w-full max-w-xs"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <PublishWorksheetButton
+              worksheetId={worksheetId}
+              refetch={refetchWorksheet}
+            />
+          </nav>
+        </header>
+        <main className="container mx-auto flex-grow px-4 py-8">
+          {children}
+        </main>
+      </div>
+      {/* <div className="navbar">
         <div className="mt-4 flex-1">
           <input
             type="text"
@@ -86,7 +121,7 @@ const WorksheetHeader: React.FC<WorksheetHeaderProps> = ({ worksheetId }) => {
             refetch={refetchWorksheet}
           />
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
