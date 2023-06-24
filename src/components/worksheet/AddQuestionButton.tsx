@@ -1,6 +1,16 @@
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 import { api } from "@/utils/api";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   id: string;
@@ -109,11 +119,11 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
       dialogId: "create-multiple-choice-question",
       create: addMultipleChoiceQuestion,
     },
-    {
-      label: "Short Answer",
-      dialogId: "create-short-answer-question",
-      create: addShortAnswerQuestion,
-    },
+    // {
+    //   label: "Short Answer",
+    //   dialogId: "create-short-answer-question",
+    //   create: addShortAnswerQuestion,
+    // },
     {
       label: "Long Answer",
       dialogId: "create-long-answer-question",
@@ -123,7 +133,7 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
 
   return (
     <>
-      <div className="dropdown">
+      {/* <div className="dropdown">
         <label tabIndex={0} className="btn-ghost btn m-1">
           Add Question
         </label>
@@ -144,7 +154,26 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
             );
           })}
         </ul>
-      </div>
+      </div> */}
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Button className="w-[180px]">Add Question</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-[180px]">
+          <DropdownMenuLabel>Types</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          {questionTypes.map((questionType) => {
+            return (
+              <DropdownMenuItem
+                key={questionType.label}
+                onClick={() => questionType.create()}
+              >
+                {questionType.label}
+              </DropdownMenuItem>
+            );
+          })}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </>
   );
 };

@@ -4,7 +4,7 @@ import remarkMath from "remark-math";
 import supersub from "remark-supersub";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css"; // `rehype-katex` does not import the CSS for you
-import ReactTextareaAutosize from "react-textarea-autosize";
+import { AutosizeInput } from "@/components/ui/resize-input";
 
 interface Props {
   label: string;
@@ -31,14 +31,22 @@ const MarkdownEditor: React.FC<Props> = (props) => {
       {isEditing && !props.disabled ? (
         <div key="input" className="">
           <p className="text-slate-400">{props.label}</p>
-          <ReactTextareaAutosize
+          {/* <ReactTextareaAutosize
             placeholder="Type here"
-            className="input-bordered input w-[80vw] overflow-hidden py-4 transition-all"
+            className="w-[80vw] overflow-hidden py-4 transition-all"
             autoFocus
             value={props.text}
             onChange={props.onChange}
             onBlur={() => setIsEditing(false)}
-          ></ReactTextareaAutosize>
+          ></ReactTextareaAutosize> */}
+          <AutosizeInput
+            placeholder="Type here"
+            className="py-4"
+            autoFocus
+            value={props.text}
+            onChange={props.onChange}
+            onBlur={() => setIsEditing(false)}
+          />
         </div>
       ) : (
         <div

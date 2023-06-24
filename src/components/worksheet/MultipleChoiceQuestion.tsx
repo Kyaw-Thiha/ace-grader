@@ -2,8 +2,16 @@ import { useState } from "react";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import { useAutosave } from "react-autosave";
 import { api, type RouterOutputs } from "@/utils/api";
-import { convertIntegerToASCII } from "@/utils/helper";
+import { convertIntegerToASCII, convertASCIIToInteger } from "@/utils/helper";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 
@@ -126,21 +134,25 @@ const Answer: React.FC<Props> = (props) => {
   return (
     <>
       <p className="text-slate-400">Answer</p>
-      <div className="dropdown">
-        <label tabIndex={0} className="btn m-1">
-          {answer}
-        </label>
-        <ul
-          tabIndex={0}
-          className="dropdown-content menu rounded-box bg-base-100 w-52 p-2 shadow"
-        >
+      <Select
+        defaultValue={answer}
+        onValueChange={(val) => updateAnswer(convertASCIIToInteger(val))}
+      >
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder={answer} />
+        </SelectTrigger>
+        <SelectContent>
           {props.question?.choices.map((choice) => (
-            <li key={choice.index} onClick={() => updateAnswer(choice.index)}>
-              <a> {convertIntegerToASCII(choice.index)}</a>
-            </li>
+            <SelectItem
+              value={convertIntegerToASCII(choice.index)}
+              key={choice.index}
+              // onClick={() => updateAnswer(choice.index)}
+            >
+              {convertIntegerToASCII(choice.index)}
+            </SelectItem>
           ))}
-        </ul>
-      </div>
+        </SelectContent>
+      </Select>
     </>
   );
 };

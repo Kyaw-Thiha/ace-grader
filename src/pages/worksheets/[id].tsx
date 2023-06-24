@@ -17,6 +17,7 @@ import {
 import Head from "next/head";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Input } from "@/components/ui/input";
 
 const WorksheetEditor: NextPage = () => {
   const router = useRouter();
@@ -88,13 +89,15 @@ const WorksheetLayout: React.FC<WorksheetHeaderProps> = ({
       <div className="flex min-h-screen flex-col">
         <header className="border-b">
           <nav className="container mx-auto flex justify-between px-4 py-4">
-            <input
-              type="text"
-              placeholder="Type here"
-              className="input-bordered input w-full max-w-xs"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
+            <div>
+              <Input
+                id="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="col-span-3"
+              />
+            </div>
+
             <PublishWorksheetButton
               worksheetId={worksheetId}
               refetch={refetchWorksheet}
@@ -105,23 +108,6 @@ const WorksheetLayout: React.FC<WorksheetHeaderProps> = ({
           {children}
         </main>
       </div>
-      {/* <div className="navbar">
-        <div className="mt-4 flex-1">
-          <input
-            type="text"
-            placeholder="Type here"
-            className="input-bordered input w-full max-w-xs"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </div>
-        <div className="">
-          <PublishWorksheetButton
-            worksheetId={worksheetId}
-            refetch={refetchWorksheet}
-          />
-        </div>
-      </div> */}
     </>
   );
 };
@@ -166,7 +152,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
     );
   } else {
     return (
-      <div className="mt-4" ref={parent}>
+      <div className="mb-40 mt-4" ref={parent}>
         {questions?.map((question) => (
           <div key={question.id} className="my-4 md:mx-8 md:rounded-md">
             <div className="bg-slate-50 shadow-sm">
@@ -221,7 +207,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
             </div> */}
           </div>
         ))}
-        <div className="flex h-64 justify-center">
+        <div className="flex justify-center">
           <AddQuestionButton
             id={worksheetId}
             order={(questions?.length ?? 0) + 1}
