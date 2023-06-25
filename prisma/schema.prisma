@@ -230,6 +230,7 @@ model LongAnswerQuestion {
     text                String      @db.Text
     images              Image[]
     sampleAnswer        String      @db.MediumText
+    explanation         String      @db.MediumText
     markingScheme       Json        @default("[]")  
     marks               Int    
     parentQuestionId    String?

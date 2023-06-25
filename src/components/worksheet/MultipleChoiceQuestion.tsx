@@ -5,6 +5,7 @@ import { api, type RouterOutputs } from "@/utils/api";
 import { convertIntegerToASCII, convertASCIIToInteger } from "@/utils/helper";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
 
+import { Bot } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -12,6 +13,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { AutosizeInput } from "@/components/ui/resize-input";
+import { Button } from "@/components/ui/button";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 
@@ -69,11 +73,22 @@ const Text: React.FC<Props> = (props) => {
   });
 
   return (
-    <MarkdownEditor
-      text={text}
-      label="Question"
-      onChange={(e) => setText(e.target.value)}
-    />
+    // <MarkdownEditor
+    //   text={text}
+    //   label="Question"
+    //   onChange={(e) => setText(e.target.value)}
+    // />
+    <div>
+      <p className="text-slate-400">Question</p>
+      <AutosizeInput
+        placeholder="Type here"
+        className="mt-2 transition-all"
+        value={text}
+        onChange={(e) => {
+          setText(e.target.value);
+        }}
+      />
+    </div>
   );
 };
 
@@ -103,11 +118,20 @@ const Choice: React.FC<ChoiceProps> = (props) => {
   useAutosave({ data: text, onSave: updateText });
 
   return (
-    <div className="flex">
-      <MarkdownEditor
+    <div className="flex items-center justify-center gap-4">
+      {/* <MarkdownEditor
         text={text}
         label={convertIntegerToASCII(props.index)}
         onChange={(e) => setText(e.target.value)}
+      /> */}
+      <p className="text-slate-400">{convertIntegerToASCII(props.index)}</p>
+      <AutosizeInput
+        placeholder="Type here"
+        className="mt-2 transition-all"
+        value={text}
+        onChange={(e) => {
+          setText(e.target.value);
+        }}
       />
     </div>
   );
@@ -133,7 +157,7 @@ const Answer: React.FC<Props> = (props) => {
 
   return (
     <>
-      <p className="text-slate-400">Answer</p>
+      <p className="mb-2 text-slate-400">Answer</p>
       <Select
         defaultValue={answer}
         onValueChange={(val) => updateAnswer(convertASCIIToInteger(val))}
@@ -146,7 +170,6 @@ const Answer: React.FC<Props> = (props) => {
             <SelectItem
               value={convertIntegerToASCII(choice.index)}
               key={choice.index}
-              // onClick={() => updateAnswer(choice.index)}
             >
               {convertIntegerToASCII(choice.index)}
             </SelectItem>
@@ -179,10 +202,10 @@ const Marks: React.FC<Props> = (props) => {
   return (
     <>
       <p className="text-slate-400">Marks</p>
-      <input
+      <Input
         type="text"
         placeholder="Type here"
-        className="input-bordered input w-14 bg-gray-700 text-white transition-all"
+        className="mt-2 w-14 transition-all"
         value={marks.toString()}
         onChange={(e) => {
           setMarks(e.target.value);
@@ -216,10 +239,26 @@ const Explanation: React.FC<Props> = (props) => {
   });
 
   return (
-    <MarkdownEditor
-      text={explanation}
-      label="Explanation"
-      onChange={(e) => setExplanation(e.target.value)}
-    />
+    // <MarkdownEditor
+    //   text={explanation}
+    //   label="Explanation"
+    //   onChange={(e) => setExplanation(e.target.value)}
+    // />
+    <div>
+      <p className="text-slate-400">Explanation</p>
+      <div className="mt-2 flex items-center justify-center gap-4">
+        <AutosizeInput
+          placeholder="Type here"
+          className="transition-all"
+          value={explanation}
+          onChange={(e) => {
+            setExplanation(e.target.value);
+          }}
+        />
+        <Button>
+          <Bot className="mr-2 h-4 w-4" /> Generate
+        </Button>
+      </div>
+    </div>
   );
 };

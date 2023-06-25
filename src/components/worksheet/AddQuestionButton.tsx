@@ -103,7 +103,6 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
         worksheetId: id,
         text: "This is the question text for the question. Please edit this.",
         marks: 1,
-        sampleAnswer: "This is the sample answer for feedback to student",
       }),
       {
         pending: "Creating Question",
@@ -156,7 +155,7 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
         </ul>
       </div> */}
       <DropdownMenu>
-        <DropdownMenuTrigger>
+        <DropdownMenuTrigger asChild>
           <Button className="w-[180px]">Add Question</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-[180px]">

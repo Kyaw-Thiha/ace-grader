@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { type NextPage } from "next";
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+  NextPage,
+} from "next";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { Autosave, useAutosave } from "react-autosave";
@@ -19,23 +23,24 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 
-const WorksheetEditor: NextPage = () => {
-  const router = useRouter();
-  const { isReady } = router;
-  const { id } = router.query;
+export function getServerSideProps(context: GetServerSidePropsContext) {
+  const id = context.params?.["id"];
+  const worksheetId = id as string;
 
+  return {
+    props: {
+      id: worksheetId,
+    },
+  };
+}
+
+const WorksheetEditor: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ id }) => {
   return (
-    <>
-      {isReady ? (
-        <>
-          <WorksheetLayout worksheetId={id as string}>
-            <QuestionList worksheetId={id as string} />
-          </WorksheetLayout>
-        </>
-      ) : (
-        <></>
-      )}
-    </>
+    <WorksheetLayout worksheetId={id}>
+      <QuestionList worksheetId={id} />
+    </WorksheetLayout>
   );
 };
 
@@ -72,6 +77,7 @@ const WorksheetLayout: React.FC<WorksheetHeaderProps> = ({
   });
   const updateTitle = () => {
     if (title != "") {
+      console.log("hello");
       editTitle.mutate({ id: worksheetId, title: title });
     }
   };
@@ -166,7 +172,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
                   />
                 </label>
               </div>
-              <div className="flex gap-4 px-2 py-12 md:gap-8 md:px-16 md:py-16">
+              <div className="px-2 py-12 md:px-16 md:py-16">
                 <p className="my-2 text-3xl text-slate-400">
                   {question.order}.
                 </p>

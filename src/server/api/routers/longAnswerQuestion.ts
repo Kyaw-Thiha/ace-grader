@@ -24,8 +24,10 @@ export const longAnswerQuestionRouter = createTRPCRouter({
         worksheetId: z.string().optional(),
         publishedWorksheetId: z.string().optional(),
         text: z.string().optional(),
+        markingScheme: z.array(z.string()).optional(),
         marks: z.number().optional(),
         sampleAnswer: z.string().optional(),
+        explanation: z.string().optional(),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -39,7 +41,9 @@ export const longAnswerQuestionRouter = createTRPCRouter({
             create: {
               text: input.text ?? "",
               marks: input.marks ?? 1,
+              markingScheme: input.markingScheme ?? [],
               sampleAnswer: input.sampleAnswer ?? "",
+              explanation: input.explanation ?? "",
             },
           },
         },
@@ -78,6 +82,24 @@ export const longAnswerQuestionRouter = createTRPCRouter({
         },
         data: {
           markingScheme: input.markingScheme,
+        },
+      });
+    }),
+
+  editExplanation: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        explanation: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.longAnswerQuestion.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          explanation: input.explanation,
         },
       });
     }),

@@ -8,8 +8,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 import { type RouterOutputs, api } from "@/utils/api";
 import { X } from "lucide-react";
@@ -195,7 +193,9 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
               marks: question.longAnswerQuestion?.marks ?? 1,
               markingScheme: question.longAnswerQuestion
                 ?.markingScheme as string[],
+                explanation: question.longAnswerQuestion?.explanation ?? "",
               sampleAnswer: question.longAnswerQuestion?.sampleAnswer ?? "",
+              
             },
           },
         });

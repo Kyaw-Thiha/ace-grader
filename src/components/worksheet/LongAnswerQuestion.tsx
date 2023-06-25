@@ -4,6 +4,21 @@ import { useAutosave } from "react-autosave";
 import { api, type RouterOutputs } from "@/utils/api";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
 
+import { Bot } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { toast } from "react-toastify";
+import { Input } from "@/components/ui/input";
+import { AutosizeInput } from "@/components/ui/resize-input";
+
 type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
 
 interface Props {
@@ -13,11 +28,12 @@ interface Props {
 
 const LongAnswerQuestion: React.FC<Props> = (props) => {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 px-12">
       <Text question={props.question} refetch={props.refetch} />
-      <SampleAnswer question={props.question} refetch={props.refetch} />
       <Marks question={props.question} refetch={props.refetch} />
+      <MarkingScheme question={props.question} refetch={props.refetch} />
       <Explanation question={props.question} refetch={props.refetch} />
+      <SampleAnswer question={props.question} refetch={props.refetch} />
     </div>
   );
 };
@@ -43,11 +59,209 @@ const Text: React.FC<Props> = (props) => {
   });
 
   return (
-    <MarkdownEditor
-      text={text}
-      label="Question"
-      onChange={(e) => setText(e.target.value)}
-    />
+    // <MarkdownEditor
+    //   text={text}
+    //   label="Question"
+    //   onChange={(e) => setText(e.target.value)}
+    // />
+    <div>
+      <p className="text-slate-400">Question</p>
+      <AutosizeInput
+        placeholder="Type here"
+        className="mt-2 transition-all"
+        value={text}
+        onChange={(e) => {
+          setText(e.target.value);
+        }}
+      />
+    </div>
+  );
+};
+
+const Marks: React.FC<Props> = (props) => {
+  const [marks, setMarks] = useState(props.question?.marks.toString() ?? "");
+
+  const editMarks = api.longAnswerQuestion.editMarks.useMutation({
+    onSuccess: () => {
+      void props.refetch();
+    },
+  });
+  const updateMarks = () => {
+    if (marks != "") {
+      const marksInt = parseInt(marks, 10);
+
+      if (marksInt > 0) {
+        editMarks.mutate({ id: props.question?.id ?? "", marks: marksInt });
+      }
+    }
+  };
+  useAutosave({ data: marks, onSave: updateMarks });
+
+  return (
+    <div>
+      <p className="text-slate-400">Marks</p>
+      <Input
+        placeholder="Type here"
+        className="mt-2 w-16 transition-all"
+        value={marks.toString()}
+        onChange={(e) => {
+          setMarks(e.target.value);
+        }}
+      />
+    </div>
+  );
+};
+
+const MarkingScheme: React.FC<Props> = (props) => {
+  const markingScheme = props.question?.markingScheme as string[];
+
+  return (
+    <div>
+      <p className="text-slate-400">Marking Scheme</p>
+      <div className="mt-2 flex flex-col gap-2">
+        {markingScheme.map((marking, index) => {
+          return <p key={index}>{marking}</p>;
+        })}
+      </div>
+      <div className="mt-4">
+        <MarkingSchemeForm question={props.question} refetch={props.refetch} />
+      </div>
+    </div>
+  );
+};
+
+const MarkingSchemeForm: React.FC<Props> = (props) => {
+  const [open, setOpen] = useState(false);
+  const [markingScheme, setMarkingScheme] = useState(
+    props.question?.markingScheme as string[]
+  );
+
+  const editMarkingScheme =
+    api.longAnswerQuestion.editMarkingScheme.useMutation({
+      onSuccess: () => {
+        void props.refetch();
+      },
+    });
+  const updateMarkingScheme = () => {
+    // Removing empty markings
+    const markingSchemeCopy = markingScheme.filter(
+      (str: string) => str.trim() !== ""
+    );
+    setMarkingScheme(markingSchemeCopy);
+
+    if (markingScheme.length != 0) {
+      setOpen(false);
+
+      void toast.promise(
+        editMarkingScheme.mutateAsync({
+          id: props.question?.id ?? "",
+          markingScheme: markingScheme,
+        }),
+        {
+          pending: "Editing Marking Scheme",
+          success: "Successful Editing 👌",
+          error: "Error in Editing 🤯",
+        }
+      );
+    } else {
+      toast.error("Marking scheme need to be defined.");
+    }
+  };
+
+  const handleOnChange = (index: number, text: string) => {
+    const markingSchemeCopy = [...markingScheme];
+    markingSchemeCopy[index] = text;
+    setMarkingScheme(markingSchemeCopy);
+  };
+
+  const addMarking = () => {
+    const markingSchemeCopy = [...markingScheme];
+    markingSchemeCopy.push("");
+    setMarkingScheme(markingSchemeCopy);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button>{markingScheme.length == 0 ? "Add" : "Edit"}</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit Marking Scheme</DialogTitle>
+          <DialogDescription>
+            <div className="mt-8 flex flex-col gap-4">
+              {markingScheme?.map((marking, index) => {
+                return (
+                  <Input
+                    key={index}
+                    value={marking}
+                    onChange={(e) => handleOnChange(index, e.target.value)}
+                  />
+                );
+              })}
+            </div>
+            <Button className="mt-4" onClick={addMarking}>
+              Add
+            </Button>
+          </DialogDescription>
+        </DialogHeader>
+
+        <DialogFooter>
+          <Button type="submit" onClick={() => updateMarkingScheme()}>
+            Save
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const Explanation: React.FC<Props> = (props) => {
+  const [explanation, setExplanation] = useState(
+    props.question?.explanation ?? ""
+  );
+
+  const editExplanation = api.longAnswerQuestion.editExplanation.useMutation({
+    onSuccess: () => {
+      void props.refetch();
+    },
+  });
+  const updateExplanation = () => {
+    if (explanation != "") {
+      editExplanation.mutate({
+        id: props.question?.id ?? "",
+        explanation: explanation,
+      });
+    }
+  };
+  useAutosave({
+    data: explanation,
+    onSave: updateExplanation,
+  });
+
+  return (
+    // <MarkdownEditor
+    //   text={explanation}
+    //   label="Explanation"
+    //   onChange={(e) => setExplanation(e.target.value)}
+    // />
+    <div>
+      <p className="text-slate-400">Explanation</p>
+
+      <div className="mt-2 flex items-center justify-center gap-4">
+        <AutosizeInput
+          placeholder="Type here"
+          className="transition-all"
+          value={explanation}
+          onChange={(e) => {
+            setExplanation(e.target.value);
+          }}
+        />
+        <Button>
+          <Bot className="mr-2 h-4 w-4" /> Generate
+        </Button>
+      </div>
+    </div>
   );
 };
 
@@ -72,77 +286,27 @@ const SampleAnswer: React.FC<Props> = (props) => {
   useAutosave({ data: sampleAnswer, onSave: updateSampleAnswer });
 
   return (
-    <MarkdownEditor
-      text={sampleAnswer}
-      label="Sample Answer"
-      onChange={(e) => setSampleAnswer(e.target.value)}
-    />
-  );
-};
+    // <MarkdownEditor
+    //   text={sampleAnswer}
+    //   label="Sample Answer"
+    //   onChange={(e) => setSampleAnswer(e.target.value)}
+    // />
+    <div>
+      <p className="text-slate-400">Sample Answer</p>
 
-const Marks: React.FC<Props> = (props) => {
-  const [marks, setMarks] = useState(props.question?.marks.toString() ?? "");
-
-  const editMarks = api.longAnswerQuestion.editMarks.useMutation({
-    onSuccess: () => {
-      void props.refetch();
-    },
-  });
-  const updateMarks = () => {
-    if (marks != "") {
-      const marksInt = parseInt(marks, 10);
-
-      if (marksInt > 0) {
-        editMarks.mutate({ id: props.question?.id ?? "", marks: marksInt });
-      }
-    }
-  };
-  useAutosave({ data: marks, onSave: updateMarks });
-
-  return (
-    <>
-      <p className="text-slate-400">Marks</p>
-      <input
-        type="text"
-        placeholder="Type here"
-        className="input-bordered input w-14 bg-gray-700 text-white transition-all"
-        value={marks.toString()}
-        onChange={(e) => {
-          setMarks(e.target.value);
-        }}
-      />
-    </>
-  );
-};
-
-const Explanation: React.FC<Props> = (props) => {
-  const [explanation, setExplanation] = useState(
-    props.question?.explanation ?? ""
-  );
-
-  const editText = api.longAnswerQuestion.editExplanation.useMutation({
-    onSuccess: () => {
-      void props.refetch();
-    },
-  });
-  const updateExplanation = () => {
-    if (explanation != "") {
-      editText.mutate({
-        id: props.question?.id ?? "",
-        explanation: explanation,
-      });
-    }
-  };
-  useAutosave({
-    data: explanation,
-    onSave: updateExplanation,
-  });
-
-  return (
-    <MarkdownEditor
-      text={explanation}
-      label="Explanation"
-      onChange={(e) => setExplanation(e.target.value)}
-    />
+      <div className="mt-2 flex items-center justify-center gap-4">
+        <AutosizeInput
+          placeholder="Type here"
+          className="transition-all"
+          value={sampleAnswer}
+          onChange={(e) => {
+            setSampleAnswer(e.target.value);
+          }}
+        />
+        <Button>
+          <Bot className="mr-2 h-4 w-4" /> Generate
+        </Button>
+      </div>
+    </div>
   );
 };
