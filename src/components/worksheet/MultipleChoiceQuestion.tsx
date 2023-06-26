@@ -16,6 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { AutosizeInput } from "@/components/ui/resize-input";
 import { Button } from "@/components/ui/button";
+import { toast } from "react-toastify";
+import { openaiAPI } from "@/server/openai/api";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 
@@ -219,6 +221,7 @@ const Explanation: React.FC<Props> = (props) => {
   const [explanation, setExplanation] = useState(
     props.question?.explanation ?? ""
   );
+  const [loading, setLoading] = useState(false);
 
   const editText = api.multipleChoiceQuestion.editExplanation.useMutation({
     onSuccess: () => {
@@ -238,6 +241,30 @@ const Explanation: React.FC<Props> = (props) => {
     onSave: updateExplanation,
   });
 
+  // Fetching openai's response for generating explanations
+  const fetchExplanation = async () => {
+    if (props.question?.text.trim() == "") {
+      toast.error("Question text cannot be blank");
+    } else if (
+      props.question?.choices.length == 0 ||
+      props.question?.choices.at(0)?.text == ""
+    ) {
+      toast.error("Choices need to be added");
+    } else if (props.question?.answer == 0) {
+      toast.error("Answer must be chosen");
+    } else if (props.question?.marks == 0) {
+      toast.error("Marks must be added");
+    } else {
+      setLoading(true);
+      // Fetching the explanation and updating it
+      const res = await openaiAPI.multipleChoiceQuestion.generateExplanation(
+        props.question
+      );
+      setExplanation(res.data.choices[0]?.text ?? "");
+      setLoading(false);
+    }
+  };
+
   return (
     // <MarkdownEditor
     //   text={explanation}
@@ -255,7 +282,7 @@ const Explanation: React.FC<Props> = (props) => {
             setExplanation(e.target.value);
           }}
         />
-        <Button>
+        <Button onClick={() => void fetchExplanation()} disabled={loading}>
           <Bot className="mr-2 h-4 w-4" /> Generate
         </Button>
       </div>

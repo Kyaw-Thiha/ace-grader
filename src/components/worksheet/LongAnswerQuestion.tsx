@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { Input } from "@/components/ui/input";
 import { AutosizeInput } from "@/components/ui/resize-input";
+import { openaiAPI } from "@/server/openai/api";
 
 type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
 
@@ -220,6 +221,7 @@ const Explanation: React.FC<Props> = (props) => {
   const [explanation, setExplanation] = useState(
     props.question?.explanation ?? ""
   );
+  const [loading, setLoading] = useState(false);
 
   const editExplanation = api.longAnswerQuestion.editExplanation.useMutation({
     onSuccess: () => {
@@ -239,6 +241,26 @@ const Explanation: React.FC<Props> = (props) => {
     onSave: updateExplanation,
   });
 
+  // Fetching openai's response for generating explanations
+  const fetchExplanation = async () => {
+    const markingScheme = props.question?.markingScheme as string[];
+    if (props.question?.text.trim() == "") {
+      toast.error("Question text cannot be blank");
+    } else if (markingScheme.length == 0 || markingScheme.at(0) == "") {
+      toast.error("Marking Scheme needs to be added");
+    } else if (props.question?.marks == 0) {
+      toast.error("Marks must be added");
+    } else {
+      setLoading(true);
+      // Fetching the explanation and updating it
+      const res = await openaiAPI.longAnswerQuestion.generateExplanation(
+        props.question
+      );
+      setExplanation(res.data.choices[0]?.text ?? "");
+      setLoading(false);
+    }
+  };
+
   return (
     // <MarkdownEditor
     //   text={explanation}
@@ -256,8 +278,9 @@ const Explanation: React.FC<Props> = (props) => {
           onChange={(e) => {
             setExplanation(e.target.value);
           }}
+          disabled={loading}
         />
-        <Button>
+        <Button onClick={() => void fetchExplanation()} disabled={loading}>
           <Bot className="mr-2 h-4 w-4" /> Generate
         </Button>
       </div>
@@ -269,6 +292,7 @@ const SampleAnswer: React.FC<Props> = (props) => {
   const [sampleAnswer, setSampleAnswer] = useState(
     props.question?.sampleAnswer ?? ""
   );
+  const [loading, setLoading] = useState(false);
 
   const editSampleAnswer = api.longAnswerQuestion.editSampleAnswer.useMutation({
     onSuccess: () => {
@@ -284,6 +308,26 @@ const SampleAnswer: React.FC<Props> = (props) => {
     }
   };
   useAutosave({ data: sampleAnswer, onSave: updateSampleAnswer });
+
+  // Fetching openai's response for generating sample answer
+  const fetchSampleAnswer = async () => {
+    const markingScheme = props.question?.markingScheme as string[];
+    if (props.question?.text.trim() == "") {
+      toast.error("Question text cannot be blank");
+    } else if (markingScheme.length == 0 || markingScheme.at(0) == "") {
+      toast.error("Marking Scheme needs to be added");
+    } else if (props.question?.marks == 0) {
+      toast.error("Marks must be added");
+    } else {
+      setLoading(true);
+      // Fetching the explanation and updating it
+      const res = await openaiAPI.longAnswerQuestion.generateSampleAnswer(
+        props.question
+      );
+      setSampleAnswer(res.data.choices[0]?.text ?? "");
+      setLoading(false);
+    }
+  };
 
   return (
     // <MarkdownEditor
@@ -302,8 +346,9 @@ const SampleAnswer: React.FC<Props> = (props) => {
           onChange={(e) => {
             setSampleAnswer(e.target.value);
           }}
+          disabled={loading}
         />
-        <Button>
+        <Button onClick={() => void fetchSampleAnswer()} disabled={loading}>
           <Bot className="mr-2 h-4 w-4" /> Generate
         </Button>
       </div>
