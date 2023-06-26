@@ -23,6 +23,7 @@ export const shortAnswerQuestionAnswerRouter = createTRPCRouter({
         order: z.number(),
         answerSheetId: z.string(),
         studentAnswer: z.string(),
+        feedback: z.string().optional(),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -33,7 +34,8 @@ export const shortAnswerQuestionAnswerRouter = createTRPCRouter({
           answerSheetId: input.answerSheetId,
           shortAnswerQuestionAnswer: {
             create: {
-              studentAnswer: input.studentAnswer,
+              studentAnswer: input.studentAnswer ?? "",
+              feedback: input.feedback ?? "",
             },
           },
         },

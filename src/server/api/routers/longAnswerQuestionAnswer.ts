@@ -23,7 +23,10 @@ export const longAnswerQuestionAnswerRouter = createTRPCRouter({
         order: z.number(),
         answerSheetId: z.string(),
         studentAnswer: z.string(),
-        studentImages: z.string(),
+        studentImages: z.array(
+          z.object({ url: z.string(), caption: z.string() })
+        ),
+        feedback: z.string().optional(),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -35,7 +38,10 @@ export const longAnswerQuestionAnswerRouter = createTRPCRouter({
           longAnswerQuestionAnswer: {
             create: {
               studentAnswer: input.studentAnswer,
-              studentImages: input.studentImages,
+              studentImages: {
+                create: input.studentImages,
+              },
+              feedback: input.feedback ?? "",
             },
           },
         },

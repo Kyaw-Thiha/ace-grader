@@ -151,6 +151,7 @@ export const publishedWorksheetRouter = createTRPCRouter({
                   text: z.string(),
                   marks: z.number(),
                   markingScheme: z.array(z.string()),
+                  explanation: z.string(),
                   sampleAnswer: z.string(),
                 }),
               })
