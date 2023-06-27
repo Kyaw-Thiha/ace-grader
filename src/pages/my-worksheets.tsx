@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 import { api } from "@/utils/api";
 import Loading from "@/components/Loading";
@@ -43,6 +44,8 @@ const WorksheetList: React.FC = () => {
   // Automatically animate the list add and delete
   const [parent, enableAnimations] = useAutoAnimate(/* optional config */);
 
+  const router = useRouter();
+
   //Fetching list of worksheets
   const {
     data: profiles,
@@ -56,21 +59,28 @@ const WorksheetList: React.FC = () => {
   const worksheets = profiles?.worksheets ?? [];
 
   // Fetching the corresponding latest published worksheet
-  const [copyWorksheetId, setCopyWorksheetId] = useState("");
+  const [chosenWorksheetId, setChosenWorksheetId] = useState("");
   const { data: worksheet, refetch: refetchPublishedWorksheet } =
     api.worksheet.getPublishedWorksheetLatestVersion.useQuery(
-      { id: copyWorksheetId },
+      { id: chosenWorksheetId },
       { enabled: false }
     );
 
+  const openDashboard = async (worksheetId: string) => {
+    setChosenWorksheetId(worksheetId);
+    const res = await refetchPublishedWorksheet();
+    const publishedWorksheetId = res.data?.publishedWorksheets.at(0)?.id ?? "";
+
+    await router.push(`/published-worksheets/${publishedWorksheetId}`);
+  };
+
   const copyLink = async (worksheetId: string) => {
-    setCopyWorksheetId(worksheetId);
-    await refetchPublishedWorksheet();
+    setChosenWorksheetId(worksheetId);
+    const res = await refetchPublishedWorksheet();
+    const publishedWorksheetId = res.data?.publishedWorksheets.at(0)?.id ?? "";
 
     void navigator.clipboard.writeText(
-      `${window.location.origin}/published-worksheets/${
-        worksheet?.publishedWorksheets.at(0)?.id ?? ""
-      }`
+      `${window.location.origin}/published-worksheets/${publishedWorksheetId}`
     );
 
     toast.success("Link copied to your clipboard");
@@ -110,22 +120,28 @@ const WorksheetList: React.FC = () => {
                   {worksheet.title}
                 </h2>
                 <h3>
-                  {" "}
-                  {`Last Edited: ${worksheet.lastEdited.toLocaleDateString()}`}{" "}
+                  {`Last Edited: ${worksheet.lastEdited.toLocaleDateString()}`}
                 </h3>
               </div>
             </Link>
 
-            <div className="mx-4 flex items-center justify-center">
-              {worksheet.publishedWorksheets.length > 0 && (
+            <div className="mx-4 flex items-center justify-center gap-2">
+              {/* {worksheet.publishedWorksheets.length > 0 && (
                 <button
                   className="btn-primary btn-outline btn-circle btn text-xl"
                   onClick={() => void copyLink(worksheet.id)}
                 >
                   🔗
                 </button>
+              )} */}
+              {worksheet.publishedWorksheets.length > 0 && (
+                <Button
+                  variant={"outline"}
+                  onClick={() => void openDashboard(worksheet.id)}
+                >
+                  Dashboard
+                </Button>
               )}
-
               <DeleteWorksheetButton
                 worksheetId={worksheet.id}
                 worksheetTitle={worksheet.title}
