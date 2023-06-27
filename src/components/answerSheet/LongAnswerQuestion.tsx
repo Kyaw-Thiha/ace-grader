@@ -1,11 +1,11 @@
 import { useState } from "react";
-import MarkdownEditor from "@components/MarkdownEditor";
+import MarkdownEditor from "@/components/MarkdownEditor";
 import { useAutosave } from "react-autosave";
-import { api, type RouterOutputs } from "@utils/api";
+import { api, type RouterOutputs } from "@/utils/api";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
 import Explanation from "./Explanation";
-import { AnswerSheetStatus } from "@utils/interface";
-import MarkdownText from "@components/MarkdownText";
+import type { AnswerSheetStatus } from "@/utils/interface";
+import MarkdownText from "@/components/MarkdownText";
 
 type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
 type LongAnswerQuestionAnswer =
@@ -102,7 +102,7 @@ const SampleAnswer: React.FC<Props> = (props) => {
 
   if (showSampleAnswer) {
     return (
-      <div className="collapse-arrow collapse border border-base-300 bg-base-100 transition-all">
+      <div className="collapse-arrow border-base-300 bg-base-100 collapse border transition-all">
         <input type="checkbox" />
         <div className="collapse-title text-xl font-medium text-slate-800">
           Sample Answer

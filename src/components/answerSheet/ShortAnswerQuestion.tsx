@@ -1,10 +1,10 @@
 import { useState } from "react";
-import MarkdownEditor from "@components/MarkdownEditor";
+import MarkdownEditor from "@/components/MarkdownEditor";
 import { useAutosave } from "react-autosave";
-import { api, type RouterOutputs } from "@utils/api";
+import { api, type RouterOutputs } from "@/utils/api";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
-import MarkdownText from "@components/MarkdownText";
-import { type AnswerSheetStatus } from "@utils/interface";
+import MarkdownText from "@/components/MarkdownText";
+import { type AnswerSheetStatus } from "@/utils/interface";
 import Explanation from "./Explanation";
 
 type ShortAnswerQuestion = RouterOutputs["shortAnswerQuestion"]["get"];
@@ -101,7 +101,7 @@ const CorrectAnswer: React.FC<Props> = (props) => {
   if (showCorrectAnswer) {
     return (
       <div className="mt-8">
-        <div className="inline-block min-w-[80vw] rounded-lg border-2 border-slate-400 py-1 px-4">
+        <div className="inline-block min-w-[80vw] rounded-lg border-2 border-slate-400 px-4 py-1">
           <div className=" text-md text-slate-400">Correct Answer</div>
           <MarkdownText text={props.question?.answer ?? ""} />
         </div>

@@ -1,6 +1,6 @@
-import { type RouterOutputs } from "@utils/api";
-import { type AnswerSheetStatus } from "@utils/interface";
-import MarkdownText from "@components/MarkdownText";
+import { type RouterOutputs } from "@/utils/api";
+import { type AnswerSheetStatus } from "@/utils/interface";
+import MarkdownText from "@/components/MarkdownText";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 type ShortAnswerQuestion = RouterOutputs["shortAnswerQuestion"]["get"];
@@ -34,7 +34,7 @@ const Explanation: React.FC<Props> = (props) => {
 
   if (showExplanation) {
     return (
-      <div className="collapse-arrow collapse border border-base-300 bg-base-100">
+      <div className="collapse-arrow border-base-300 bg-base-100 collapse border">
         <input type="checkbox" />
         <div className="collapse-title text-xl font-medium text-slate-800">
           Explanation

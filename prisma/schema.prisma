@@ -215,6 +215,7 @@ model ShortAnswerQuestion {
     text                String          @db.Text
     images              Image[]
     answer              String
+    explanation         String
     marks               Int    
     parentQuestionId    String
     parentQuestion      ParentQuestion?  @relation(fields: [parentQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)

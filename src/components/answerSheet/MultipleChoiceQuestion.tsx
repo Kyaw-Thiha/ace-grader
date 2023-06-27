@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { api, type RouterOutputs } from "@utils/api";
-import { convertIntegerToASCII } from "@utils/helper";
+import { api, type RouterOutputs } from "@/utils/api";
+import { convertIntegerToASCII } from "@/utils/helper";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
-import MarkdownText from "@components/MarkdownText";
-import { type AnswerSheetStatus } from "@utils/interface";
+import MarkdownText from "@/components/MarkdownText";
+import { type AnswerSheetStatus } from "@/utils/interface";
 import Explanation from "./Explanation";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
