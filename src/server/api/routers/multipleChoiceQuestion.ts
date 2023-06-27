@@ -26,7 +26,7 @@ export const multipleChoiceQuestionRouter = createTRPCRouter({
         order: z.number(),
         worksheetId: z.string().optional(),
         publishedWorksheetId: z.string().optional(),
-        text: z.string().optional(),
+        text: z.string(),
         explanation: z.string().optional(),
         marks: z.number().optional(),
         answer: z.number().optional(),
@@ -54,7 +54,7 @@ export const multipleChoiceQuestionRouter = createTRPCRouter({
           multipleChoiceQuestion: {
             create: {
               text: input.text,
-              explanation: input.explanation,
+              explanation: input.explanation ?? "",
               marks: input.marks ?? 1,
               answer: input.answer ?? 0,
               choices: {
