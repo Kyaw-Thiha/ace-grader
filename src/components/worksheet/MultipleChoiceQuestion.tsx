@@ -249,6 +249,18 @@ const Explanation: React.FC<Props> = (props) => {
 
   // Fetching openai's response for generating explanations
   const fetchExplanation = async () => {
+    // Fetching the explanation and updating it
+    const res = await openaiAPI.multipleChoiceQuestion.generateExplanation(
+      props.question
+    );
+    const data = res.data.choices[0]?.text ?? "";
+    // Remove the first character as it is either empty space or \n
+    const explanationResponse = data.slice(1);
+    setExplanation(explanationResponse);
+  };
+
+  // Generating explanation from openai
+  const generateExplanation = () => {
     if (props.question?.text.trim() == "") {
       toast.error("Question text cannot be blank");
     } else if (
@@ -262,11 +274,11 @@ const Explanation: React.FC<Props> = (props) => {
       toast.error("Marks must be added");
     } else {
       setLoading(true);
-      // Fetching the explanation and updating it
-      const res = await openaiAPI.multipleChoiceQuestion.generateExplanation(
-        props.question
-      );
-      setExplanation(res.data.choices[0]?.text ?? "");
+      void toast.promise(fetchExplanation, {
+        pending: "Generating Explanation",
+        success: "Explanation generated 👌",
+        error: "Error in explanation generation 🤯",
+      });
       setLoading(false);
     }
   };
@@ -289,7 +301,7 @@ const Explanation: React.FC<Props> = (props) => {
           }}
           disabled={loading}
         />
-        <Button onClick={() => void fetchExplanation()} disabled={loading}>
+        <Button onClick={() => generateExplanation()} disabled={loading}>
           <Bot className="mr-2 h-4 w-4" /> Generate
         </Button>
       </div>
