@@ -1,44 +1,66 @@
-import { type NextPage } from "next";
+import type {
+  NextPage,
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from "next";
 import { useRouter } from "next/router";
 import { api } from "@/utils/api";
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { toast } from "react-toastify";
-import { useUser } from "@clerk/nextjs";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
+import Head from "next/head";
+import { Button } from "@/components/ui/button";
 
-const Answer: NextPage = () => {
-  const router = useRouter();
-  const { isReady } = router;
-  const { id } = router.query;
+export function getServerSideProps(context: GetServerSidePropsContext) {
+  const id = context.params?.["id"];
+  const worksheetId = id as string;
 
-  const auth = useUser();
-  const isLoggedIn = auth.isSignedIn;
+  return {
+    props: {
+      id: worksheetId,
+    },
+  };
+}
 
+const Answer: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ id }) => {
   return (
     <>
-      <div className="navbar">
-        <Link href="/" className="btn-ghost btn text-2xl normal-case">
-          <Image
-            src="/images/logo-icon.png"
-            alt="Logo"
-            width="32"
-            height="32"
-          />
-          <h2 className="ml-2">SmartGrader</h2>
-        </Link>
+      <Head>
+        <title>Smart Grader</title>
+        <meta
+          name="description"
+          content="A website where teachers can automate their workflow"
+        />
+      </Head>
+      <div className="flex min-h-screen flex-col">
+        <header className="border-b">
+          <nav className="container mx-auto flex justify-between px-4 py-4">
+            <Button asChild className="flex gap-2 px-4 py-6" variant="outline">
+              <Link href="/">
+                <Image
+                  src="/images/logo-icon.png"
+                  alt="Logo"
+                  width="32"
+                  height="32"
+                />
+                <span className="text-2xl font-bold">SmartGrader</span>
+              </Link>
+            </Button>
+          </nav>
+        </header>
+        <main className="container mx-auto flex-grow px-4 py-8">
+          <SignedIn>
+            <RedirectIfUserCreatedWorksheet id={id} />
+          </SignedIn>
+          <SignedOut>
+            <StudentCredentialsForm id={id} />
+          </SignedOut>
+        </main>
       </div>
-      {isReady ? (
-        <>
-          {isLoggedIn ? (
-            <RedirectIfUserCreatedWorksheet id={id as string} />
-          ) : (
-            <StudentCredentialsForm id={id as string} />
-          )}
-        </>
-      ) : (
-        <></>
-      )}
     </>
   );
 };

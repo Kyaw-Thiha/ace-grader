@@ -1,7 +1,11 @@
-import { type NextPage } from "next";
+import type {
+  NextPage,
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useUser } from "@clerk/nextjs";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { api } from "@/utils/api";
 import Link from "next/link";
 import Image from "next/image";
@@ -11,45 +15,64 @@ import { type AnswerSheetStatus } from "@/utils/interface";
 import MultipleChoiceQuestion from "@/components/answerSheet/MultipleChoiceQuestion";
 import ShortAnswerQuestion from "@/components/answerSheet/ShortAnswerQuestion";
 import LongAnswerQuestion from "@/components/answerSheet/LongAnswerQuestion";
+import { Button } from "@/components/ui/button";
 
-const SampleAnswerSheet: NextPage = () => {
-  const router = useRouter();
-  const { isReady } = router;
-  const { id, answerSheetId } = router.query;
+export function getServerSideProps(context: GetServerSidePropsContext) {
+  const id = context.params?.["id"] as string;
 
-  const auth = useUser();
-  const isLoggedIn = auth.isSignedIn;
+  const answerSheetId = context.params?.["answerSheetId"] as string;
 
+  return {
+    props: {
+      id,
+      answerSheetId,
+    },
+  };
+}
+
+const SampleAnswerSheet: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ id, answerSheetId }) => {
   return (
     <>
-      <div className="navbar">
-        <Link href="/" className="btn-ghost btn text-2xl normal-case">
-          <Image
-            src="/images/logo-icon.png"
-            alt="Logo"
-            width="32"
-            height="32"
-          />
-          <h2 className="ml-2">SmartGrader</h2>
-        </Link>
-      </div>
-      {isReady ? (
-        <>
-          {isLoggedIn ? (
+      <Head>
+        <title>Smart Grader</title>
+        <meta
+          name="description"
+          content="A website where teachers can automate their workflow"
+        />
+      </Head>
+      <div className="flex min-h-screen flex-col">
+        <header className="border-b">
+          <nav className="container mx-auto flex justify-between px-4 py-4">
+            <Button asChild className="flex gap-2 px-4 py-6" variant="outline">
+              <Link href="/">
+                <Image
+                  src="/images/logo-icon.png"
+                  alt="Logo"
+                  width="32"
+                  height="32"
+                />
+                <span className="text-2xl font-bold">SmartGrader</span>
+              </Link>
+            </Button>
+          </nav>
+        </header>
+        <main className="container mx-auto flex-grow px-4 py-8">
+          <SignedIn>
             <CheckIfUserCreatedWorksheet
-              publishedWorksheetId={id as string}
-              answerSheedId={answerSheetId as string}
+              publishedWorksheetId={id}
+              answerSheedId={answerSheetId}
             />
-          ) : (
+          </SignedIn>
+          <SignedOut>
             <QuestionList
-              publishedWorksheetId={id as string}
-              answerSheedId={answerSheetId as string}
+              publishedWorksheetId={id}
+              answerSheedId={answerSheetId}
             />
-          )}
-        </>
-      ) : (
-        <></>
-      )}
+          </SignedOut>
+        </main>
+      </div>
     </>
   );
 };

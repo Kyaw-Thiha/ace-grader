@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import Head from "next/head";
-import { SignedOut, SignedIn, SignInButton, UserButton } from "@clerk/nextjs";
+import { SignedOut, SignedIn, UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
@@ -40,7 +40,7 @@ const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
                   width="32"
                   height="32"
                 />
-                <span className="text-2xl font-bold">SmartGrader</span>{" "}
+                <span className="text-2xl font-bold">SmartGrader</span>
               </Link>
             </Button>
 
