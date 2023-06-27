@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Head from "next/head";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
@@ -186,27 +187,24 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
         <section className="flex flex-col gap-4">
           <div className="flex items-center gap-4">
             <p>Name: </p>
-            <input
-              type="text"
+            <Input
               placeholder="Type your name"
-              className="input-bordered input"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div className="flex items-center gap-4">
             <p>Email: </p>
-            <input
+            <Input
               type="email"
               placeholder="Type your email"
-              className="input-bordered input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <button className="btn-primary btn mt-4" onClick={addAnswerSheet}>
+          <Button className="mt-4" onClick={addAnswerSheet}>
             Confirm
-          </button>
+          </Button>
         </section>
         <p className="mt-8 text-lg text-gray-800">
           The email will be used to store your answer sheet in real-time
