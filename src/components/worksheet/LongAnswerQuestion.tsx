@@ -50,7 +50,7 @@ const Text: React.FC<Props> = (props) => {
     },
   });
   const updateText = () => {
-    if (text != "") {
+    if (text != "" && text != props.question?.text) {
       editText.mutate({ id: props.question?.id ?? "", text: text });
     }
   };
@@ -88,7 +88,7 @@ const Marks: React.FC<Props> = (props) => {
     },
   });
   const updateMarks = () => {
-    if (marks != "") {
+    if (marks != "" && marks != props.question?.marks.toString()) {
       const marksInt = parseInt(marks, 10);
 
       if (marksInt > 0) {
@@ -229,7 +229,7 @@ const Explanation: React.FC<Props> = (props) => {
     },
   });
   const updateExplanation = () => {
-    if (explanation != "") {
+    if (explanation != "" && explanation != props.question?.explanation) {
       editExplanation.mutate({
         id: props.question?.id ?? "",
         explanation: explanation,
@@ -300,7 +300,7 @@ const SampleAnswer: React.FC<Props> = (props) => {
     },
   });
   const updateSampleAnswer = () => {
-    if (sampleAnswer != "") {
+    if (sampleAnswer != "" && sampleAnswer != props.question?.sampleAnswer) {
       editSampleAnswer.mutate({
         id: props.question?.id ?? "",
         sampleAnswer: sampleAnswer,

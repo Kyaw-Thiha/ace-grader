@@ -193,9 +193,8 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
               marks: question.longAnswerQuestion?.marks ?? 1,
               markingScheme: question.longAnswerQuestion
                 ?.markingScheme as string[],
-                explanation: question.longAnswerQuestion?.explanation ?? "",
+              explanation: question.longAnswerQuestion?.explanation ?? "",
               sampleAnswer: question.longAnswerQuestion?.sampleAnswer ?? "",
-              
             },
           },
         });

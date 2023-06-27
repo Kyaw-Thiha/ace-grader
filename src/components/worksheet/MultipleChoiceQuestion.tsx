@@ -65,7 +65,7 @@ const Text: React.FC<Props> = (props) => {
     },
   });
   const updateText = () => {
-    if (text != "") {
+    if (text != "" && text != props.question?.text) {
       editText.mutate({ id: props.question?.id ?? "", text: text });
     }
   };
@@ -108,7 +108,10 @@ const Choice: React.FC<ChoiceProps> = (props) => {
     },
   });
   const updateText = () => {
-    if (text != "") {
+    if (
+      text != "" &&
+      text != props.question?.choices.at(props.index - 1)?.text
+    ) {
       editText.mutate({
         multipleChoiceQuestionOptionId:
           props.question?.choices.at(props.index - 1)?.id ?? "",
@@ -152,7 +155,10 @@ const Answer: React.FC<Props> = (props) => {
   const updateAnswer = (answer: number) => {
     const answerText = convertIntegerToASCII(answer);
     setAnswer(answerText);
-    if (answerText != "") {
+    if (
+      answerText != "" &&
+      answerText != convertIntegerToASCII(props.question?.answer ?? 0)
+    ) {
       editAnswer.mutate({ id: props.question?.id ?? "", answer: answer });
     }
   };
@@ -191,7 +197,7 @@ const Marks: React.FC<Props> = (props) => {
     },
   });
   const updateMarks = () => {
-    if (marks != "") {
+    if (marks != "" && marks != props.question?.marks.toString()) {
       const marksInt = parseInt(marks, 10);
 
       if (marksInt > 0) {
@@ -229,7 +235,7 @@ const Explanation: React.FC<Props> = (props) => {
     },
   });
   const updateExplanation = () => {
-    if (explanation != "") {
+    if (explanation != "" && explanation != props.question?.explanation) {
       editText.mutate({
         id: props.question?.id ?? "",
         explanation: explanation,
@@ -281,6 +287,7 @@ const Explanation: React.FC<Props> = (props) => {
           onChange={(e) => {
             setExplanation(e.target.value);
           }}
+          disabled={loading}
         />
         <Button onClick={() => void fetchExplanation()} disabled={loading}>
           <Bot className="mr-2 h-4 w-4" /> Generate
