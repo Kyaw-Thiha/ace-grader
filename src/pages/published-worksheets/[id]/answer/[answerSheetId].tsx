@@ -16,6 +16,7 @@ import MultipleChoiceQuestion from "@/components/answerSheet/MultipleChoiceQuest
 import ShortAnswerQuestion from "@/components/answerSheet/ShortAnswerQuestion";
 import LongAnswerQuestion from "@/components/answerSheet/LongAnswerQuestion";
 import { Button } from "@/components/ui/button";
+import { SubmitAnswerDialog } from "@/components/answerSheet/SubmitAnswer";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"] as string;
@@ -223,6 +224,11 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
             order={(questions?.length ?? 0) + 1}
             refetch={refetchWorksheet}
           /> */}
+          <SubmitAnswerDialog
+            worksheetId={props.publishedWorksheetId}
+            answerSheetId={props.answerSheedId}
+            refetch={refetchAnswerSheet}
+          />
         </div>
       </div>
     );

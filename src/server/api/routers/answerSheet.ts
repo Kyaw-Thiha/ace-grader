@@ -5,6 +5,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
+import { checkAnswer } from "@/server/helpers/checkAnswer";
 
 export const answerSheetRouter = createTRPCRouter({
   get: publicProcedure
@@ -180,6 +181,17 @@ export const answerSheetRouter = createTRPCRouter({
           studentEmail: input.studentEmail,
         },
       });
+    }),
+
+  checkAnswer: publicProcedure
+    .input(
+      z.object({
+        worksheetId: z.string(),
+        answerSheetId: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return checkAnswer(ctx.prisma, input.worksheetId, input.answerSheetId);
     }),
 
   delete: publicProcedure

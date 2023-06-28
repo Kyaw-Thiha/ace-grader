@@ -158,20 +158,24 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
         answers.push({
           order: question.order,
           answerType: "MultipleChoiceQuestionAnswer" as AnswerType,
-          multipleChoiceQuestionAnswer: { create: { studentAnswer: 0 } },
+          multipleChoiceQuestionAnswer: {
+            create: { studentAnswer: 0, feedback: "" },
+          },
         });
       } else if (question.questionType == "ShortAnswerQuestion") {
         answers.push({
           order: question.order,
           answerType: "ShortAnswerQuestionAnswer" as AnswerType,
-          shortAnswerQuestionAnswer: { create: { studentAnswer: "" } },
+          shortAnswerQuestionAnswer: {
+            create: { studentAnswer: "", feedback: "" },
+          },
         });
       } else if (question.questionType == "LongAnswerQuestion") {
         answers.push({
           order: question.order,
           answerType: "LongAnswerQuestionAnswer" as AnswerType,
           longAnswerQuestionAnswer: {
-            create: { studentAnswer: "", studentImages: "" },
+            create: { studentAnswer: "", feedback: "" },
           },
         });
       }
