@@ -27,6 +27,7 @@ export const teacherProfileRouter = createTRPCRouter({
                 select: {
                   id: true,
                 },
+                orderBy: { createdTime: "desc" },
               },
             },
           },

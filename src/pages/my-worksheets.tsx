@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/router";
-
 import { api } from "@/utils/api";
+import { useRouter } from "next/router";
+import { Share2 } from "lucide-react";
+
 import Loading from "@/components/Loading";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { toast } from "react-toastify";
@@ -48,7 +49,7 @@ const WorksheetList: React.FC = () => {
 
   //Fetching list of worksheets
   const {
-    data: profiles,
+    data: profile,
     refetch: refetchProfiles,
     isLoading,
     isError,
@@ -56,7 +57,7 @@ const WorksheetList: React.FC = () => {
     undefined // no input
   );
 
-  const worksheets = profiles?.worksheets ?? [];
+  const worksheets = profile?.worksheets ?? [];
 
   // Fetching the corresponding latest published worksheet
   const [chosenWorksheetId, setChosenWorksheetId] = useState("");
@@ -67,20 +68,27 @@ const WorksheetList: React.FC = () => {
     );
 
   const openDashboard = async (worksheetId: string) => {
-    setChosenWorksheetId(worksheetId);
-    const res = await refetchPublishedWorksheet();
-    const publishedWorksheetId = res.data?.publishedWorksheets.at(0)?.id ?? "";
+    const worksheet = worksheets.find((obj) => {
+      return obj.id == worksheetId;
+    });
+    const latestPublishedWorksheet =
+      worksheet?.publishedWorksheets.at(0)?.id ?? "";
 
-    await router.push(`/published-worksheets/${publishedWorksheetId}`);
+    await router.push(`/published-worksheets/${latestPublishedWorksheet}`);
   };
 
-  const copyLink = async (worksheetId: string) => {
-    setChosenWorksheetId(worksheetId);
-    const res = await refetchPublishedWorksheet();
-    const publishedWorksheetId = res.data?.publishedWorksheets.at(0)?.id ?? "";
+  const copyLink = (worksheetId: string) => {
+    // setChosenWorksheetId(worksheetId);
+    // const res = await refetchPublishedWorksheet();
+    // const publishedWorksheetId = res.data?.publishedWorksheets.at(0)?.id ?? "";
+    const worksheet = worksheets.find((obj) => {
+      return obj.id == worksheetId;
+    });
+    const latestPublishedWorksheet =
+      worksheet?.publishedWorksheets.at(0)?.id ?? "";
 
     void navigator.clipboard.writeText(
-      `${window.location.origin}/published-worksheets/${publishedWorksheetId}`
+      `${window.location.origin}/published-worksheets/${latestPublishedWorksheet}`
     );
 
     toast.success("Link copied to your clipboard");
@@ -126,20 +134,21 @@ const WorksheetList: React.FC = () => {
             </Link>
 
             <div className="mx-4 flex items-center justify-center gap-2">
-              {/* {worksheet.publishedWorksheets.length > 0 && (
-                <button
-                  className="btn-primary btn-outline btn-circle btn text-xl"
-                  onClick={() => void copyLink(worksheet.id)}
-                >
-                  🔗
-                </button>
-              )} */}
               {worksheet.publishedWorksheets.length > 0 && (
                 <Button
                   variant={"outline"}
                   onClick={() => void openDashboard(worksheet.id)}
                 >
                   Dashboard
+                </Button>
+              )}
+
+              {worksheet.publishedWorksheets.length > 0 && (
+                <Button
+                  variant="outline"
+                  onClick={() => void copyLink(worksheet.id)}
+                >
+                  <Share2 className="h-4 w-4" />
                 </Button>
               )}
               <DeleteWorksheetButton
