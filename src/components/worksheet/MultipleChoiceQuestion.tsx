@@ -4,8 +4,10 @@ import { useAutosave } from "react-autosave";
 import { api, type RouterOutputs } from "@/utils/api";
 import { convertIntegerToASCII, convertASCIIToInteger } from "@/utils/helper";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { openaiAPI } from "@/server/openai/api";
 
-import { Bot } from "lucide-react";
+import { Bot, Sparkles, Wand } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -16,8 +18,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { AutosizeInput } from "@/components/ui/resize-input";
 import { Button } from "@/components/ui/button";
-import { toast } from "react-toastify";
-import { openaiAPI } from "@/server/openai/api";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 
@@ -301,9 +307,20 @@ const Explanation: React.FC<Props> = (props) => {
           }}
           disabled={loading}
         />
-        <Button onClick={() => generateExplanation()} disabled={loading}>
-          <Bot className="mr-2 h-4 w-4" /> Generate
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button onClick={() => generateExplanation()} disabled={loading}>
+                <Bot className="mr-2 h-4 w-4" /> Generate
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>
+                Let AI do its <Sparkles className="inline-block h-4 w-4" />
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </div>
   );

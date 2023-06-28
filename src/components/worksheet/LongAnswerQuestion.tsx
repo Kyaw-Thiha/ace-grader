@@ -3,8 +3,9 @@ import MarkdownEditor from "@/components/MarkdownEditor";
 import { useAutosave } from "react-autosave";
 import { api, type RouterOutputs } from "@/utils/api";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
+import { openaiAPI } from "@/server/openai/api";
+import { Bot, Sparkles } from "lucide-react";
 
-import { Bot } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -17,8 +18,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { Input } from "@/components/ui/input";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { AutosizeInput } from "@/components/ui/resize-input";
-import { openaiAPI } from "@/server/openai/api";
 
 type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
 
@@ -291,9 +297,24 @@ const Explanation: React.FC<Props> = (props) => {
           }}
           disabled={loading}
         />
-        <Button onClick={() => void generateExplanation()} disabled={loading}>
-          <Bot className="mr-2 h-4 w-4" /> Generate
-        </Button>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                onClick={() => void generateExplanation()}
+                disabled={loading}
+              >
+                <Bot className="mr-2 h-4 w-4" /> Generate
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>
+                Let AI do its <Sparkles className="inline-block h-4 w-4" />
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </div>
   );
@@ -371,9 +392,24 @@ const SampleAnswer: React.FC<Props> = (props) => {
           }}
           disabled={loading}
         />
-        <Button onClick={() => void generateSampleAnswer()} disabled={loading}>
-          <Bot className="mr-2 h-4 w-4" /> Generate
-        </Button>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                onClick={() => void generateSampleAnswer()}
+                disabled={loading}
+              >
+                <Bot className="mr-2 h-4 w-4" /> Generate
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>
+                Let AI do its <Sparkles className="inline-block h-4 w-4" />
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </div>
   );
