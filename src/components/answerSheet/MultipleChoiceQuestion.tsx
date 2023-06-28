@@ -6,6 +6,9 @@ import MarkdownText from "@/components/MarkdownText";
 import { type AnswerSheetStatus } from "@/utils/interface";
 import Explanation from "./Explanation";
 
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 type MultipleChoiceQuestionAnswer =
   RouterOutputs["multipleChoiceQuestionAnswer"]["get"];
@@ -80,7 +83,7 @@ const ChoiceGroup: React.FC<Props> = (props) => {
     if (props.status == "sample-teacherview") {
       // For the sample answer, automatically select the corrent choice
       if (index == props.question?.answer) {
-        className = className + " radio-success";
+        className = className + " border-green-400 text-green-600";
       }
     } else if (
       props.status == "checking-teacherview" ||
@@ -89,13 +92,13 @@ const ChoiceGroup: React.FC<Props> = (props) => {
     ) {
       if (index == props.question?.answer) {
         // For the correct answer, highlight the radio button as positive color
-        className = className + " radio-success";
+        className = className + " border-green-400 text-green-600";
       } else if (
         index != props.question?.answer &&
         index == props.answer?.studentAnswer
       ) {
         // If student chose the wrong answer, make the radio button have error color
-        className = className + " radio-error";
+        className = className + " border-red-400 text-red-500";
       }
     }
 
@@ -103,24 +106,53 @@ const ChoiceGroup: React.FC<Props> = (props) => {
   };
 
   return (
-    <div className="flex flex-col">
-      {props.question?.choices.map((choice) => (
-        <div key={choice.index} className="my-2">
-          <label className=" flex cursor-pointer flex-row gap-2">
-            <input
-              type="radio"
-              name={`multiple-choice-question-${props.question?.id ?? ""}`}
+    <>
+      {/* <div className="flex flex-col">
+        {props.question?.choices.map((choice) => (
+          <div key={choice.index} className="my-2">
+            <label className=" flex cursor-pointer flex-row gap-2">
+              <input
+                type="radio"
+                name={`multiple-choice-question-${props.question?.id ?? ""}`}
+                className={getRadioClass(choice.index)}
+                checked={chosenChoice == choice.index}
+                onChange={() => updateChoice(choice.index)}
+              />
+              <div className="flex flex-row gap-2 ">
+                <p className="text-xl">
+                  {convertIntegerToASCII(choice.index)})
+                </p>
+                <p className="text-lg">{choice.text}</p>
+              </div>
+            </label>
+          </div>
+        ))}
+      </div> */}
+      <RadioGroup
+        defaultValue={chosenChoice?.toString()}
+        disabled={props.status != "answering-studentview"}
+        onValueChange={(val) => {
+          () => updateChoice(parseInt(val));
+        }}
+      >
+        {props.question?.choices.map((choice) => (
+          <div key={choice.index} className="flex items-center space-x-2">
+            <RadioGroupItem
               className={getRadioClass(choice.index)}
-              checked={chosenChoice == choice.index}
-              onChange={() => updateChoice(choice.index)}
+              value={choice.index?.toString()}
+              id={choice.index?.toString()}
             />
-            <div className="flex flex-row gap-2 ">
-              <p className="text-xl">{convertIntegerToASCII(choice.index)})</p>
-              <p className="text-lg">{choice.text}</p>
-            </div>
-          </label>
-        </div>
-      ))}
-    </div>
+            <Label htmlFor={choice.index?.toString()}>
+              <div className="flex flex-row gap-2 font-normal">
+                <p className="text-xl">
+                  {convertIntegerToASCII(choice.index)})
+                </p>
+                <p className="text-lg">{choice.text}</p>
+              </div>
+            </Label>
+          </div>
+        ))}
+      </RadioGroup>
+    </>
   );
 };

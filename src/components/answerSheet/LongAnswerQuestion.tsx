@@ -6,6 +6,8 @@ import { type QueryObserverBaseResult } from "@tanstack/react-query";
 import Explanation from "./Explanation";
 import type { AnswerSheetStatus } from "@/utils/interface";
 import MarkdownText from "@/components/MarkdownText";
+import SampleAnswer from "./SampleAnswer";
+import { AutosizeInput } from "../ui/resize-input";
 
 type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
 type LongAnswerQuestionAnswer =
@@ -35,14 +37,13 @@ const LongAnswerQuestion: React.FC<Props> = (props) => {
         refetch={props.refetch}
         status={props.status}
       />
-      <div className="mt-8">
+      <div className="">
+        <Explanation question={props.question} status={props.status} />
         <SampleAnswer
           question={props.question}
           answer={props.answer}
-          refetch={props.refetch}
           status={props.status}
         />
-        <Explanation question={props.question} status={props.status} />
       </div>
     </div>
   );
@@ -69,50 +70,20 @@ const StudentAnswer: React.FC<Props> = (props) => {
   useAutosave({ data: answer, onSave: updateAnswer });
 
   return (
-    <MarkdownEditor
-      text={answer}
-      label="Answer"
+    // <MarkdownEditor
+    //   text={answer}
+    //   label="Answer"
+    //   disabled={props.status != "answering-studentview"}
+    //   outlined
+    //   onChange={(e) => setAnswer(e.target.value)}
+    // />
+    <AutosizeInput
+      minRows={4}
+      placeholder="Type here"
+      className="transition-all"
       disabled={props.status != "answering-studentview"}
-      outlined
+      value={answer}
       onChange={(e) => setAnswer(e.target.value)}
     />
   );
-};
-
-const SampleAnswer: React.FC<Props> = (props) => {
-  let showSampleAnswer = false;
-
-  if (props.status == "sample-teacherview") {
-    // Show the explanation if it is the sample answer
-    if (props.question?.sampleAnswer?.trim() != "") {
-      showSampleAnswer = true;
-    }
-  } else if (
-    props.status == "checking-teacherview" ||
-    props.status == "returned-studentview" ||
-    props.status == "returned-teacherview"
-  ) {
-    // Show explanation if teacher is checking or the answer sheet has been returned
-    if (props.question?.sampleAnswer?.trim() != "") {
-      showSampleAnswer = true;
-    }
-  } else {
-    showSampleAnswer = false;
-  }
-
-  if (showSampleAnswer) {
-    return (
-      <div className="collapse-arrow border-base-300 bg-base-100 collapse border transition-all">
-        <input type="checkbox" />
-        <div className="collapse-title text-xl font-medium text-slate-800">
-          Sample Answer
-        </div>
-        <div className="collapse-content">
-          <MarkdownText text={props.question?.sampleAnswer ?? ""} />
-        </div>
-      </div>
-    );
-  } else {
-    return <></>;
-  }
 };

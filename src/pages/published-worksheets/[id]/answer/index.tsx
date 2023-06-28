@@ -106,7 +106,7 @@ const QuestionList: React.FC<Props> = ({ publishedWorksheetId }) => {
         {questions?.map((question) => (
           <div key={question.id} className="my-4 md:mx-8 md:rounded-md">
             <div className="bg-slate-50 shadow-sm">
-              <div className="flex gap-4 px-2 py-12 md:gap-8 md:px-16 md:py-16">
+              <div className=" gap-4 px-2 py-12 md:gap-8 md:px-16 md:py-16">
                 <p className="my-2 text-3xl text-slate-400">
                   {question.order}.
                 </p>
