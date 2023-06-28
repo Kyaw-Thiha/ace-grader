@@ -80,6 +80,7 @@ export const answerSheetRouter = createTRPCRouter({
               .object({
                 create: z.object({
                   studentAnswer: z.number(),
+                  feedback: z.string(),
                 }),
               })
               .optional(),
@@ -87,6 +88,7 @@ export const answerSheetRouter = createTRPCRouter({
               .object({
                 create: z.object({
                   studentAnswer: z.string(),
+                  feedback: z.string(),
                 }),
               })
               .optional(),
@@ -94,7 +96,13 @@ export const answerSheetRouter = createTRPCRouter({
               .object({
                 create: z.object({
                   studentAnswer: z.string(),
-                  studentImages: z.string(),
+                  // studentImages: z.array(
+                  //   z.object({
+                  //     urL: z.string(),
+                  //     caption: z.string(),
+                  //   })
+                  // ),
+                  feedback: z.string(),
                 }),
               })
               .optional(),

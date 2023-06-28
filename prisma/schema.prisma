@@ -50,13 +50,10 @@ model Image {
     shortAnswerQuestion             ShortAnswerQuestion?    @relation(fields: [shortAnswerQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     longAnswerQuestionId            String? 
     longAnswerQuestion              LongAnswerQuestion?     @relation(fields: [longAnswerQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    longAnswerQuestionAnswerId      String? 
-    longAnswerQuestionAnswer        LongAnswerQuestionAnswer?     @relation(fields: [longAnswerQuestionAnswerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
    
     @@index([multipleChoiceQuestionId])
     @@index([shortAnswerQuestionId])
     @@index([longAnswerQuestionId])
-    @@index([longAnswerQuestionAnswerId])
 }
 
 //  Worksheet, Published Worksheet and Answer Sheet
@@ -290,7 +287,6 @@ model ShortAnswerQuestionAnswer {
 model LongAnswerQuestionAnswer {
     id                    String    @id @default(cuid())
     studentAnswer         String    @db.MediumText
-    studentImages         Image[]    
     feedback              String    @db.Text
     marks                 Int       @default(0)
     answerId              String    @unique 

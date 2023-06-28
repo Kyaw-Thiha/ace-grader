@@ -23,9 +23,9 @@ export const longAnswerQuestionAnswerRouter = createTRPCRouter({
         order: z.number(),
         answerSheetId: z.string(),
         studentAnswer: z.string(),
-        studentImages: z.array(
-          z.object({ url: z.string(), caption: z.string() })
-        ),
+        // studentImages: z.array(
+        //   z.object({ url: z.string(), caption: z.string() })
+        // ),
         feedback: z.string().optional(),
       })
     )
@@ -38,9 +38,9 @@ export const longAnswerQuestionAnswerRouter = createTRPCRouter({
           longAnswerQuestionAnswer: {
             create: {
               studentAnswer: input.studentAnswer,
-              studentImages: {
-                create: input.studentImages,
-              },
+              // studentImages: {
+              //   create: input.studentImages,
+              // },
               feedback: input.feedback ?? "",
             },
           },
