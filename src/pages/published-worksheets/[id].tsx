@@ -185,37 +185,39 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
   };
 
   return (
-    <div className="mt-8 flex items-center justify-center sm:mt-0 sm:min-h-screen">
-      <div className="flex min-w-full flex-col items-center justify-center rounded-none bg-slate-200 px-6 py-12 shadow-xl sm:min-w-[50vw] sm:rounded-lg">
-        <h2 className="mb-12 text-3xl">Student Credentials</h2>
-        <section className="flex flex-col gap-4">
-          <div className="flex items-center gap-4">
-            <p>Name: </p>
-            <Input
-              placeholder="Type your name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <div className="flex items-center gap-4">
-            <p>Email: </p>
-            <Input
-              type="email"
-              placeholder="Type your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <Button className="mt-4" onClick={addAnswerSheet}>
-            Confirm
-          </Button>
-        </section>
-        <p className="mt-8 text-lg text-gray-800">
-          The email will be used to store your answer sheet in real-time
-        </p>
-        <p className="text-lg text-gray-800">
-          and to contact you once the teacher has handed back the worksheet.
-        </p>
+    <div className="flex min-h-screen justify-center sm:min-h-[80vh]">
+      <div className="flex min-w-full flex-col items-center justify-center rounded-none bg-slate-200 px-6 py-4 shadow-xl md:py-12 lg:min-w-[50vw] lg:rounded-lg">
+        <div className="min-w-[30vw]">
+          <h2 className="mb-12 text-3xl">Student Credentials</h2>
+          <section className="flex flex-col gap-4">
+            <div className="flex items-center gap-4">
+              <p>Name: </p>
+              <Input
+                placeholder="Type your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div className="flex items-center gap-4">
+              <p>Email: </p>
+              <Input
+                type="email"
+                placeholder="Type your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <Button className="mt-4" onClick={addAnswerSheet}>
+              Confirm
+            </Button>
+          </section>
+          {/* <p className="mt-8 text-lg text-gray-800">
+            The email will be used to store your answer sheet in real-time
+          </p>
+          <p className="text-lg text-gray-800">
+            and to contact you once the teacher has handed back the worksheet.
+          </p> */}
+        </div>
       </div>
     </div>
   );

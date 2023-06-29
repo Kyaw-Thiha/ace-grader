@@ -5,6 +5,8 @@ const publicRoutes = [
   "/",
   "/sign-in",
   "/sign-up",
+  "/published-worksheets/:id",
+  "/published-worksheets/:id/answer/:answerSheetId",
   "/api(.*)",
   "/info(.*)",
   "/proxy(.*)",
