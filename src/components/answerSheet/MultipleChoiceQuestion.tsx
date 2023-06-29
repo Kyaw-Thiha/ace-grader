@@ -56,7 +56,7 @@ const ChoiceGroup: React.FC<Props> = (props) => {
 
   const editAnswer = api.multipleChoiceQuestionAnswer.editAnswer.useMutation({
     onSuccess: () => {
-      void props.refetch();
+      //void props.refetch();
     },
   });
 
@@ -69,6 +69,19 @@ const ChoiceGroup: React.FC<Props> = (props) => {
       setChosenChoice(index);
     }
   };
+
+  // /**
+  //  * Function to handle each change in radio value
+  //  *
+  //  * value format - {question id}_{choice index}
+  //  */
+  // const handleValueChange = (value: string) => {
+  //   const word = "_";
+  //   const lastIndex = value.lastIndexOf(word);
+  //   const substring = value.substring(lastIndex + word.length);
+
+  //   updateChoice(parseInt(substring));
+  // };
 
   /**
    * Function to determine the class names of each radio button.
@@ -129,20 +142,24 @@ const ChoiceGroup: React.FC<Props> = (props) => {
         ))}
       </div> */}
       <RadioGroup
-        defaultValue={chosenChoice?.toString()}
+        defaultValue={`${props.question?.id ?? ""}_${
+          chosenChoice?.toString() ?? ""
+        }`}
         disabled={props.status != "answering-studentview"}
-        onValueChange={(val) => {
-          () => updateChoice(parseInt(val));
-        }}
       >
         {props.question?.choices.map((choice) => (
           <div key={choice.index} className="flex items-center space-x-2">
             <RadioGroupItem
               className={getRadioClass(choice.index)}
-              value={choice.index?.toString()}
-              id={choice.index?.toString()}
+              value={`${props.question?.id ?? ""}_${choice.index?.toString()}`}
+              id={`${props.question?.id ?? ""}_${choice.index?.toString()}`}
+              onClick={() => updateChoice(choice.index)}
             />
-            <Label htmlFor={choice.index?.toString()}>
+            <Label
+              htmlFor={`${
+                props.question?.id ?? ""
+              }_${choice.index?.toString()}`}
+            >
               <div className="flex flex-row gap-2 font-normal">
                 <p className="text-xl">
                   {convertIntegerToASCII(choice.index)})

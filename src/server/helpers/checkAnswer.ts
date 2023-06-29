@@ -71,13 +71,12 @@ export const checkAnswer = async (
       });
     }
   }
-
   await markAsReturned(prisma, answerSheetId);
 };
 
 // Fetching the worksheet from the server
 const fetchWorksheet = (prisma: PrismaClient, worksheetId: string) => {
-  return prisma.worksheet.findFirst({
+  return prisma.publishedWorksheet.findFirst({
     where: {
       id: worksheetId,
     },

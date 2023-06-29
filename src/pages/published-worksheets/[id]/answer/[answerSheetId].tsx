@@ -218,7 +218,7 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
             </div> */}
           </div>
         ))}
-        <div className="flex h-64 justify-center">
+        <div className="mt-8 flex h-64 justify-center md:mx-8">
           {/* <AddQuestionButton
             id={worksheetId}
             order={(questions?.length ?? 0) + 1}
