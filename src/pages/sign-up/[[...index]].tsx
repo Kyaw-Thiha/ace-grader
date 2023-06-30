@@ -5,7 +5,7 @@ import TopNavLayout from "@/components/TopNavLayout";
 const SignUpPage: NextPage = () => {
   return (
     <TopNavLayout>
-      <div className="flex h-screen items-center justify-center">
+      <div className="mt-32 flex h-screen items-center justify-center">
         <SignUp />
       </div>
     </TopNavLayout>

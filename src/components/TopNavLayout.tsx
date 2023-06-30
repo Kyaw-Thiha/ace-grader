@@ -7,7 +7,10 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "SmartGrader",
-  description: "This is SmartGrader.",
+  description: `
+  SmartGrader is an innovative website software designed to streamline the daily tasks of teachers and enhance student learning. 
+  With our intelligent grading and feedback system, you can say goodbye to the tedious and time-consuming process of manually 
+  grading worksheets.`,
   icons: {
     icon: "/icon.png",
     shortcut: "/shortcut-icon.png",
@@ -26,7 +29,9 @@ const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
         <title>Smart Grader</title>
         <meta
           name="description"
-          content="A website where teachers can automate their workflow"
+          content="SmartGrader is an innovative website software designed to streamline the daily tasks of teachers and enhance student learning. 
+          With our intelligent grading and feedback system, you can say goodbye to the tedious and time-consuming process of manually 
+          grading worksheets."
         />
       </Head>
       <div className="flex min-h-screen flex-col">
