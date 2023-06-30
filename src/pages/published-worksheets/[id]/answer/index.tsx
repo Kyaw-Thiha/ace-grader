@@ -14,6 +14,7 @@ import ShortAnswerQuestion from "@/components/answerSheet/ShortAnswerQuestion";
 import LongAnswerQuestion from "@/components/answerSheet/LongAnswerQuestion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import TopNavLayout from "@/components/TopNavLayout";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
@@ -31,33 +32,9 @@ const SampleAnswerSheet: NextPage<
 > = ({ id }) => {
   return (
     <>
-      <Head>
-        <title>Smart Grader</title>
-        <meta
-          name="description"
-          content="A website where teachers can automate their workflow"
-        />
-      </Head>
-      <div className="flex min-h-screen flex-col">
-        <header className="border-b">
-          <nav className="container mx-auto flex justify-between px-4 py-4">
-            <Button asChild className="flex gap-2 px-4 py-6" variant="outline">
-              <Link href="/">
-                <Image
-                  src="/images/logo-icon.png"
-                  alt="Logo"
-                  width="32"
-                  height="32"
-                />
-                <span className="text-2xl font-bold">SmartGrader</span>
-              </Link>
-            </Button>
-          </nav>
-        </header>
-        <main className="container mx-auto flex-grow px-4 py-8">
-          <QuestionList publishedWorksheetId={id} />
-        </main>
-      </div>
+      <TopNavLayout>
+        <QuestionList publishedWorksheetId={id} />
+      </TopNavLayout>
     </>
   );
 };

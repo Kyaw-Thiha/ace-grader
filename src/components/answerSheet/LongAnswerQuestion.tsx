@@ -64,7 +64,7 @@ const LongAnswerQuestion: React.FC<Props> = (props) => {
       </CardContent>
 
       {hasAnswered ? (
-        <CardFooter className="mt-8">
+        <CardFooter className="mt-8 flex flex-col gap-4">
           <Explanation question={props.question} status={props.status} />
           <SampleAnswer
             question={props.question}
@@ -72,7 +72,9 @@ const LongAnswerQuestion: React.FC<Props> = (props) => {
             status={props.status}
           />
         </CardFooter>
-      ) : <></>}
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
