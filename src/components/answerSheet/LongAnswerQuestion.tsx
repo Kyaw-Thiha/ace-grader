@@ -7,7 +7,16 @@ import Explanation from "./Explanation";
 import type { AnswerSheetStatus } from "@/utils/interface";
 import MarkdownText from "@/components/MarkdownText";
 import SampleAnswer from "./SampleAnswer";
-import { AutosizeInput } from "../ui/resize-input";
+
+import { AutosizeInput } from "@/components/ui/resize-input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
 type LongAnswerQuestionAnswer =
@@ -21,30 +30,49 @@ interface Props {
 }
 
 const LongAnswerQuestion: React.FC<Props> = (props) => {
+  const hasAnswered =
+    props.status == "sample-teacherview" ||
+    props.status == "checking-teacherview" ||
+    props.status == "returned-teacherview" ||
+    props.status == "returned-studentview";
+
   return (
     <div className="flex flex-col gap-6">
-      <div className="mt-3">
-        <MarkdownText text={props.question?.text ?? ""} />
-        <p className="mt-6 ">
-          <span className="rounded-md border-2 border-slate-800 px-2 py-1">
+      <CardHeader>
+        <CardTitle>
+          <MarkdownText text={props.question?.text ?? ""} />
+        </CardTitle>
+        <CardDescription>
+          <span className="rounded-md border-2 px-2 py-1">
             Marks: {props.question?.marks}
           </span>
-        </p>
-      </div>
-      <StudentAnswer
-        question={props.question}
-        answer={props.answer}
-        refetch={props.refetch}
-        status={props.status}
-      />
-      <div className="">
-        <Explanation question={props.question} status={props.status} />
-        <SampleAnswer
-          question={props.question}
-          answer={props.answer}
-          status={props.status}
-        />
-      </div>
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form>
+          <div className="grid w-full items-center gap-4">
+            <div className="flex flex-col space-y-1.5">
+              <StudentAnswer
+                question={props.question}
+                answer={props.answer}
+                refetch={props.refetch}
+                status={props.status}
+              />
+            </div>
+          </div>
+        </form>
+      </CardContent>
+
+      {hasAnswered ? (
+        <CardFooter className="mt-8">
+          <Explanation question={props.question} status={props.status} />
+          <SampleAnswer
+            question={props.question}
+            answer={props.answer}
+            status={props.status}
+          />
+        </CardFooter>
+      ) : <></>}
     </div>
   );
 };

@@ -13,6 +13,7 @@ import MultipleChoiceQuestion from "@/components/answerSheet/MultipleChoiceQuest
 import ShortAnswerQuestion from "@/components/answerSheet/ShortAnswerQuestion";
 import LongAnswerQuestion from "@/components/answerSheet/LongAnswerQuestion";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
@@ -105,8 +106,8 @@ const QuestionList: React.FC<Props> = ({ publishedWorksheetId }) => {
       <div className="mt-4">
         {questions?.map((question) => (
           <div key={question.id} className="my-4 md:mx-8 md:rounded-md">
-            <div className="bg-slate-50 shadow-sm">
-              <div className=" gap-4 px-2 py-12 md:gap-8 md:px-16 md:py-16">
+            <Card>
+              <div className=" gap-4 px-2 py-4 md:gap-8 md:px-16 md:py-8">
                 <p className="my-2 text-3xl text-slate-400">
                   {question.order}.
                 </p>
@@ -140,23 +141,10 @@ const QuestionList: React.FC<Props> = ({ publishedWorksheetId }) => {
                   )}
                 </div>
               </div>
-            </div>
-            {/* <div className="flex justify-center">
-              <AddQuestionButton
-                id={worksheetId}
-                order={(questions?.length ?? 0) + 1}
-                refetch={refetchWorksheet}
-              />
-            </div> */}
+            </Card>
           </div>
         ))}
-        <div className="flex h-64 justify-center">
-          {/* <AddQuestionButton
-            id={worksheetId}
-            order={(questions?.length ?? 0) + 1}
-            refetch={refetchWorksheet}
-          /> */}
-        </div>
+        <div className="flex h-64 justify-center"></div>
       </div>
     );
   }

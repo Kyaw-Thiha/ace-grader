@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { SubmitAnswerDialog } from "@/components/answerSheet/SubmitAnswer";
 import CheckingInProgress from "@/components/answerSheet/CheckingInProgress";
 import { useState } from "react";
+import { Card } from "@/components/ui/card";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"] as string;
@@ -172,12 +173,12 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
       <div className="mt-4">
         {questions?.map((question, index) => (
           <div key={question.id} className="my-4 md:mx-8 md:rounded-md">
-            <div className="bg-slate-50 shadow-sm">
-              <div className="flex gap-4 px-2 py-12 md:gap-8 md:px-16 md:py-16">
+            <Card>
+              <div className="flex gap-4 px-2 py-4 md:gap-8 md:px-16 md:py-8">
                 <p className="my-2 text-3xl text-slate-400">
                   {question.order}.
                 </p>
-                <div>
+                <div className="w-full">
                   {question.questionType == "MultipleChoiceQuestion" ? (
                     <MultipleChoiceQuestion
                       question={question.multipleChoiceQuestion}
@@ -210,7 +211,7 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
                   )}
                 </div>
               </div>
-            </div>
+            </Card>
           </div>
         ))}
         <div className="mt-8 flex h-64 justify-center md:mx-8">

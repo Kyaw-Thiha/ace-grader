@@ -13,6 +13,15 @@ import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Head from "next/head";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
@@ -185,40 +194,43 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
   };
 
   return (
-    <div className="flex min-h-screen justify-center sm:min-h-[80vh]">
-      <div className="flex min-w-full flex-col items-center justify-center rounded-none bg-slate-200 px-6 py-4 shadow-xl md:py-12 lg:min-w-[50vw] lg:rounded-lg">
-        <div className="min-w-[30vw]">
-          <h2 className="mb-12 text-3xl">Student Credentials</h2>
-          <section className="flex flex-col gap-4">
-            <div className="flex items-center gap-4">
-              <p>Name: </p>
-              <Input
-                placeholder="Type your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
+    <div className="mt-12 flex justify-center">
+      <Card className="px-4 py-8">
+        <CardHeader>
+          <CardTitle>Create Answer Sheet</CardTitle>
+          <CardDescription>
+            You will be contacted by email after your worksheet is graded.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form>
+            <div className="grid w-full items-center gap-4">
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  placeholder="Your name"
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Your email"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
             </div>
-            <div className="flex items-center gap-4">
-              <p>Email: </p>
-              <Input
-                type="email"
-                placeholder="Type your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <Button className="mt-4" onClick={addAnswerSheet}>
-              Confirm
-            </Button>
-          </section>
-          {/* <p className="mt-8 text-lg text-gray-800">
-            The email will be used to store your answer sheet in real-time
-          </p>
-          <p className="text-lg text-gray-800">
-            and to contact you once the teacher has handed back the worksheet.
-          </p> */}
-        </div>
-      </div>
+          </form>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          {/* <Button variant="outline">Cancel</Button> */}
+          <div></div>
+          <Button onClick={addAnswerSheet}>Confirm</Button>
+        </CardFooter>
+      </Card>
     </div>
   );
 };

@@ -8,6 +8,14 @@ import Explanation from "./Explanation";
 
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 type MultipleChoiceQuestionAnswer =
@@ -21,26 +29,51 @@ interface Props {
 }
 
 const MultipleChoiceQuestion: React.FC<Props> = (props) => {
+  const hasAnswered =
+    props.status == "sample-teacherview" ||
+    props.status == "checking-teacherview" ||
+    props.status == "returned-teacherview" ||
+    props.status == "returned-studentview";
+
   return (
-    <div className="flex flex-col gap-6">
-      <div className="mt-3">
-        <MarkdownText text={props.question?.text ?? ""} />
-        <p className="mt-6 ">
-          <span className="rounded-md border-2 border-slate-800 px-2 py-1">
+    <div className="flex w-full flex-col gap-6">
+      <CardHeader>
+        <CardTitle>
+          <MarkdownText text={props.question?.text ?? ""} />
+        </CardTitle>
+        <CardDescription>
+          <span className="rounded-md border-2 px-2 py-1">
             Marks: {props.question?.marks}
           </span>
-        </p>
-      </div>
-      <ChoiceGroup
-        question={props.question}
-        answer={props.answer}
-        refetch={props.refetch}
-        status={props.status}
-      />
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form>
+          <div className="grid w-full items-center gap-4">
+            <div className="flex flex-col space-y-1.5">
+              <ChoiceGroup
+                question={props.question}
+                answer={props.answer}
+                refetch={props.refetch}
+                status={props.status}
+              />
+            </div>
+          </div>
+        </form>
+      </CardContent>
 
-      <div className="mt-8">
-        <Explanation question={props.question} status={props.status} />
-      </div>
+      {hasAnswered ? (
+        <CardFooter className="mt-8">
+          <Explanation question={props.question} status={props.status} />
+        </CardFooter>
+      ) : (
+        <></>
+      )}
+      {/* {hasAnswered ?? (
+        <CardFooter className="mt-8">
+          <Explanation question={props.question} status={props.status} />
+        </CardFooter>
+      )} */}
     </div>
   );
 };
@@ -120,27 +153,6 @@ const ChoiceGroup: React.FC<Props> = (props) => {
 
   return (
     <>
-      {/* <div className="flex flex-col">
-        {props.question?.choices.map((choice) => (
-          <div key={choice.index} className="my-2">
-            <label className=" flex cursor-pointer flex-row gap-2">
-              <input
-                type="radio"
-                name={`multiple-choice-question-${props.question?.id ?? ""}`}
-                className={getRadioClass(choice.index)}
-                checked={chosenChoice == choice.index}
-                onChange={() => updateChoice(choice.index)}
-              />
-              <div className="flex flex-row gap-2 ">
-                <p className="text-xl">
-                  {convertIntegerToASCII(choice.index)})
-                </p>
-                <p className="text-lg">{choice.text}</p>
-              </div>
-            </label>
-          </div>
-        ))}
-      </div> */}
       <RadioGroup
         defaultValue={`${props.question?.id ?? ""}_${
           chosenChoice?.toString() ?? ""

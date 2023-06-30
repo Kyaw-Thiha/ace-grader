@@ -40,7 +40,7 @@ const Explanation: React.FC<Props> = (props) => {
 
   if (showExplanation) {
     return (
-      <Accordion type="single" collapsible>
+      <Accordion className="w-full" type="single" collapsible>
         <AccordionItem value="item-1">
           <AccordionTrigger>
             <h3 className="text-xl">Explanation</h3>

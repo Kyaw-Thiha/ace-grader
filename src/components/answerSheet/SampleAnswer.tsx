@@ -41,7 +41,7 @@ const SampleAnswer: React.FC<Props> = (props) => {
 
   if (showSampleAnswer) {
     return (
-      <Accordion type="single" collapsible>
+      <Accordion className="w-full" type="single" collapsible>
         <AccordionItem value="item-1">
           <AccordionTrigger>
             <h3 className="text-xl">Sample Answer</h3>
