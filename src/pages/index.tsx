@@ -92,9 +92,9 @@ const FeatureSection = () => {
               <svg
                 fill="none"
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 className="h-6 w-6"
                 viewBox="0 0 24 24"
               >
@@ -133,9 +133,9 @@ const FeatureSection = () => {
               <svg
                 fill="none"
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 className="h-6 w-6"
                 viewBox="0 0 24 24"
               >
@@ -163,38 +163,9 @@ const FeatureSection = () => {
               <svg
                 fill="none"
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                className="h-6 w-6"
-                viewBox="0 0 24 24"
-              >
-                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-            </div>
-            <div className="flex-grow pl-6">
-              <h2 className="title-font mb-2 text-lg font-medium text-gray-900">
-                Automated Grading Made Simple
-              </h2>
-              <p className="text-base leading-relaxed">
-                SmartGrader takes the hassle out of grading. By configuring your
-                desired marking scheme, our intelligent system automatically
-                checks student answers against the preset criteria. The days of
-                manually checking every response are over, allowing you to focus
-                on providing valuable feedback and personalized attention to
-                your students.
-              </p>
-            </div>
-          </div>
-          <div className="flex p-4 md:w-1/3">
-            <div className="mb-4 inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 text-indigo-500">
-              <svg
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 className="h-6 w-6"
                 viewBox="0 0 24 24"
               >
