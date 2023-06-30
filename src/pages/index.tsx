@@ -20,7 +20,7 @@ const HeroSection = () => {
       <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
         <section className="flex flex-col-reverse justify-between gap-6 sm:gap-10 md:gap-16 lg:flex-row">
           <div className="flex flex-col justify-center sm:text-center lg:py-12 lg:text-left xl:w-5/12 xl:py-24">
-            <p className="mb-4 font-semibold text-indigo-500 md:mb-6 md:text-lg xl:text-xl">
+            <p className="mb-4 font-semibold text-muted-foreground md:mb-6 md:text-lg xl:text-xl">
               {/* Very proud to introduce */}
               Welcome to SmartGrader
             </p>
