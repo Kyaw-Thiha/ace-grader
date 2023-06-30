@@ -18,6 +18,7 @@ interface SubmitAnswerDialogProps {
   worksheetId: string;
   answerSheetId: string;
   refetch: QueryObserverBaseResult["refetch"];
+  onSubmit: () => void;
 }
 
 export const SubmitAnswerDialog: React.FC<SubmitAnswerDialogProps> = (
@@ -34,18 +35,26 @@ export const SubmitAnswerDialog: React.FC<SubmitAnswerDialogProps> = (
 
   const submitAnswer = () => {
     setOpen(false);
+    props.onSubmit();
 
-    void toast.promise(
-      checkAnswer.mutateAsync({
-        worksheetId: props.worksheetId,
-        answerSheetId: props.answerSheetId,
-      }),
-      {
-        pending: "Checking Answers",
-        success: "Answers Checked 👌",
-        error: "Error in Answer Checking 🤯",
-      }
-    );
+    void checkAnswer.mutateAsync({
+      worksheetId: props.worksheetId,
+      answerSheetId: props.answerSheetId,
+    });
+
+    // Uncomment this when debugging
+    //
+    // void toast.promise(
+    //   checkAnswer.mutateAsync({
+    //     worksheetId: props.worksheetId,
+    //     answerSheetId: props.answerSheetId,
+    //   }),
+    //   {
+    //     pending: "Checking Answers",
+    //     success: "Answers Checked 👌",
+    //     error: "Error in Answer Checking 🤯",
+    //   }
+    // );
   };
 
   return (

@@ -17,6 +17,8 @@ import ShortAnswerQuestion from "@/components/answerSheet/ShortAnswerQuestion";
 import LongAnswerQuestion from "@/components/answerSheet/LongAnswerQuestion";
 import { Button } from "@/components/ui/button";
 import { SubmitAnswerDialog } from "@/components/answerSheet/SubmitAnswer";
+import CheckingInProgress from "@/components/answerSheet/CheckingInProgress";
+import { useState } from "react";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"] as string;
@@ -123,6 +125,8 @@ interface QuestionListProps {
 }
 
 const QuestionList: React.FC<QuestionListProps> = (props) => {
+  const [isChecking, setIsChecking] = useState(false);
+
   //Fetching the worksheet
   const {
     data: publishedWorksheet,
@@ -157,14 +161,12 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
           priority
         />
         <div className="flex items-center justify-center">
-          {/* <AddQuestionButton
-            id={publishedWorksheetId}
-            order={1}
-            refetch={refetchWorksheet}
-          /> */}
+          There seems to have been some sort of error
         </div>
       </div>
     );
+  } else if (isChecking || status == "checking-studentview") {
+    return <CheckingInProgress />;
   } else {
     return (
       <div className="mt-4">
@@ -209,76 +211,17 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
                 </div>
               </div>
             </div>
-            {/* <div className="flex justify-center">
-              <AddQuestionButton
-                id={worksheetId}
-                order={(questions?.length ?? 0) + 1}
-                refetch={refetchWorksheet}
-              />
-            </div> */}
           </div>
         ))}
         <div className="mt-8 flex h-64 justify-center md:mx-8">
-          {/* <AddQuestionButton
-            id={worksheetId}
-            order={(questions?.length ?? 0) + 1}
-            refetch={refetchWorksheet}
-          /> */}
           <SubmitAnswerDialog
             worksheetId={props.publishedWorksheetId}
             answerSheetId={props.answerSheedId}
             refetch={refetchAnswerSheet}
+            onSubmit={() => setIsChecking(true)}
           />
         </div>
       </div>
     );
   }
 };
-
-// const SubmitAnswerSheetButton: React.FC<Props> = (props) => {
-//   const dialogId = `submit-answer`;
-
-//   const editStatus = api.answerSheet.editStatus.useMutation({
-//     onSuccess: () => {
-//       // void props.refetch();
-//     },
-//   });
-
-//   const submitAnswer = () => {
-//     void editStatus.mutate({ id: props.answerSheedId, status: "checking" });
-//   };
-
-//   return (
-//     <>
-//       <Dialog
-//         id={dialogId}
-//         openContainer={
-//           <label htmlFor={dialogId} className="btn-primary btn text-lg">
-//             Submit
-//           </label>
-//         }
-//         body={
-//           <>
-//             <h3 className="mb-4 text-2xl font-bold">Submit Answer Sheet</h3>
-//             <h4 className="mb-2">
-//               Once submitted, your teacher can now check the answers
-//             </h4>
-//             <p className="mb-6">
-//               You will be informed once your teacher finishes checking
-//             </p>
-//           </>
-//         }
-//         actions={
-//           <>
-//             <label htmlFor={dialogId} className="btn-ghost btn">
-//               Cancel
-//             </label>
-//             <label htmlFor={dialogId} className="btn-success btn">
-//               Publish
-//             </label>
-//           </>
-//         }
-//       />
-//     </>
-//   );
-// };
