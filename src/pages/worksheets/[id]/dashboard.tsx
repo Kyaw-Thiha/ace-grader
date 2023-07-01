@@ -72,14 +72,6 @@ const AnswerSheetList: React.FC<Props> = ({ id }) => {
   const publishedWorksheets = worksheet?.publishedWorksheets ?? [];
   const answerSheets = [];
 
-  for (const publishedWorksheet of publishedWorksheets) {
-    for (const answerSheet of publishedWorksheet.answerSheets) {
-      answerSheets.push(answerSheet);
-    }
-  }
-
-  console.log(worksheet);
-
   return (
     <>
       <h2 className="text-xl font-medium">Answer Sheets</h2>
