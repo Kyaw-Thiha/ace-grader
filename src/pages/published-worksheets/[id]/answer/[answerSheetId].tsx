@@ -40,7 +40,7 @@ const SampleAnswerSheet: NextPage<
   return (
     <>
       <Head>
-        <title>Smart Grader</title>
+        <title>Ace Grader</title>
         <meta
           name="description"
           content="A website where teachers can automate their workflow"
@@ -57,7 +57,7 @@ const SampleAnswerSheet: NextPage<
                   width="32"
                   height="32"
                 />
-                <span className="text-2xl font-bold">SmartGrader</span>
+                <span className="text-2xl font-bold">AceGrader</span>
               </Link>
             </Button>
           </nav>

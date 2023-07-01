@@ -87,7 +87,7 @@ const WorksheetLayout: React.FC<WorksheetHeaderProps> = ({
   return (
     <>
       <Head>
-        <title>Smart Grader</title>
+        <title>Ace Grader</title>
         <meta
           name="description"
           content="A website where teachers can automate their workflow"

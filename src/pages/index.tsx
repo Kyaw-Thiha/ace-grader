@@ -22,7 +22,7 @@ const HeroSection = () => {
           <div className="flex flex-col justify-center sm:text-center lg:py-12 lg:text-left xl:w-5/12 xl:py-24">
             <p className="mb-4 font-semibold text-muted-foreground md:mb-6 md:text-lg xl:text-xl">
               {/* Very proud to introduce */}
-              Welcome to SmartGrader
+              Welcome to AceGrader
             </p>
 
             <h1 className="text-black-800 mb-8 text-4xl font-bold sm:text-5xl md:mb-12 md:text-6xl">
@@ -110,7 +110,7 @@ const FeatureSection = () => {
                 crafted your custom worksheet, effortlessly share it with your
                 students using our shareable link feature. Gone are the days of
                 printing stacks of papers or dealing with lost assignments.
-                SmartGrader makes sharing and distributing worksheets a breeze.
+                AceGrader makes sharing and distributing worksheets a breeze.
               </p>
               {/* <a className="mt-3 inline-flex items-center text-indigo-500">
                 Learn More
@@ -178,7 +178,7 @@ const FeatureSection = () => {
                 Automated Grading Made Simple
               </h2>
               <p className="text-base leading-relaxed">
-                SmartGrader takes the hassle out of grading. By configuring your
+                AceGrader takes the hassle out of grading. By configuring your
                 desired marking scheme, our intelligent system automatically
                 checks student answers against the preset criteria. The days of
                 manually checking every response are over, allowing you to focus

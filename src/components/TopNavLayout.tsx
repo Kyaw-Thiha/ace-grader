@@ -6,9 +6,9 @@ import { SignedOut, SignedIn, UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "SmartGrader",
+  title: "AceGrader",
   description: `
-  SmartGrader is an innovative website software designed to streamline the daily tasks of teachers and enhance student learning. 
+  AceGrader is an innovative website software designed to streamline the daily tasks of teachers and enhance student learning. 
   With our intelligent grading and feedback system, you can say goodbye to the tedious and time-consuming process of manually 
   grading worksheets.`,
   icons: {
@@ -26,10 +26,10 @@ const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <Head>
-        <title>Smart Grader</title>
+        <title>Ace Grader</title>
         <meta
           name="description"
-          content="SmartGrader is an innovative website software designed to streamline the daily tasks of teachers and enhance student learning. 
+          content="AceGrader is an innovative website software designed to streamline the daily tasks of teachers and enhance student learning. 
           With our intelligent grading and feedback system, you can say goodbye to the tedious and time-consuming process of manually 
           grading worksheets."
         />
@@ -45,7 +45,7 @@ const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
                   width="32"
                   height="32"
                 />
-                <span className="text-2xl font-bold">SmartGrader</span>
+                <span className="text-2xl font-bold">AceGrader</span>
               </Link>
             </Button>
 
