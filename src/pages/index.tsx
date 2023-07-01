@@ -45,7 +45,7 @@ const HeroSection = () => {
 
               <SignedIn>
                 <Button asChild className="px-8 py-3">
-                  <Link href="/my-worksheets">Go to My Worksheets</Link>
+                  <Link href="/worksheets">Go to My Worksheets</Link>
                 </Button>
               </SignedIn>
               {/* <a
