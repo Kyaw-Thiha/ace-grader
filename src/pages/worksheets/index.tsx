@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 import {
   AddWorksheetButton,
   DeleteWorksheetButton,
-} from "@/components/worksheet/WorksheetDialogs";
+} from "@/components/worksheet/WorksheetDialog";
 import { Button } from "@/components/ui/button";
 import TopNavLayout from "@/components/TopNavLayout";
 
