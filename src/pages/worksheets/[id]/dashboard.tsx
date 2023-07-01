@@ -78,6 +78,8 @@ const AnswerSheetList: React.FC<Props> = ({ id }) => {
     }
   }
 
+  console.log(worksheet);
+
   return (
     <>
       <h2 className="text-xl font-medium">Answer Sheets</h2>
@@ -113,7 +115,11 @@ const AnswerSheetList: React.FC<Props> = ({ id }) => {
                         </TableCell>
                         <TableCell>
                           <Button asChild>
-                            <Link href={``}>View</Link>
+                            <Link
+                              href={`/published-worksheets/${publishedWorksheet.id}/answer/${answerSheet.id}`}
+                            >
+                              View
+                            </Link>
                           </Button>
                         </TableCell>
                       </TableRow>

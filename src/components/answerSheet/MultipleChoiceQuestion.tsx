@@ -125,7 +125,7 @@ const ChoiceGroup: React.FC<Props> = (props) => {
    */
 
   const getRadioClass = (index: number) => {
-    let className = "radio";
+    let className = "";
     if (props.status == "sample-teacherview") {
       // For the sample answer, automatically select the corrent choice
       if (index == props.question?.answer) {

@@ -215,12 +215,16 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
           </div>
         ))}
         <div className="mt-8 flex h-64 justify-center md:mx-8">
-          <SubmitAnswerDialog
-            worksheetId={props.publishedWorksheetId}
-            answerSheetId={props.answerSheedId}
-            refetch={refetchAnswerSheet}
-            onSubmit={() => setIsChecking(true)}
-          />
+          {status == "answering-studentview" ? (
+            <SubmitAnswerDialog
+              worksheetId={props.publishedWorksheetId}
+              answerSheetId={props.answerSheedId}
+              refetch={refetchAnswerSheet}
+              onSubmit={() => setIsChecking(true)}
+            />
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     );
