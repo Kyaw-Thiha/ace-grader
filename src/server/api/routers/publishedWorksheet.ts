@@ -66,6 +66,8 @@ export const publishedWorksheetRouter = createTRPCRouter({
           id: input.id,
         },
         select: {
+          title: true,
+          totalMarks: true,
           questions: {
             orderBy: {
               order: "asc",
