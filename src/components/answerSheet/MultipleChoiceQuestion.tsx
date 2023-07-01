@@ -42,9 +42,21 @@ const MultipleChoiceQuestion: React.FC<Props> = (props) => {
           <MarkdownText text={props.question?.text ?? ""} />
         </CardTitle>
         <CardDescription>
-          <span className="rounded-md border-2 px-2 py-1">
-            Marks: {props.question?.marks}
-          </span>
+          {props.status.startsWith("returned-") ? (
+            <span
+              className={`rounded-md border-2 px-2 py-1 ${
+                props.answer?.marks == props.question?.marks
+                  ? "bg-green-100"
+                  : "bg-red-100"
+              }`}
+            >
+              Marks: {props.answer?.marks} / {props.question?.marks}
+            </span>
+          ) : (
+            <span className="rounded-md border-2 px-2 py-1">
+              Marks: {props.question?.marks}
+            </span>
+          )}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -125,7 +137,7 @@ const ChoiceGroup: React.FC<Props> = (props) => {
    */
 
   const getRadioClass = (index: number) => {
-    let className = "";
+    let className = "disabled:opacity-100";
     if (props.status == "sample-teacherview") {
       // For the sample answer, automatically select the corrent choice
       if (index == props.question?.answer) {

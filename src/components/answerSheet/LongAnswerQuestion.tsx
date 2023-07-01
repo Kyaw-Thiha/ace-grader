@@ -37,15 +37,27 @@ const LongAnswerQuestion: React.FC<Props> = (props) => {
     props.status == "returned-studentview";
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col">
       <CardHeader>
         <CardTitle>
           <MarkdownText text={props.question?.text ?? ""} />
         </CardTitle>
         <CardDescription>
-          <span className="rounded-md border-2 px-2 py-1">
-            Marks: {props.question?.marks}
-          </span>
+          {props.status.startsWith("returned-") ? (
+            <span
+              className={`rounded-md border-2 px-2 py-1 ${
+                props.answer?.marks == props.question?.marks
+                  ? "bg-green-100"
+                  : "bg-red-100"
+              }`}
+            >
+              Marks: {props.answer?.marks} / {props.question?.marks}
+            </span>
+          ) : (
+            <span className="rounded-md border-2 px-2 py-1">
+              Marks: {props.question?.marks}
+            </span>
+          )}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -61,6 +73,9 @@ const LongAnswerQuestion: React.FC<Props> = (props) => {
             </div>
           </div>
         </form>
+        <div className="mt-4 rounded-md border-2 px-4 py-2">
+          Feedback: {props.answer?.feedback}
+        </div>
       </CardContent>
 
       {hasAnswered ? (
@@ -110,7 +125,7 @@ const StudentAnswer: React.FC<Props> = (props) => {
     <AutosizeInput
       minRows={4}
       placeholder="Type here"
-      className="transition-all"
+      className="transition-all disabled:cursor-default disabled:opacity-100"
       disabled={props.status != "answering-studentview"}
       value={answer}
       onChange={(e) => setAnswer(e.target.value)}
