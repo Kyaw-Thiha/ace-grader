@@ -105,7 +105,7 @@ export const worksheetRouter = createTRPCRouter({
                   startTime: "desc",
                 },
                 where: {
-                  status: "checking" || "returned",
+                  OR: [{ status: "checking" }, { status: "returned" }],
                 },
               },
             },
