@@ -17,6 +17,7 @@ export const checkAnswer = async (
   const questions = worksheet?.questions ?? [];
   const answers = answerSheet?.answers ?? [];
 
+  let totalMarks = 0;
   for (const answer of answers) {
     if (answer.answerType == "MultipleChoiceQuestionAnswer") {
       const question = questions.at(answer.order - 1)?.multipleChoiceQuestion;
@@ -32,6 +33,9 @@ export const checkAnswer = async (
             marks: 1,
           },
         });
+
+        // Updating the total marks
+        totalMarks = totalMarks + 1;
       } else {
         await prisma.multipleChoiceQuestionAnswer.update({
           where: {
@@ -69,8 +73,12 @@ export const checkAnswer = async (
           feedback: feedback,
         },
       });
+
+      // Updating the total marks
+      totalMarks = totalMarks + marks;
     }
   }
+  await setTotalMarks(prisma, answerSheetId, totalMarks);
   await markAsReturned(prisma, answerSheetId);
 };
 
@@ -163,6 +171,22 @@ const markAsReturned = (prisma: PrismaClient, answerSheetId: string) => {
     },
     data: {
       status: "returned",
+    },
+  });
+};
+
+// Changing the status of the answer sheet as returned
+const setTotalMarks = (
+  prisma: PrismaClient,
+  answerSheetId: string,
+  totalMarks: number
+) => {
+  return prisma.answerSheet.update({
+    where: {
+      id: answerSheetId,
+    },
+    data: {
+      totalMarks: totalMarks,
     },
   });
 };

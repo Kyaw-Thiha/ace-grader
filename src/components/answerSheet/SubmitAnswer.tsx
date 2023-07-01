@@ -12,7 +12,6 @@ import {
 import { api } from "@/utils/api";
 import { useState } from "react";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 
 interface SubmitAnswerDialogProps {
   worksheetId: string;
@@ -26,16 +25,22 @@ export const SubmitAnswerDialog: React.FC<SubmitAnswerDialogProps> = (
 ) => {
   const [open, setOpen] = useState(false);
 
-  //Function for deleting question
+  //Function for checking the answers
   const checkAnswer = api.answerSheet.checkAnswer.useMutation({
     onSuccess: () => {
       void props.refetch();
     },
   });
 
+  //Function for setting the submission time
+  const setEndTime = api.answerSheet.setEndTime.useMutation({});
+
   const submitAnswer = () => {
     setOpen(false);
     props.onSubmit();
+
+    const today = new Date();
+    void setEndTime.mutateAsync({ id: props.answerSheetId, endTime: today });
 
     void checkAnswer.mutateAsync({
       worksheetId: props.worksheetId,

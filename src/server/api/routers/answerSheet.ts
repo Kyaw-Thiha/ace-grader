@@ -183,6 +183,24 @@ export const answerSheetRouter = createTRPCRouter({
       });
     }),
 
+  setEndTime: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        endTime: z.date(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.answerSheet.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          endTime: input.endTime,
+        },
+      });
+    }),
+
   checkAnswer: publicProcedure
     .input(
       z.object({
