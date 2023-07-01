@@ -41,6 +41,7 @@ export const shortAnswerQuestionRouter = createTRPCRouter({
               text: input.text ?? "",
               marks: input.marks ?? 1,
               answer: input.answer ?? "",
+              explanation: input.explanation ?? "",
             },
           },
         },
@@ -61,6 +62,24 @@ export const shortAnswerQuestionRouter = createTRPCRouter({
         },
         data: {
           text: input.text,
+        },
+      });
+    }),
+
+  editExplanation: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        explanation: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.shortAnswerQuestion.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          explanation: input.explanation,
         },
       });
     }),

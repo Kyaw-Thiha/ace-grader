@@ -5,9 +5,11 @@ import ReactTextareaAutosize, {
   type TextareaAutosizeProps,
 } from "react-textarea-autosize";
 
-export interface AutosizeInputProps
-  extends React.InputHTMLAttributes<HTMLTextAreaElement>,
-    TextareaAutosizeProps {}
+// export interface AutosizeInputProps
+//   extends React.InputHTMLAttributes<HTMLTextAreaElement>,
+//     TextareaAutosizeProps {}
+
+export interface AutosizeInputProps extends TextareaAutosizeProps {}
 
 const AutosizeInput = React.forwardRef<
   HTMLTextAreaElement,

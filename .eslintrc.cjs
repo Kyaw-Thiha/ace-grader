@@ -28,7 +28,12 @@ const config = {
         fixStyle: "inline-type-imports",
       },
     ],
-    "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+    "@typescript-eslint/no-unused-vars":
+      process.env.NODE_ENV === "production"
+        ? "off"
+        : ["warn", { argsIgnorePattern: "^_" }],
+    "@typescript-eslint/no-empty-interface":
+      process.env.NODE_ENV === "production" ? "off" : "warn",
   },
 };
 
