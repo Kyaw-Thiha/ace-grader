@@ -62,7 +62,7 @@ export const checkAnswer = async (
 
       const markString = data.substring(0, index);
       const marks = parseInt(markString.trim());
-      const feedback = data.substring(keyword.length);
+      const feedback = data.substring(index + keyword.length);
 
       await prisma.longAnswerQuestionAnswer.update({
         where: {
