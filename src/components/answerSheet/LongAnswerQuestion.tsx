@@ -73,9 +73,13 @@ const LongAnswerQuestion: React.FC<Props> = (props) => {
             </div>
           </div>
         </form>
-        <div className="mt-4 rounded-md border-2 px-4 py-2">
-          Feedback: {props.answer?.feedback}
-        </div>
+        {hasAnswered ? (
+          <div className="mt-4 rounded-md border-2 px-4 py-2">
+            Feedback: {props.answer?.feedback}
+          </div>
+        ) : (
+          <></>
+        )}
       </CardContent>
 
       {hasAnswered ? (

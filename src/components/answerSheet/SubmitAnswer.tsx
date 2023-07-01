@@ -64,7 +64,7 @@ export const SubmitAnswerDialog: React.FC<SubmitAnswerDialogProps> = (
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild className="w-full">
+      <DialogTrigger asChild className="px-40">
         <Button>Submit</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

@@ -18,9 +18,12 @@ const CheckingInProgress: React.FC = () => {
       className="flex flex-col items-center justify-center gap-2"
       ref={parent}
     >
-      <h2 className="text-3xl"> Checking in Progress </h2>
+      <h2 className="text-3xl font-medium"> Checking in Progress </h2>
       <Lottie animationData={writingOnNotebook as unknown} style={style} />
-      <h3 className="text-xl">Refresh this page in a few minutes</h3>
+      <h3 className="text-xl">
+        You will be contacted via email once your answers have been checked.
+      </h3>
+      <p className="text-lg">You can safely close this window</p>
     </div>
   );
 };

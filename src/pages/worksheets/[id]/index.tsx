@@ -22,6 +22,7 @@ import Head from "next/head";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
@@ -161,7 +162,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
       <div className="mb-40 mt-4" ref={parent}>
         {questions?.map((question) => (
           <div key={question.id} className="my-4 md:mx-8 md:rounded-md">
-            <div className="bg-slate-50 shadow-sm">
+            <Card>
               <div className="relative">
                 <label className="absolute right-1 top-1 md:right-2 md:top-2">
                   <DeleteQuestionButton
@@ -172,7 +173,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
                   />
                 </label>
               </div>
-              <div className="px-2 py-12 md:px-16 md:py-16">
+              <div className="px-2 py-4 md:px-16 md:pb-8 md:pt-4">
                 <p className="my-2 text-3xl text-slate-400">
                   {question.order}.
                 </p>
@@ -203,7 +204,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
                   )}
                 </div>
               </div>
-            </div>
+            </Card>
             {/* <div className="flex justify-center">
               <AddQuestionButton
                 id={worksheetId}
