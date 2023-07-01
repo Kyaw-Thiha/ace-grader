@@ -137,6 +137,8 @@ const ChoiceGroup: React.FC<Props> = (props) => {
       props.status == "returned-teacherview"
     ) {
       if (index == props.question?.answer) {
+        console.log("index - ", index);
+        console.log("answer - ", props.question.answer);
         // For the correct answer, highlight the radio button as positive color
         className = className + " border-green-400 text-green-600";
       } else if (

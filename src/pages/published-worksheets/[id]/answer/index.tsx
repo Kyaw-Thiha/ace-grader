@@ -80,7 +80,10 @@ const QuestionList: React.FC<Props> = ({ publishedWorksheetId }) => {
     );
   } else {
     return (
-      <div className="mt-4">
+      <div>
+        <h2 className="mb-8 mt-0 text-center text-3xl font-medium md:mb-12 md:mt-4">
+          {publishedWorksheet?.title}
+        </h2>
         {questions?.map((question) => (
           <div key={question.id} className="my-4 md:mx-8 md:rounded-md">
             <Card>

@@ -91,7 +91,7 @@ interface Props {
 const CheckIfUserCreatedWorksheet: React.FC<Props> = (props) => {
   //Fetching list of worksheets
   const {
-    data: teacherProfiles,
+    data: teacherProfile,
     isLoading,
     isError,
   } = api.teacherProfile.getAll.useQuery();
@@ -101,20 +101,12 @@ const CheckIfUserCreatedWorksheet: React.FC<Props> = (props) => {
   );
 
   const profileId = publishedWorksheet?.profileId ?? "";
-  const profiles = teacherProfiles ?? [];
-
-  let status = "";
-  if (profileId in profiles) {
-    status = `${status}-teacherview`;
-  } else {
-    status = `${status}-studentview`;
-  }
 
   return (
     <QuestionList
       publishedWorksheetId={props.publishedWorksheetId}
       answerSheedId={props.answerSheedId}
-      status={status as AnswerSheetStatus}
+      isTeacher={profileId == teacherProfile?.id}
     />
   );
 };
@@ -122,7 +114,7 @@ const CheckIfUserCreatedWorksheet: React.FC<Props> = (props) => {
 interface QuestionListProps {
   publishedWorksheetId: string;
   answerSheedId: string;
-  status?: AnswerSheetStatus;
+  isTeacher?: boolean;
 }
 
 const QuestionList: React.FC<QuestionListProps> = (props) => {
@@ -146,8 +138,11 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
     });
   const answers = answerSheet?.answers ?? [];
 
-  const status =
-    props.status ?? `${answerSheet?.status ?? "answering"}-studentview`;
+  const status = props.isTeacher
+    ? (`${answerSheet?.status ?? "answering"}-teacherview` as AnswerSheetStatus)
+    : (`${
+        answerSheet?.status ?? "answering"
+      }-studentview` as AnswerSheetStatus);
 
   if (isLoading) {
     return <Loading />;
@@ -170,7 +165,23 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
     return <CheckingInProgress />;
   } else {
     return (
-      <div className="mt-4">
+      <div>
+        <section className="md:mx-8">
+          <h2 className="mb-8 mt-0 text-center text-3xl font-medium md:mb-12 md:mt-4">
+            {publishedWorksheet?.title}
+          </h2>
+          {status.startsWith("returned-") ? (
+            <p className="text-right">
+              Total Marks: {answerSheet?.totalMarks}/
+              {publishedWorksheet?.totalMarks}
+            </p>
+          ) : (
+            <p className="text-right">
+              Total Marks: {publishedWorksheet?.totalMarks}
+            </p>
+          )}
+        </section>
+
         {questions?.map((question, index) => (
           <div key={question.id} className="my-4 md:mx-8 md:rounded-md">
             <Card>
