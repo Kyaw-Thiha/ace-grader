@@ -1,6 +1,9 @@
+import type { ReactElement } from "react";
 import type { PrismaClient } from "@prisma/client";
 import type { RouterOutputs } from "@/utils/api";
 import { openaiAPI } from "@/server/openai/api";
+import { Resend } from "resend";
+import { CheckingFinishedEmailTemplate } from "@/components/emails/CheckingFinished";
 
 type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
 
@@ -80,6 +83,17 @@ export const checkAnswer = async (
   }
   await setTotalMarks(prisma, answerSheetId, totalMarks);
   await markAsReturned(prisma, answerSheetId);
+
+  const baseUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "localhost:3000";
+
+  await sendEmail(
+    answerSheet?.studentEmail ?? "",
+    answerSheet?.studentName ?? "",
+    worksheet?.title ?? "",
+    `${baseUrl}/published-worksheets/${worksheetId}/answer/${answerSheetId}`
+  );
 };
 
 // Fetching the worksheet from the server
@@ -89,6 +103,7 @@ const fetchWorksheet = (prisma: PrismaClient, worksheetId: string) => {
       id: worksheetId,
     },
     select: {
+      title: true,
       questions: {
         orderBy: {
           order: "asc",
@@ -188,5 +203,25 @@ const setTotalMarks = (
     data: {
       totalMarks: totalMarks,
     },
+  });
+};
+
+const sendEmail = (
+  email: string,
+  studentName: string,
+  title: string,
+  url: string
+) => {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+
+  return resend.emails.send({
+    from: "AceGrader <no-reply@acegrader.com>",
+    to: [email],
+    subject: "Answer Sheet has been checked",
+    react: CheckingFinishedEmailTemplate({
+      studentName,
+      title,
+      url,
+    }) as ReactElement,
   });
 };
