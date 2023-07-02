@@ -43,6 +43,7 @@
     "rehype-katex": "^6.0.3",
     "remark-math": "^5.1.1",
     "remark-supersub": "^1.0.0",
+    "resend": "^0.16.0",
     "superjson": "1.12.3",
     "tailwind-merge": "^1.13.2",
     "zod": "^3.21.4"
