@@ -32,26 +32,26 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
       createMultipleChoiceQuestion.mutateAsync({
         order: order,
         worksheetId: id,
-        text: "This is the question text for the question. Please edit this.",
+        text: "",
         explanation: "",
         marks: 1,
         answer: 1,
         choices: [
           {
             index: 1,
-            text: "Choice-A",
+            text: "",
           },
           {
             index: 2,
-            text: "Choice-B",
+            text: "",
           },
           {
             index: 3,
-            text: "Choice-C",
+            text: "",
           },
           {
             index: 4,
-            text: "Choice-D",
+            text: "",
           },
         ],
       }),
@@ -75,7 +75,7 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
       createShortAnswerQuestion.mutateAsync({
         order: order,
         worksheetId: id,
-        text: "This is the question text for the question. Please edit this.",
+        text: "",
         explanation: "",
         marks: 1,
         answer:
@@ -101,7 +101,7 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
       createLongAnswerQuestion.mutateAsync({
         order: order,
         worksheetId: id,
-        text: "This is the question text for the question. Please edit this.",
+        text: "",
         marks: 1,
       }),
       {
