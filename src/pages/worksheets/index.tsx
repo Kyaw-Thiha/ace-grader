@@ -135,7 +135,7 @@ const WorksheetList: React.FC = () => {
                   variant={"outline"}
                   onClick={() => void openDashboard(worksheet.id)}
                 >
-                  Dashboard
+                  <span className="whitespace-nowrap">Answer Sheets</span>
                 </Button>
               )}
 
