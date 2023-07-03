@@ -24,12 +24,6 @@ const MyWorksheets: NextPage = () => {
       <div className="flex items-center justify-between">
         <h1 className="text-4xl">My Worksheets</h1>
         <div className="flex gap-4">
-          <Button asChild variant="ghost">
-            <Link href="/answer-sheets">
-              <button>Answer Sheets</button>
-            </Link>
-          </Button>
-
           <AddWorksheetButton />
         </div>
       </div>
