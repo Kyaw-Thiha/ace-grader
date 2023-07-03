@@ -44,11 +44,11 @@ const SampleAnswer: React.FC<Props> = (props) => {
       <Accordion className="w-full" type="single" collapsible>
         <AccordionItem value="item-1">
           <AccordionTrigger>
-            <h3 className="text-xl">Sample Answer</h3>
+            <h3 className="text-lg">Sample Answer</h3>
           </AccordionTrigger>
           <AccordionContent>
             {/* <MarkdownText text={props.question?.explanation ?? ""} /> */}
-            <p className="text-lg leading-loose">
+            <p className="text-md leading-relaxed">
               {props.question?.sampleAnswer ?? ""}
             </p>
           </AccordionContent>

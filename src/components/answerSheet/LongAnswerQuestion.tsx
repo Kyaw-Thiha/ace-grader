@@ -129,7 +129,7 @@ const StudentAnswer: React.FC<Props> = (props) => {
     <AutosizeInput
       minRows={4}
       placeholder="Type here"
-      className="transition-all disabled:cursor-default disabled:opacity-100"
+      className="text-md transition-all disabled:cursor-default disabled:opacity-100"
       disabled={props.status != "answering-studentview"}
       value={answer}
       onChange={(e) => setAnswer(e.target.value)}
