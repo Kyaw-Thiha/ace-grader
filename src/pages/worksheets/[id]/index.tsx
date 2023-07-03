@@ -94,7 +94,7 @@ const WorksheetLayout: React.FC<WorksheetHeaderProps> = ({
         />
       </Head>
       <div className="flex min-h-screen flex-col">
-        <header className="border-b">
+        <header className="sticky top-0 z-50 border-b bg-white">
           <nav className="container mx-auto flex justify-between px-4 py-4">
             <div>
               <Input
