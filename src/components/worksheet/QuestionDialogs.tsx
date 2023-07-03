@@ -14,6 +14,7 @@ import { X } from "lucide-react";
 import { useState } from "react";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 type Questions = RouterOutputs["question"]["getAll"];
 interface DeleteQuestionButtonProps {
@@ -99,6 +100,8 @@ interface PublishWorksheetButtonProps {
 export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
   props
 ) => {
+  const router = useRouter();
+
   const [open, setOpen] = useState(false);
 
   //Fetching the worksheet
@@ -205,10 +208,10 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
   };
 
   //Publishing the worksheet
-  const publishWorksheet = () => {
+  const publishWorksheet = async () => {
     setOpen(false);
 
-    void toast.promise(
+    await toast.promise(
       createWorksheet.mutateAsync({
         title: worksheet?.title ?? "",
         totalMarks: calculateTotalMarks(),
@@ -223,6 +226,8 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
         error: "Error in Worksheet Publishing 🤯",
       }
     );
+
+    await router.push("/worksheets");
   };
 
   return (
@@ -243,7 +248,7 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
         </DialogHeader>
 
         <DialogFooter>
-          <Button type="submit" onClick={() => publishWorksheet()}>
+          <Button type="submit" onClick={() => void publishWorksheet()}>
             Publish Worksheet
           </Button>
         </DialogFooter>
