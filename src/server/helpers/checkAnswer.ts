@@ -109,7 +109,7 @@ const fetchWorksheet = (prisma: PrismaClient, worksheetId: string) => {
           order: "asc",
         },
         include: {
-          parentQuestions: {
+          parentQuestion: {
             // 1st Level
             include: {
               // 2nd Level
