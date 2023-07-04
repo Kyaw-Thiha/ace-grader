@@ -109,7 +109,6 @@ export const DeleteWorksheetButton: React.FC<DeleteWorksheetButtonProps> = ({
   worksheetId,
   worksheetTitle,
 }) => {
-  const [text, setText] = useState("");
   const [open, setOpen] = useState(false);
 
   const { data, refetch: refetchProfiles } =
@@ -125,25 +124,18 @@ export const DeleteWorksheetButton: React.FC<DeleteWorksheetButtonProps> = ({
   });
 
   const removeWorksheet = () => {
-    if (text != worksheetTitle) {
-      // If title is not entered
-      toast.error("Your input text is incorrect");
-    } else {
-      setOpen(false);
+    setOpen(false);
 
-      void toast.promise(
-        deleteWorksheet.mutateAsync({
-          id: worksheetId,
-        }),
-        {
-          pending: "Removing Worksheet",
-          success: "Worksheet Removed 👌",
-          error: "Error in Worksheet Deletion 🤯",
-        }
-      );
-    }
-
-    setText("");
+    void toast.promise(
+      deleteWorksheet.mutateAsync({
+        id: worksheetId,
+      }),
+      {
+        pending: "Removing Worksheet",
+        success: "Worksheet Removed 👌",
+        error: "Error in Worksheet Deletion 🤯",
+      }
+    );
   };
 
   return (
@@ -157,26 +149,11 @@ export const DeleteWorksheetButton: React.FC<DeleteWorksheetButtonProps> = ({
         <DialogHeader>
           <DialogTitle>Delete Worksheet</DialogTitle>
           <DialogDescription>
-            <p>
-              Please type in <b>{worksheetTitle}</b> below to proceed with
-              worksheet removal
-            </p>
+            <p>Are you sure you want to delete this worksheet?</p>
             <p>Note: This process is irreversible.</p>
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="text" className="text-right">
-              Text
-            </Label>
-            <Input
-              id="text"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              className="col-span-3"
-            />
-          </div>
-        </div>
+
         <DialogFooter>
           <Button type="submit" onClick={() => removeWorksheet()}>
             Delete Worksheet
