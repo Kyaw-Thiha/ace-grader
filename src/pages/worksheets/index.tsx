@@ -147,7 +147,7 @@ const WorksheetList: React.FC<Props> = (props) => {
           >
             <Link
               href={`/worksheets/${worksheet.id}`}
-              className="flex w-full items-center justify-start rounded-lg px-4 py-2 transition-all hover:bg-gray-200 active:bg-gray-100"
+              className="flex w-full items-center justify-start rounded-lg px-4 py-2 transition-all hover:bg-accent hover:text-accent-foreground active:bg-blue-100 dark:active:bg-sky-950/60"
             >
               <div className="flex flex-col items-start">
                 <h2 className="mb-2 text-xl font-semibold">

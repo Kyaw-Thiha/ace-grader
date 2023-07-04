@@ -4,6 +4,7 @@ import Image from "next/image";
 import Head from "next/head";
 import { SignedOut, SignedIn, UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
+import ToggleTheme from "@/components/ToggleTheme";
 
 export const metadata: Metadata = {
   title: "AceGrader",
@@ -49,16 +50,19 @@ const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
               </Link>
             </Button>
 
-            <SignedOut>
-              <Button asChild>
-                <Link href="/sign-in">Sign In</Link>
-              </Button>
-            </SignedOut>
-            <SignedIn>
-              <Button asChild>
-                <UserButton />
-              </Button>
-            </SignedIn>
+            <div className="flex flex-row items-center gap-4">
+              <ToggleTheme />
+              <SignedOut>
+                <Button asChild>
+                  <Link href="/sign-in">Sign In</Link>
+                </Button>
+              </SignedOut>
+              <SignedIn>
+                <Button asChild>
+                  <UserButton />
+                </Button>
+              </SignedIn>
+            </div>
           </nav>
         </header>
         <main className="container mx-auto flex-grow px-4 py-8">

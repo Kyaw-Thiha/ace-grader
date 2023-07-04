@@ -34,6 +34,7 @@
     "lucide-react": "^0.248.0",
     "next": "^13.4.6",
     "next-seo": "^6.0.0",
+    "next-themes": "^0.2.1",
     "openai": "^3.3.0",
     "react": "18.2.0",
     "react-autosave": "^0.4.2",

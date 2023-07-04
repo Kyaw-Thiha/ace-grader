@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import ToggleTheme from "@/components/ToggleTheme";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
@@ -94,7 +95,7 @@ const WorksheetLayout: React.FC<WorksheetHeaderProps> = ({
         />
       </Head>
       <div className="flex min-h-screen flex-col">
-        <header className="sticky top-0 z-50 border-b bg-white">
+        <header className="sticky top-0 z-50 border-b bg-background">
           <nav className="container mx-auto flex justify-between px-4 py-4">
             <div>
               <Input
@@ -105,10 +106,13 @@ const WorksheetLayout: React.FC<WorksheetHeaderProps> = ({
               />
             </div>
 
-            <PublishWorksheetButton
-              worksheetId={worksheetId}
-              refetch={refetchWorksheet}
-            />
+            <div className="flex flex-row items-center gap-4">
+              <ToggleTheme />
+              <PublishWorksheetButton
+                worksheetId={worksheetId}
+                refetch={refetchWorksheet}
+              />
+            </div>
           </nav>
         </header>
         <main className="container mx-auto flex-grow px-4 py-8">
