@@ -206,16 +206,20 @@ const setTotalMarks = (
   });
 };
 
-const sendEmail = (
+export const sendEmail = (
   email: string,
   studentName: string,
   title: string,
   url: string
 ) => {
+  const domain =
+    process.env.NODE_ENV == "development"
+      ? "testing.acegrader.com"
+      : "notification.acegrader.com";
   const resend = new Resend(process.env.RESEND_API_KEY);
 
   return resend.emails.send({
-    from: "AceGrader <no-reply@acegrader.com>",
+    from: `AceGrader <no-reply@${domain}>`,
     to: [email],
     subject: "Answer Sheet has been checked",
     react: CheckingFinishedEmailTemplate({
