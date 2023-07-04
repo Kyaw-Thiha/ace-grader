@@ -8,6 +8,8 @@ import { api } from "@/utils/api";
 import Link from "next/link";
 import Image from "next/image";
 import Loading from "@/components/Loading";
+import ToggleTheme from "@/components/ToggleTheme";
+
 import MultipleChoiceQuestion from "@/components/answerSheet/MultipleChoiceQuestion";
 import ShortAnswerQuestion from "@/components/answerSheet/ShortAnswerQuestion";
 import LongAnswerQuestion from "@/components/answerSheet/LongAnswerQuestion";
@@ -51,6 +53,8 @@ const SampleAnswerSheet: NextPage<
                 <span className="text-2xl font-bold">AceGrader</span>
               </Link>
             </Button>
+
+            <ToggleTheme />
           </nav>
         </header>
         <main className="container mx-auto flex-grow px-4 py-8">

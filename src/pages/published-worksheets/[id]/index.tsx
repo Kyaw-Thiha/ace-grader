@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import TopNavLayout from "@/components/TopNavLayout";
+import ToggleTheme from "@/components/ToggleTheme";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
@@ -40,14 +41,40 @@ const Answer: NextPage<
 > = ({ id }) => {
   return (
     <>
-      <TopNavLayout>
-        <SignedIn>
-          <RedirectIfUserCreatedWorksheet id={id} />
-        </SignedIn>
-        <SignedOut>
-          <StudentCredentialsForm id={id} />
-        </SignedOut>
-      </TopNavLayout>
+      <Head>
+        <title>Ace Grader</title>
+        <meta
+          name="description"
+          content="A website where teachers can automate their workflow"
+        />
+      </Head>
+      <div className="flex min-h-screen flex-col">
+        <header className="border-b">
+          <nav className="container mx-auto flex justify-between px-4 py-4">
+            <Button asChild className="flex gap-2 px-4 py-6" variant="outline">
+              <Link href="/">
+                <Image
+                  src="/images/logo-icon.png"
+                  alt="Logo"
+                  width="32"
+                  height="32"
+                />
+                <span className="text-2xl font-bold">AceGrader</span>
+              </Link>
+            </Button>
+
+            <ToggleTheme />
+          </nav>
+        </header>
+        <main className="container mx-auto flex-grow px-4 py-8">
+          <SignedIn>
+            <RedirectIfUserCreatedWorksheet id={id} />
+          </SignedIn>
+          <SignedOut>
+            <StudentCredentialsForm id={id} />
+          </SignedOut>
+        </main>
+      </div>
     </>
   );
 };
