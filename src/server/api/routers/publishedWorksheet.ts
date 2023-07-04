@@ -73,7 +73,7 @@ export const publishedWorksheetRouter = createTRPCRouter({
               order: "asc",
             },
             include: {
-              parentQuestions: {
+              parentQuestion: {
                 // 1st Level
                 include: {
                   // 2nd Level
