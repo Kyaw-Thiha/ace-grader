@@ -17,6 +17,7 @@ export const teacherProfileRouter = createTRPCRouter({
           userId: ctx.userId,
         },
         select: {
+          id: true,
           worksheets: {
             orderBy: { lastEdited: "desc" },
             select: {

@@ -11,29 +11,29 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { api } from "@/utils/api";
+import { type RouterOutputs, api } from "@/utils/api";
+import type { QueryObserverBaseResult } from "@tanstack/react-query";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-export const AddWorksheetButton: React.FC = () => {
+type Profile = RouterOutputs["teacherProfile"]["getWorksheets"];
+
+interface AddWorksheetButtonProps {
+  profile: Profile;
+  refetch: QueryObserverBaseResult["refetch"];
+}
+export const AddWorksheetButton: React.FC<AddWorksheetButtonProps> = ({
+  profile,
+  refetch,
+}) => {
   const [title, setTitle] = useState("");
   const [open, setOpen] = useState(false);
-
-  const { data, refetch: refetchProfiles } =
-    api.teacherProfile.getWorksheets.useQuery(
-      undefined // no input
-    );
-
-  //Fetching the teacher profiles
-  const { data: profiles } = api.teacherProfile.getAll.useQuery(
-    undefined // no input
-  );
 
   //Function for creating worksheet
   const createWorksheet = api.worksheet.create.useMutation({
     onSuccess: () => {
-      void refetchProfiles();
+      void refetch();
     },
   });
 
@@ -53,7 +53,7 @@ export const AddWorksheetButton: React.FC = () => {
       void toast.promise(
         createWorksheet.mutateAsync({
           title: title,
-          profileId: profiles?.id ?? "",
+          profileId: profile?.id ?? "",
         }),
         {
           pending: "Creating Worksheet",

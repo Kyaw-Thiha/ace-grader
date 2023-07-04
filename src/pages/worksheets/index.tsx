@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { api } from "@/utils/api";
+import { type RouterOutputs, api } from "@/utils/api";
+import type { QueryObserverBaseResult } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { Share2 } from "lucide-react";
 
@@ -17,41 +18,70 @@ import { Button } from "@/components/ui/button";
 import TopNavLayout from "@/components/TopNavLayout";
 
 // https://github.com/jherr/notetaker
+type Profile = RouterOutputs["teacherProfile"]["getWorksheets"];
 
 const MyWorksheets: NextPage = () => {
-  return (
-    <TopNavLayout>
-      <div className="flex items-center justify-between">
-        <h1 className="text-4xl">My Worksheets</h1>
-        <div className="flex gap-4">
-          <AddWorksheetButton />
-        </div>
-      </div>
-
-      <WorksheetList />
-    </TopNavLayout>
-  );
-};
-
-export default MyWorksheets;
-
-const WorksheetList: React.FC = () => {
-  // Automatically animate the list add and delete
-  const [parent, enableAnimations] = useAutoAnimate(/* optional config */);
-
-  const router = useRouter();
-
   //Fetching list of worksheets
   const {
     data: profile,
-    refetch: refetchProfiles,
+    refetch,
     isLoading,
     isError,
   } = api.teacherProfile.getWorksheets.useQuery(
     undefined // no input
   );
 
-  const worksheets = profile?.worksheets ?? [];
+  return (
+    <TopNavLayout>
+      <div className="flex items-center justify-between">
+        <h1 className="text-4xl">My Worksheets</h1>
+        <div className="flex gap-4">
+          {!isLoading ? (
+            <AddWorksheetButton
+              profile={profile as Profile}
+              refetch={refetch}
+            />
+          ) : (
+            <></>
+          )}
+        </div>
+      </div>
+
+      <WorksheetList
+        profile={profile as Profile}
+        refetch={refetch}
+        isLoading={isLoading}
+        isError={isError}
+      />
+    </TopNavLayout>
+  );
+};
+
+export default MyWorksheets;
+
+interface Props {
+  profile: Profile;
+  refetch: QueryObserverBaseResult["refetch"];
+  isLoading: boolean;
+  isError: boolean;
+}
+const WorksheetList: React.FC<Props> = (props) => {
+  // Automatically animate the list add and delete
+  const [parent, enableAnimations] = useAutoAnimate(/* optional config */);
+
+  const router = useRouter();
+
+  // //Fetching list of worksheets
+  // const {
+  //   data: profile,
+  //   refetch: refetchProfiles,
+  //   isLoading,
+  //   isError,
+  // } = api.teacherProfile.getWorksheets.useQuery(
+  //   undefined // no input
+  // );
+
+  const worksheets = props.profile?.worksheets ?? [];
 
   // Fetching the corresponding latest published worksheet
   const [chosenWorksheetId, setChosenWorksheetId] = useState("");
@@ -90,7 +120,7 @@ const WorksheetList: React.FC = () => {
     toast.success("Link copied to your clipboard");
   };
 
-  if (isLoading) {
+  if (props.isLoading) {
     return <Loading />;
   } else if (worksheets?.length == 0) {
     //Empty worksheets
@@ -103,7 +133,7 @@ const WorksheetList: React.FC = () => {
           height="350"
         />
         <div className="flex items-center justify-center">
-          <AddWorksheetButton />
+          <AddWorksheetButton profile={props.profile} refetch={props.refetch} />
         </div>
       </div>
     );
