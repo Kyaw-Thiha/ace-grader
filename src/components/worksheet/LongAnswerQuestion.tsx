@@ -196,7 +196,11 @@ const MarkingSchemeForm: React.FC<Props> = (props) => {
         <DialogHeader>
           <DialogTitle>Edit Marking Scheme</DialogTitle>
           <DialogDescription>
-            <div className="mt-8 flex flex-col gap-4">
+            <p className="mt-2 text-accent-foreground">
+              Create at least one marking point per mark. Click <b>Add</b> to
+              add a marking point.
+            </p>
+            <div className="mt-4 flex flex-col gap-4">
               {markingScheme?.map((marking, index) => {
                 return (
                   <Input
