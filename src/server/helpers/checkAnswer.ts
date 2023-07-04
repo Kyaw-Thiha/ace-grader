@@ -84,9 +84,10 @@ export const checkAnswer = async (
   await setTotalMarks(prisma, answerSheetId, totalMarks);
   await markAsReturned(prisma, answerSheetId);
 
-  const baseUrl = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : "localhost:3000";
+  const baseUrl =
+    process.env.NODE_ENV == "development"
+      ? process.env.VERCEL_URL ?? "localhost:3000"
+      : "https://acegrader.com";
 
   await sendEmail(
     answerSheet?.studentEmail ?? "",
