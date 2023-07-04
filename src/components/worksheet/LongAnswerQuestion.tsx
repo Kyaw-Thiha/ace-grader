@@ -40,7 +40,7 @@ const LongAnswerQuestion: React.FC<Props> = (props) => {
       <Marks question={props.question} refetch={props.refetch} />
       <MarkingScheme question={props.question} refetch={props.refetch} />
       <Explanation question={props.question} refetch={props.refetch} />
-      <SampleAnswer question={props.question} refetch={props.refetch} />
+      {/* <SampleAnswer question={props.question} refetch={props.refetch} /> */}
     </div>
   );
 };
