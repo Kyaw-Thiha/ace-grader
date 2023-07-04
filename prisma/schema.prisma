@@ -84,10 +84,10 @@ model PublishedWorksheet {
     totalMarks     Int 
     questions                    Question[]
     answerSheets                 AnswerSheet[]
-    worksheetId      String
-    worksheet        Worksheet          @relation(fields: [worksheetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-    profileId        String
-    profile          TeacherProfile     @relation(fields: [profileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    worksheetId      String?
+    worksheet        Worksheet?          @relation(fields: [worksheetId], references: [id], onDelete: SetNull, onUpdate: SetNull)
+    profileId        String?
+    profile          TeacherProfile?     @relation(fields: [profileId], references: [id], onDelete: SetNull, onUpdate: SetNull)
 
     @@index([worksheetId])
     @@index([profileId])
@@ -126,7 +126,7 @@ model Question {
     id                          String    @id @default(cuid())
     order                       Int   
     questionType                    QuestionType
-    parentQuestions                 ParentQuestion?
+    parentQuestion                  ParentQuestion?
     multipleChoiceQuestion          MultipleChoiceQuestion?
     shortAnswerQuestion             ShortAnswerQuestion?
     longAnswerQuestion              LongAnswerQuestion? 
