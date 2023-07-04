@@ -4,7 +4,6 @@ import type {
   InferGetServerSidePropsType,
 } from "next";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import { api } from "@/utils/api";
 import Link from "next/link";
 import Image from "next/image";
@@ -14,7 +13,6 @@ import ShortAnswerQuestion from "@/components/answerSheet/ShortAnswerQuestion";
 import LongAnswerQuestion from "@/components/answerSheet/LongAnswerQuestion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import TopNavLayout from "@/components/TopNavLayout";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
