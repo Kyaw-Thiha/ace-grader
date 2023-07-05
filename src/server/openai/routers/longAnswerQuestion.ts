@@ -63,6 +63,11 @@ const generateMarksAndFeedback = (
   answer: LongAnswerQuestionAnswer
 ) => {
   const markingScheme = question?.markingScheme as string[];
+  let studentAnswer = answer?.studentAnswer;
+  if (studentAnswer == "" || !studentAnswer) {
+    studentAnswer = "No Answer";
+  }
+
   const prompt = `
   Give one mark each for satisfying each point in the marking scheme. Give the mark in whole number. Give feedback for your marking in one short paragraph.
   Question: Explain how mineral ions enter a plant.
@@ -104,7 +109,7 @@ const generateMarksAndFeedback = (
       .join("\n") ?? ""
   }
   
-  Answer: ${answer?.studentAnswer ?? ""}
+  Answer: ${studentAnswer}
   Mark:`;
 
   return openai.createCompletion({
