@@ -16,6 +16,7 @@ import {
 } from "@/components/worksheet/WorksheetDialogs";
 import { Button } from "@/components/ui/button";
 import TopNavLayout from "@/components/TopNavLayout";
+import { ShareLinkGuideDialog } from "@/components/worksheet/ShareLinkGuideDialog";
 
 // https://github.com/jherr/notetaker
 type Profile = RouterOutputs["teacherProfile"]["getWorksheets"];
@@ -184,6 +185,7 @@ const WorksheetList: React.FC<Props> = (props) => {
             </div>
           </div>
         ))}
+        <ShareLinkGuideDialog profile={props.profile} />
       </div>
     );
   }
