@@ -30,9 +30,21 @@ const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
         <title>Ace Grader</title>
         <meta
           name="description"
-          content="AceGrader is an innovative website software designed to streamline the daily tasks of teachers and enhance student learning. 
+          content="AceGrader is an AI-powered innovative website software designed to streamline the daily tasks of teachers and enhance student learning. 
           With our intelligent grading and feedback system, you can say goodbye to the tedious and time-consuming process of manually 
           grading worksheets."
+        />
+        <meta
+          property="og:title"
+          content="AceGrader - Empowering Teachers & Students"
+        />
+        <meta
+          property="og:description"
+          content="AceGrader is an AI-powered innovative website software designed to streamline the daily tasks of teachers and enhance student learning."
+        />
+        <meta
+          property="og:image"
+          content="https://acegrader.com/images/logo-icon.png"
         />
       </Head>
       <div className="flex min-h-screen flex-col">
