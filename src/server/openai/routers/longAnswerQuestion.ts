@@ -68,6 +68,59 @@ const generateMarksAndFeedback = (
     studentAnswer = "No Answer";
   }
 
+  const systemPrompt = `
+  Assign marks based on the marking scheme provided. 
+  For each point in the marking scheme that is satisfied or demonstrates similar meaning, award one whole mark. 
+  If a student's answer satisfies multiple points or conveys similar meaning, give the corresponding number of marks accordingly. 
+  Provide constructive feedback on the student's performance in a concise paragraph.
+  Give response in the format -
+  Mark: (number)
+  Feedback: (string)
+  `;
+
+  const userPrompt = `
+  Question: ${question?.text ?? ""}
+  Total Mark: ${question?.marks ?? 0}
+  Marking Scheme: ${
+    markingScheme
+      .map((marking) => {
+        return marking;
+      })
+      .join("\n") ?? ""
+  }
+  Answer: ${studentAnswer}
+  `;
+
+  return openai.createChatCompletion({
+    model: "gpt-3.5-turbo-16k",
+    messages: [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userPrompt },
+    ],
+    temperature: 0,
+    max_tokens: 256,
+    top_p: 1,
+    frequency_penalty: 0,
+    presence_penalty: 0,
+  });
+};
+
+export const longAnswerQuestion = {
+  generateExplanation,
+  generateSampleAnswer,
+  generateMarksAndFeedback,
+};
+
+const generateMarksAndFeedbackLegacy = (
+  question: LongAnswerQuestion,
+  answer: LongAnswerQuestionAnswer
+) => {
+  const markingScheme = question?.markingScheme as string[];
+  let studentAnswer = answer?.studentAnswer;
+  if (studentAnswer == "" || !studentAnswer) {
+    studentAnswer = "No Answer";
+  }
+
   const prompt = `
   Give one mark each for satisfying each point in the marking scheme. Give the mark in whole number. Give feedback for your marking in one short paragraph.
   Question: Explain how mineral ions enter a plant.
@@ -121,10 +174,4 @@ const generateMarksAndFeedback = (
     frequency_penalty: 0,
     presence_penalty: 0,
   });
-};
-
-export const longAnswerQuestion = {
-  generateExplanation,
-  generateSampleAnswer,
-  generateMarksAndFeedback,
 };

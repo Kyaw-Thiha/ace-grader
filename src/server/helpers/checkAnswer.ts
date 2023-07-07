@@ -59,13 +59,18 @@ export const checkAnswer = async (
         question,
         longAnswerQuestionAnswer
       );
-      const data = res.data.choices[0]?.text ?? "";
-      const keyword = "Feedback: ";
-      const index = data.indexOf(keyword);
+      const data = res.data.choices[0]?.message?.content ?? "";
+      const markKeyword = "Mark: ";
+      const feedbackKeyword = "Feedback: ";
+      const markIndex = data.indexOf(markKeyword);
+      const feedbackIndex = data.indexOf(feedbackKeyword);
 
-      const markString = data.substring(0, index);
+      const markString = data.substring(
+        markIndex + markKeyword.length,
+        feedbackIndex
+      );
       const marks = parseInt(markString.trim());
-      const feedback = data.substring(index + keyword.length);
+      const feedback = data.substring(feedbackIndex + feedbackKeyword.length);
 
       await prisma.longAnswerQuestionAnswer.update({
         where: {
