@@ -206,6 +206,7 @@ const MarkingSchemeForm: React.FC<Props> = (props) => {
                   <Input
                     key={index}
                     value={marking}
+                    className="text-black"
                     onChange={(e) => handleOnChange(index, e.target.value)}
                   />
                 );
