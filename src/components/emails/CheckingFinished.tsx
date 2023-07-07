@@ -63,7 +63,7 @@ export const CheckingFinishedEmailTemplate: React.FC<
             safely ignore this email.
           </Text>
           <Img
-            src={"/favion-32x32.png"}
+            src={"https://www.acegrader.com/favicon-32x32.png"}
             width="32"
             height="32"
             alt="AceGrader's Logo"
