@@ -25,13 +25,14 @@ export const ShareLinkGuideDialog: React.FC<AddWorksheetButtonProps> = ({
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const hasPublishedBefore = localStorage.getItem("hasPublishedBefore");
-
-    if (profile?.worksheets.length == 1 && !hasPublishedBefore) {
+    if (
+      profile?.worksheets.length == 1 &&
+      profile?.worksheets.at(0)?.publishedWorksheets.length == 1
+    ) {
       setOpen(true);
       localStorage.setItem("hasPublishedBefore", "true");
     }
-  }, [profile?.worksheets.length]);
+  }, [profile?.worksheets]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
