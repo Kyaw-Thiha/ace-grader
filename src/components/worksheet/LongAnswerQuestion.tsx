@@ -206,7 +206,7 @@ const MarkingSchemeForm: React.FC<Props> = (props) => {
                   <Input
                     key={index}
                     value={marking}
-                    className="text-black"
+                    className="text-black dark:text-white"
                     onChange={(e) => handleOnChange(index, e.target.value)}
                   />
                 );
@@ -252,20 +252,30 @@ const Explanation: React.FC<Props> = (props) => {
     onSave: updateExplanation,
   });
 
+  const { refetch: refetchRateLimit } =
+    api.longAnswerQuestion.checkAIRateLimit.useQuery(undefined, {
+      enabled: false,
+    });
   const fetchExplanation = async () => {
-    // Fetching the explanation and updating it
-    const res = await openaiAPI.longAnswerQuestion.generateExplanation(
-      props.question
-    );
-    const data = res.data.choices[0]?.text ?? "";
-    // Remove the first character as it is either empty space or \n
-    const explanationResponse = data.slice(1);
-    setExplanation(explanationResponse);
+    const ratelimitResponse = await refetchRateLimit();
+    if (ratelimitResponse.data) {
+      // Fetching the explanation and updating it
+      const res = await openaiAPI.longAnswerQuestion.generateExplanation(
+        props.question
+      );
+      const data = res.data.choices[0]?.text ?? "";
+      // Remove the first character as it is either empty space or \n
+      const explanationResponse = data.slice(1);
+      setExplanation(explanationResponse);
+    } else {
+      return Promise.reject();
+    }
   };
 
   // Fetching openai's response for generating explanations
   const generateExplanation = () => {
     const markingScheme = props.question?.markingScheme as string[];
+
     if (props.question?.text.trim() == "") {
       toast.error("Question text cannot be blank");
     } else if (markingScheme.length == 0 || markingScheme.at(0) == "") {
@@ -361,6 +371,7 @@ const SampleAnswer: React.FC<Props> = (props) => {
   // Generating explanation from openai
   const generateSampleAnswer = () => {
     const markingScheme = props.question?.markingScheme as string[];
+
     if (props.question?.text.trim() == "") {
       toast.error("Question text cannot be blank");
     } else if (markingScheme.length == 0 || markingScheme.at(0) == "") {

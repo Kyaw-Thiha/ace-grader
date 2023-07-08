@@ -7,7 +7,7 @@ import { type QueryObserverBaseResult } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { openaiAPI } from "@/server/openai/api";
 
-import { Bot, Sparkles, Wand } from "lucide-react";
+import { Bot, Sparkles } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -253,16 +253,25 @@ const Explanation: React.FC<Props> = (props) => {
     onSave: updateExplanation,
   });
 
-  // Fetching openai's response for generating explanations
+  const { refetch: refetchRateLimit } =
+    api.multipleChoiceQuestion.checkAIRateLimit.useQuery(undefined, {
+      enabled: false,
+    });
+
   const fetchExplanation = async () => {
-    // Fetching the explanation and updating it
-    const res = await openaiAPI.multipleChoiceQuestion.generateExplanation(
-      props.question
-    );
-    const data = res.data.choices[0]?.text ?? "";
-    // Remove the first character as it is either empty space or \n
-    const explanationResponse = data.slice(1);
-    setExplanation(explanationResponse);
+    const ratelimitResponse = await refetchRateLimit();
+    if (ratelimitResponse.data) {
+      // Fetching the explanation and updating it
+      const res = await openaiAPI.multipleChoiceQuestion.generateExplanation(
+        props.question
+      );
+      const data = res.data.choices[0]?.text ?? "";
+      // Remove the first character as it is either empty space or \n
+      const explanationResponse = data.slice(1);
+      setExplanation(explanationResponse);
+    } else {
+      return Promise.reject();
+    }
   };
 
   // Generating explanation from openai
@@ -310,7 +319,10 @@ const Explanation: React.FC<Props> = (props) => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
-              <Button onClick={() => generateExplanation()} disabled={loading}>
+              <Button
+                onClick={() => void generateExplanation()}
+                disabled={loading}
+              >
                 <Bot className="mr-2 h-4 w-4" /> Generate
               </Button>
             </TooltipTrigger>

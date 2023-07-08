@@ -1,11 +1,28 @@
 import { z } from "zod";
 
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
 import { checkAnswer } from "@/server/helpers/checkAnswer";
+import { TRPCError } from "@trpc/server";
+
+// Create a new ratelimiter, that allows 1 request per 1 minute
+const checkAnswerRateLimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(1, "1 m"),
+  analytics: true,
+  /**
+   * Optional prefix for the keys used in redis. This is useful if you want to share a redis
+   * instance with other applications and want to avoid key collisions. The default prefix is
+   * "@upstash/ratelimit"
+   */
+  prefix: "@upstash/ratelimit",
+});
 
 export const answerSheetRouter = createTRPCRouter({
   get: publicProcedure
@@ -208,7 +225,11 @@ export const answerSheetRouter = createTRPCRouter({
         answerSheetId: z.string(),
       })
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
+      const { success } = await checkAnswerRateLimit.limit(input.answerSheetId);
+
+      if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+
       return checkAnswer(ctx.prisma, input.worksheetId, input.answerSheetId);
     }),
 

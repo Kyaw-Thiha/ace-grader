@@ -27,6 +27,8 @@
     "@trpc/next": "^10.31.0",
     "@trpc/react-query": "^10.31.0",
     "@trpc/server": "^10.31.0",
+    "@upstash/ratelimit": "^0.4.3",
+    "@upstash/redis": "^1.22.0",
     "class-variance-authority": "^0.6.0",
     "clsx": "^1.2.1",
     "framer-motion": "^10.12.16",
