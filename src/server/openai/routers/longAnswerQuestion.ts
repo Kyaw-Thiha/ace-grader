@@ -7,28 +7,34 @@ type LongAnswerQuestionAnswer =
 
 const generateExplanation = (question: LongAnswerQuestion) => {
   const markingScheme = question?.markingScheme as string[];
-  const prompt = `
-  Act as a teacher writing down an explanation for a 10th grade student.
-  \nIt will be used as reference by students to learn from.
-  \n\nQuestion: ${question?.text ?? ""}
-  \nMarking Scheme: ${
+
+  const systemPrompt = `
+  Act as a teacher writing down an explanation for a 10th grade student. 
+  Ensure that explanation is not more than 200 words.
+  `;
+  const userPrompt = `
+  Question: ${question?.text ?? ""}
+  Marking Scheme: ${
     markingScheme
       .map((marking) => {
         return marking;
       })
       .join("\n") ?? ""
   }
-  \nExplanation:
+  Explanation:
   `;
 
-  return openai.createCompletion({
-    model: "text-davinci-003",
-    prompt: prompt,
+  return openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userPrompt },
+    ],
     temperature: 1,
-    max_tokens: 256,
+    max_tokens: 512,
     top_p: 1,
     frequency_penalty: 0,
-    presence_penalty: 1.05,
+    presence_penalty: 0,
   });
 };
 

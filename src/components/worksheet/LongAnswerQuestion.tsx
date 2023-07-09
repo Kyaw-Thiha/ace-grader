@@ -263,9 +263,7 @@ const Explanation: React.FC<Props> = (props) => {
       const res = await openaiAPI.longAnswerQuestion.generateExplanation(
         props.question
       );
-      const data = res.data.choices[0]?.text ?? "";
-      // Remove the first character as it is either empty space or \n
-      const explanationResponse = data.slice(1);
+      const explanationResponse = res.data.choices[0]?.message?.content ?? "";
       setExplanation(explanationResponse);
     } else {
       return Promise.reject();
