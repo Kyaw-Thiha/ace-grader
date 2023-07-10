@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import TopNavLayout from "@/components/TopNavLayout";
 import { ShareLinkGuideDialog } from "@/components/worksheet/ShareLinkGuideDialog";
+import { ShareDialog } from "@/components/worksheet/ShareDialog";
 
 // https://github.com/jherr/notetaker
 type Profile = RouterOutputs["teacherProfile"]["getWorksheets"];
@@ -104,23 +105,6 @@ const WorksheetList: React.FC<Props> = (props) => {
     await router.push(`worksheets/${worksheetId}/dashboard`);
   };
 
-  const copyLink = (worksheetId: string) => {
-    // setChosenWorksheetId(worksheetId);
-    // const res = await refetchPublishedWorksheet();
-    // const publishedWorksheetId = res.data?.publishedWorksheets.at(0)?.id ?? "";
-    const worksheet = worksheets.find((obj) => {
-      return obj.id == worksheetId;
-    });
-    const latestPublishedWorksheet =
-      worksheet?.publishedWorksheets.at(0)?.id ?? "";
-
-    void navigator.clipboard.writeText(
-      `${window.location.origin}/published-worksheets/${latestPublishedWorksheet}`
-    );
-
-    toast.success("Link copied to your clipboard");
-  };
-
   if (props.isLoading) {
     return <Loading />;
   } else if (worksheets?.length == 0) {
@@ -171,12 +155,12 @@ const WorksheetList: React.FC<Props> = (props) => {
               )}
 
               {worksheet.publishedWorksheets.length > 0 && (
-                <Button
-                  variant="outline"
-                  onClick={() => void copyLink(worksheet.id)}
-                >
-                  <Share2 className="h-4 w-4" />
-                </Button>
+                <ShareDialog
+                  url={`${window.location.origin}/published-worksheets/${
+                    worksheet?.publishedWorksheets.at(0)?.id ?? ""
+                  }`}
+                  title={worksheet.title}
+                />
               )}
               <DeleteWorksheetButton
                 worksheetId={worksheet.id}
