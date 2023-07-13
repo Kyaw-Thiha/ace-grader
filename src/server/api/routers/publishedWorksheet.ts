@@ -31,11 +31,11 @@ export const publishedWorksheetRouter = createTRPCRouter({
     }),
 
   getCount: protectedProcedure
-    .input(z.object({ profileId: z.string() }))
+    .input(z.object({ worksheetId: z.string() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.publishedWorksheet.count({
         where: {
-          profileId: input.profileId,
+          worksheetId: input.worksheetId,
         },
       });
     }),
