@@ -115,9 +115,18 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
 
   //  Determining the version
   const { data: publishedWorksheetCount } =
-    api.publishedWorksheet.getCount.useQuery({ profileId: props.worksheetId });
+    api.publishedWorksheet.getCount.useQuery({
+      worksheetId: props.worksheetId,
+    });
   const count = publishedWorksheetCount ?? 0;
   const version = count + 1;
+
+  /**
+   *  Ensure that the action text is
+   *  - Publish when not published before
+   *  - Save when worksheet has been published before
+   */
+  const actionText = publishedWorksheetCount == 0 ? "Publish" : "Save";
 
   //Creating the published worksheet
   const createWorksheet = api.publishedWorksheet.create.useMutation({
@@ -233,23 +242,26 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Publish</Button>
+        <Button>{actionText}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Publish Worksheet</DialogTitle>
+          <DialogTitle>{actionText} Worksheet</DialogTitle>
           <DialogDescription>
             <p>
               Note: Future students answering will use the latest version of
               worksheet
             </p>
-            <p>Are you sure you want to publish this worksheet version?</p>
+            <p>
+              Are you sure you want to {actionText.toLocaleLowerCase()} this
+              worksheet version?
+            </p>
           </DialogDescription>
         </DialogHeader>
 
         <DialogFooter>
           <Button type="submit" onClick={() => void publishWorksheet()}>
-            Publish Worksheet
+            {actionText} Worksheet
           </Button>
         </DialogFooter>
       </DialogContent>
