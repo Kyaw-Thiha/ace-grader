@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { type RouterOutputs, api } from "@/utils/api";
 import type { QueryObserverBaseResult } from "@tanstack/react-query";
 import { Trash2 } from "lucide-react";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -27,6 +28,7 @@ export const AddWorksheetButton: React.FC<AddWorksheetButtonProps> = ({
   profile,
   refetch,
 }) => {
+  const router = useRouter();
   const [title, setTitle] = useState("");
   const [open, setOpen] = useState(false);
 
@@ -37,7 +39,7 @@ export const AddWorksheetButton: React.FC<AddWorksheetButtonProps> = ({
     },
   });
 
-  const addWorksheet = () => {
+  const addWorksheet = async () => {
     if (title.trim() == "") {
       // If title is not entered
       toast.error("Enter a title");
@@ -50,7 +52,7 @@ export const AddWorksheetButton: React.FC<AddWorksheetButtonProps> = ({
     } else {
       setOpen(false);
 
-      void toast.promise(
+      const createdWorksheet = await toast.promise(
         createWorksheet.mutateAsync({
           title: title,
           profileId: profile?.id ?? "",
@@ -61,6 +63,7 @@ export const AddWorksheetButton: React.FC<AddWorksheetButtonProps> = ({
           error: "Error in Worksheet Creation 🤯",
         }
       );
+      void router.push(`/worksheets/${createdWorksheet.id}`);
     }
 
     setTitle("");
@@ -92,7 +95,7 @@ export const AddWorksheetButton: React.FC<AddWorksheetButtonProps> = ({
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" onClick={() => addWorksheet()}>
+          <Button type="submit" onClick={() => void addWorksheet()}>
             Create Worksheet
           </Button>
         </DialogFooter>
