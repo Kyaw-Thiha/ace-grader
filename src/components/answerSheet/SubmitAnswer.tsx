@@ -85,3 +85,37 @@ export const SubmitAnswerDialog: React.FC<SubmitAnswerDialogProps> = (
     </Dialog>
   );
 };
+
+export const CheckAnswerButton: React.FC<SubmitAnswerDialogProps> = (props) => {
+  //Function for checking the answers
+  const checkAnswer = api.answerSheet.checkAnswer.useMutation({
+    onSuccess: () => {
+      void props.refetch();
+    },
+  });
+
+  const submitAnswer = () => {
+    props.onSubmit();
+
+    void checkAnswer.mutateAsync({
+      worksheetId: props.worksheetId,
+      answerSheetId: props.answerSheetId,
+    });
+
+    // Uncomment this when debugging
+    //
+    // void toast.promise(
+    //   checkAnswer.mutateAsync({
+    //     worksheetId: props.worksheetId,
+    //     answerSheetId: props.answerSheetId,
+    //   }),
+    //   {
+    //     pending: "Checking Answers",
+    //     success: "Answers Checked 👌",
+    //     error: "Error in Answer Checking 🤯",
+    //   }
+    // );
+  };
+
+  return <Button onClick={() => submitAnswer()}>Check Answer</Button>;
+};

@@ -17,7 +17,10 @@ import MultipleChoiceQuestion from "@/components/answerSheet/MultipleChoiceQuest
 import ShortAnswerQuestion from "@/components/answerSheet/ShortAnswerQuestion";
 import LongAnswerQuestion from "@/components/answerSheet/LongAnswerQuestion";
 import { Button } from "@/components/ui/button";
-import { SubmitAnswerDialog } from "@/components/answerSheet/SubmitAnswer";
+import {
+  CheckAnswerButton,
+  SubmitAnswerDialog,
+} from "@/components/answerSheet/SubmitAnswer";
 import CheckingInProgress from "@/components/answerSheet/CheckingInProgress";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
@@ -187,6 +190,7 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
           <h2 className="mb-8 mt-0 text-center text-3xl font-medium md:mb-12 md:mt-4">
             {publishedWorksheet?.title}
           </h2>
+
           {status.startsWith("returned-") ? (
             <p className="text-right">
               Total Marks: {answerSheet?.totalMarks}/
@@ -196,6 +200,20 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
             <p className="text-right">
               Total Marks: {publishedWorksheet?.totalMarks}
             </p>
+          )}
+
+          {/* If answer sheet isn't checked, allows teacher to manually activate check */}
+          {status.startsWith("checking-") && (
+            <div className="my-4 text-right">
+              <CheckAnswerButton
+                worksheetId={props.publishedWorksheetId}
+                answerSheetId={props.answerSheedId}
+                refetch={refetchAnswerSheet}
+                onSubmit={() => {
+                  console.log("Submited");
+                }}
+              />
+            </div>
           )}
         </section>
 
