@@ -31,6 +31,7 @@
     "@upstash/redis": "^1.22.0",
     "class-variance-authority": "^0.6.0",
     "clsx": "^1.2.1",
+    "exponential-backoff": "^3.1.1",
     "framer-motion": "^10.12.16",
     "lottie-react": "^2.4.0",
     "lucide-react": "^0.248.0",

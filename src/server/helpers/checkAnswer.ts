@@ -7,6 +7,8 @@ import { CheckingFinishedEmailTemplate } from "@/components/emails/CheckingFinis
 
 type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
 
+import { backOff } from "exponential-backoff";
+
 export const checkAnswer = async (
   prisma: PrismaClient,
   worksheetId: string,
@@ -55,10 +57,13 @@ export const checkAnswer = async (
       const longAnswerQuestionAnswer = answer.longAnswerQuestionAnswer;
 
       // Fetching the explanation and updating it
-      const res = await openaiAPI.longAnswerQuestion.generateMarksAndFeedback(
-        question,
-        longAnswerQuestionAnswer
+      const res = await backOff(() =>
+        openaiAPI.longAnswerQuestion.generateMarksAndFeedback(
+          question,
+          longAnswerQuestionAnswer
+        )
       );
+
       const data = res.data.choices[0]?.message?.content ?? "";
       const markKeyword = "Mark: ";
       const feedbackKeyword = "Feedback: ";
