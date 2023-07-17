@@ -5,7 +5,6 @@
 
 generator client {
     provider = "prisma-client-js"
-    previewFeatures = ["jsonProtocol"]
 }
 
 datasource db {
@@ -17,7 +16,7 @@ datasource db {
 // https://clerk.com/docs/users/sync-data-to-your-backend
 model TeacherProfile {
     id            String    @id @default(cuid())
-    // username      String
+    email         String    @default("")
     userId        String
     notifications           TeacherNotification[]
     worksheets              Worksheet[]
