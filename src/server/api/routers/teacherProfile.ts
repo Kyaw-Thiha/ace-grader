@@ -24,7 +24,7 @@ export const teacherProfileRouter = createTRPCRouter({
     const fetchWorksheets = () => {
       return ctx.prisma.teacherProfile.findFirst({
         where: {
-          userId: ctx.userId,
+          email: ctx.user?.emailAddresses[0]?.emailAddress,
         },
         select: {
           id: true,
