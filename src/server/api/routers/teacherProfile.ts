@@ -10,6 +10,16 @@ export const teacherProfileRouter = createTRPCRouter({
     });
   }),
 
+  getByEmail: protectedProcedure
+    .input(z.object({ email: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.teacherProfile.findFirst({
+        where: {
+          email: input.email,
+        },
+      });
+    }),
+
   getWorksheets: protectedProcedure.query(async ({ ctx }) => {
     const fetchWorksheets = () => {
       return ctx.prisma.teacherProfile.findFirst({
@@ -42,6 +52,7 @@ export const teacherProfileRouter = createTRPCRouter({
       await ctx.prisma.teacherProfile.create({
         data: {
           userId: ctx.userId,
+          email: ctx.user?.emailAddresses[0]?.emailAddress,
         },
       });
       const newProfile = await fetchWorksheets();
@@ -75,7 +86,8 @@ export const teacherProfileRouter = createTRPCRouter({
     .mutation(({ ctx, input }) => {
       return ctx.prisma.teacherProfile.create({
         data: {
-          userId: input.userId,
+          userId: ctx.userId,
+          email: ctx.user?.emailAddresses[0]?.emailAddress,
         },
       });
     }),

@@ -22,6 +22,7 @@ import Head from "next/head";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import ToggleTheme from "@/components/ToggleTheme";
+import { ChangeOwnerDialog } from "@/components/worksheet/CollaboratorsDialog";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
@@ -106,6 +107,10 @@ const WorksheetLayout: React.FC<WorksheetHeaderProps> = ({
 
             <div className="flex flex-row items-center gap-4">
               <ToggleTheme />
+              <ChangeOwnerDialog
+                worksheetId={worksheetId}
+                refetch={refetchWorksheet}
+              />
               <PublishWorksheetButton
                 worksheetId={worksheetId}
                 refetch={refetchWorksheet}

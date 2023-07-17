@@ -143,6 +143,26 @@ export const worksheetRouter = createTRPCRouter({
       });
     }),
 
+  editProfile: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        profileId: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.worksheet.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          profile: {
+            connect: { id: input.profileId },
+          },
+        },
+      });
+    }),
+
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(({ ctx, input }) => {
