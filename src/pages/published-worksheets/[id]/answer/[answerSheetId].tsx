@@ -182,7 +182,14 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
       </div>
     );
   } else if (isChecking || status == "checking-studentview") {
-    return <CheckingInProgress />;
+    return (
+      <>
+        <CheckingInProgress />
+        {isChecking ? "Checking" : "Not Checking"}
+        {status}
+        {props.isTeacher ? "Teacher" : "Student"}
+      </>
+    );
   } else {
     return (
       <div>
