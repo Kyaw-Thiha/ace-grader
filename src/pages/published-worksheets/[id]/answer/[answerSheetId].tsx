@@ -123,11 +123,16 @@ const CheckIfUserCreatedWorksheet: React.FC<Props> = (props) => {
   const profileId = publishedWorksheet?.profileId ?? "";
 
   return (
-    <QuestionList
-      publishedWorksheetId={props.publishedWorksheetId}
-      answerSheedId={props.answerSheedId}
-      isTeacher={profileId == teacherProfile?.id}
-    />
+    <>
+      <QuestionList
+        publishedWorksheetId={props.publishedWorksheetId}
+        answerSheedId={props.answerSheedId}
+        isTeacher={profileId == teacherProfile?.id}
+      />
+      {profileId}
+      {teacherProfile?.id}
+      {profileId == teacherProfile?.id}
+    </>
   );
 };
 
