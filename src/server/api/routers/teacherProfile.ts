@@ -5,7 +5,15 @@ export const teacherProfileRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.teacherProfile.findFirst({
       where: {
-        userId: ctx.userId,
+        email: ctx.user?.emailAddresses[0]?.emailAddress,
+      },
+    });
+  }),
+
+  getCurrentUser: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.teacherProfile.findFirst({
+      where: {
+        email: ctx.user?.emailAddresses[0]?.emailAddress,
       },
     });
   }),

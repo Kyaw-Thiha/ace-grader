@@ -114,7 +114,7 @@ const CheckIfUserCreatedWorksheet: React.FC<Props> = (props) => {
     data: teacherProfile,
     isLoading,
     isError,
-  } = api.teacherProfile.getAll.useQuery();
+  } = api.teacherProfile.getCurrentUser.useQuery();
 
   const { data: publishedWorksheet } = api.publishedWorksheet.get.useQuery(
     { id: props.publishedWorksheetId } // no input
@@ -123,16 +123,11 @@ const CheckIfUserCreatedWorksheet: React.FC<Props> = (props) => {
   const profileId = publishedWorksheet?.profileId ?? "";
 
   return (
-    <>
-      <QuestionList
-        publishedWorksheetId={props.publishedWorksheetId}
-        answerSheedId={props.answerSheedId}
-        isTeacher={profileId == teacherProfile?.id}
-      />
-      {profileId}
-      {teacherProfile?.id}
-      {profileId == teacherProfile?.id}
-    </>
+    <QuestionList
+      publishedWorksheetId={props.publishedWorksheetId}
+      answerSheedId={props.answerSheedId}
+      isTeacher={profileId == teacherProfile?.id}
+    />
   );
 };
 
@@ -187,14 +182,7 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
       </div>
     );
   } else if (isChecking || status == "checking-studentview") {
-    return (
-      <>
-        <CheckingInProgress />
-        {isChecking ? "Checking" : "Not Checking"}
-        {status}
-        {props.isTeacher ? "Teacher" : "Student"}
-      </>
-    );
+    return <CheckingInProgress />;
   } else {
     return (
       <div>
