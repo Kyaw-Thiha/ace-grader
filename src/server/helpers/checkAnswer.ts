@@ -13,6 +13,10 @@ interface MarksAndFeedback {
 
 import { backOff } from "exponential-backoff";
 
+export const config = {
+  runtime: "edge",
+};
+
 export const checkAnswer = async (
   prisma: PrismaClient,
   worksheetId: string,
