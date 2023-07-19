@@ -1,11 +1,15 @@
 import type { ReactElement } from "react";
-import type { PrismaClient } from "@prisma/client";
+import type { LongAnswerQuestionAnswer, PrismaClient } from "@prisma/client";
 import type { RouterOutputs } from "@/utils/api";
 import { openaiAPI } from "@/server/openai/api";
 import { Resend } from "resend";
 import { CheckingFinishedEmailTemplate } from "@/components/emails/CheckingFinished";
 
 type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
+interface MarksAndFeedback {
+  marks: number;
+  feedback: string;
+}
 
 import { backOff } from "exponential-backoff";
 
@@ -21,6 +25,9 @@ export const checkAnswer = async (
 
   const questions = worksheet?.questions ?? [];
   const answers = answerSheet?.answers ?? [];
+
+  const longAnswerQuestions: LongAnswerQuestion[] = [];
+  const longAnswerQuestionAnswers: LongAnswerQuestionAnswer[] = [];
 
   let totalMarks = 0;
   for (const answer of answers) {
@@ -56,41 +63,44 @@ export const checkAnswer = async (
         ?.longAnswerQuestion as LongAnswerQuestion;
       const longAnswerQuestionAnswer = answer.longAnswerQuestionAnswer;
 
-      // Fetching the explanation and updating it
-      const res = await backOff(() =>
-        openaiAPI.longAnswerQuestion.generateMarksAndFeedback(
-          question,
-          longAnswerQuestionAnswer
-        )
+      longAnswerQuestions.push(question);
+      longAnswerQuestionAnswers.push(
+        longAnswerQuestionAnswer as LongAnswerQuestionAnswer
       );
-
-      const data = res.data.choices[0]?.message?.content ?? "";
-      const markKeyword = "Mark: ";
-      const feedbackKeyword = "Feedback: ";
-      const markIndex = data.indexOf(markKeyword);
-      const feedbackIndex = data.indexOf(feedbackKeyword);
-
-      const markString = data.substring(
-        markIndex + markKeyword.length,
-        feedbackIndex
-      );
-      const marks = parseInt(markString.trim());
-      const feedback = data.substring(feedbackIndex + feedbackKeyword.length);
-
-      await prisma.longAnswerQuestionAnswer.update({
-        where: {
-          id: longAnswerQuestionAnswer?.id,
-        },
-        data: {
-          marks: marks,
-          feedback: feedback,
-        },
-      });
-
-      // Updating the total marks
-      totalMarks = totalMarks + marks;
     }
   }
+
+  // Fetching the explanation and updating it
+  const res = await backOff(() =>
+    openaiAPI.longAnswerQuestion.batchGenerateMarksAndFeedback(
+      longAnswerQuestions,
+      longAnswerQuestionAnswers
+    )
+  );
+
+  const data = res.data.choices[0]?.message?.content ?? "";
+  const answerResponses = JSON.parse(data) as MarksAndFeedback[];
+
+  for (let i = 0; i < longAnswerQuestionAnswers.length; i++) {
+    const answer = longAnswerQuestionAnswers[i];
+    const answerResponse = answerResponses[i];
+
+    const marks = answerResponse?.marks ?? 0;
+    const feedback = answerResponse?.feedback ?? "";
+
+    await prisma.longAnswerQuestionAnswer.update({
+      where: {
+        id: answer?.id,
+      },
+      data: {
+        marks: marks,
+        feedback: feedback,
+      },
+    });
+
+    totalMarks = totalMarks + marks;
+  }
+
   await setTotalMarks(prisma, answerSheetId, totalMarks);
   await markAsReturned(prisma, answerSheetId);
 
@@ -240,3 +250,40 @@ export const sendEmail = (
     }) as ReactElement,
   });
 };
+
+// const question = questions.at(answer.order - 1)
+//   ?.longAnswerQuestion as LongAnswerQuestion;
+// const longAnswerQuestionAnswer = answer.longAnswerQuestionAnswer;
+// // Fetching the explanation and updating it
+// const res = await backOff(() =>
+//   openaiAPI.longAnswerQuestion.generateMarksAndFeedback(
+//     question,
+//     longAnswerQuestionAnswer
+//   )
+// );
+
+// const data = res.data.choices[0]?.message?.content ?? "";
+// const markKeyword = "Mark: ";
+// const feedbackKeyword = "Feedback: ";
+// const markIndex = data.indexOf(markKeyword);
+// const feedbackIndex = data.indexOf(feedbackKeyword);
+
+// const markString = data.substring(
+//   markIndex + markKeyword.length,
+//   feedbackIndex
+// );
+// const marks = parseInt(markString.trim());
+// const feedback = data.substring(feedbackIndex + feedbackKeyword.length);
+
+// await prisma.longAnswerQuestionAnswer.update({
+//   where: {
+//     id: longAnswerQuestionAnswer?.id,
+//   },
+//   data: {
+//     marks: marks,
+//     feedback: feedback,
+//   },
+// });
+
+// // Updating the total marks
+// totalMarks = totalMarks + marks;

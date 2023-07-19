@@ -111,9 +111,73 @@ const generateMarksAndFeedback = (
   });
 };
 
+interface QuestionPrompt {
+  question: string;
+  total_marks: number;
+  marking_scheme: string;
+  answer: string;
+}
+
+const batchGenerateMarksAndFeedback = (
+  questions: LongAnswerQuestion[],
+  answers: LongAnswerQuestionAnswer[]
+) => {
+  const systemPrompt = `
+  You are AceGrader, an advanced AI-powered tool designed to automate the grading process for teachers. 
+  Your primary goal is to assist teachers in evaluating their students' worksheet answers and providing 
+  constructive feedback to help students improve their performance.
+  Your response should include the marks assigned to each answer and a feedback paragraph to guide the 
+  student on how to enhance their response.
+  For each point in the marking scheme that is satisfied or demonstrates similar meaning, award one whole mark.
+  Each marking point is separated by ';;;'
+  Remember to consider similar meanings and various valid approaches while grading the answers. 
+  Please provide your response in JSON format with a list of answers, each containing 'marks' and 'feedback' as keys.
+  `;
+  const questionsList = [] as QuestionPrompt[];
+
+  for (let i = 0; i < questions.length; i++) {
+    const question = questions[i];
+    const answer = answers[i];
+
+    const markingScheme = question?.markingScheme as string[];
+    let studentAnswer = answer?.studentAnswer;
+    if (studentAnswer == "" || !studentAnswer) {
+      studentAnswer = "No Answer";
+    }
+
+    questionsList.push({
+      question: question?.text ?? "",
+      total_marks: question?.marks ?? 0,
+      marking_scheme:
+        markingScheme
+          .map((marking) => {
+            return marking;
+          })
+          .join(";;;") ?? "",
+      answer: studentAnswer,
+    });
+  }
+
+  const userPrompt = JSON.stringify(questionsList);
+
+  return openai.createChatCompletion({
+    model: "gpt-3.5-turbo-16k",
+    messages: [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userPrompt },
+    ],
+    temperature: 0,
+    max_tokens: 1024,
+    top_p: 1,
+    frequency_penalty: 0,
+    presence_penalty: 0,
+  });
+};
+
 export const longAnswerQuestion = {
   generateExplanation,
   generateSampleAnswer,
+  batchGenerateMarksAndFeedback,
   generateMarksAndFeedback,
 };
 
