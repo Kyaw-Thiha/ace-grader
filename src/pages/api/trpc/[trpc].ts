@@ -4,9 +4,9 @@ import { appRouter } from "@/server/api/root";
 import { createTRPCContext } from "@/server/api/trpc";
 
 // We're using the edge-runtime
-export const config = {
-  runtime: "edge",
-};
+// export const config = {
+//   runtime: "edge",
+// };
 
 // export API handler
 export default createNextApiHandler({
