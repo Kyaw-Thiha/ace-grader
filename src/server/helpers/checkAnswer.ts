@@ -82,43 +82,43 @@ export const checkAnswer = async (
     )
   );
 
-  const data = res.data.choices[0]?.message?.content ?? "";
-  const answerResponses = JSON.parse(data) as MarksAndFeedback[];
+  // const data = res.data.choices[0]?.message?.content ?? "";
+  // const answerResponses = JSON.parse(data) as MarksAndFeedback[];
 
-  for (let i = 0; i < longAnswerQuestionAnswers.length; i++) {
-    const answer = longAnswerQuestionAnswers[i];
-    const answerResponse = answerResponses[i];
+  // for (let i = 0; i < longAnswerQuestionAnswers.length; i++) {
+  //   const answer = longAnswerQuestionAnswers[i];
+  //   const answerResponse = answerResponses[i];
 
-    const marks = answerResponse?.marks ?? 0;
-    const feedback = answerResponse?.feedback ?? "";
+  //   const marks = answerResponse?.marks ?? 0;
+  //   const feedback = answerResponse?.feedback ?? "";
 
-    void prisma.longAnswerQuestionAnswer.update({
-      where: {
-        id: answer?.id,
-      },
-      data: {
-        marks: marks,
-        feedback: feedback,
-      },
-    });
+  //   void prisma.longAnswerQuestionAnswer.update({
+  //     where: {
+  //       id: answer?.id,
+  //     },
+  //     data: {
+  //       marks: marks,
+  //       feedback: feedback,
+  //     },
+  //   });
 
-    totalMarks = totalMarks + marks;
-  }
+  //   totalMarks = totalMarks + marks;
+  // }
 
-  void setTotalMarks(prisma, answerSheetId, totalMarks);
-  await markAsReturned(prisma, answerSheetId);
+  // void setTotalMarks(prisma, answerSheetId, totalMarks);
+  // await markAsReturned(prisma, answerSheetId);
 
-  const baseUrl =
-    process.env.NODE_ENV == "development"
-      ? process.env.VERCEL_URL ?? "localhost:3000"
-      : "https://acegrader.com";
+  // const baseUrl =
+  //   process.env.NODE_ENV == "development"
+  //     ? process.env.VERCEL_URL ?? "localhost:3000"
+  //     : "https://acegrader.com";
 
-  void sendEmail(
-    answerSheet?.studentEmail ?? "",
-    answerSheet?.studentName ?? "",
-    worksheet?.title ?? "",
-    `${baseUrl}/published-worksheets/${worksheetId}/answer/${answerSheetId}`
-  );
+  // void sendEmail(
+  //   answerSheet?.studentEmail ?? "",
+  //   answerSheet?.studentName ?? "",
+  //   worksheet?.title ?? "",
+  //   `${baseUrl}/published-worksheets/${worksheetId}/answer/${answerSheetId}`
+  // );
 };
 
 // Fetching the worksheet from the server
