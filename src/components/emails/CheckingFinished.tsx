@@ -19,9 +19,11 @@ interface EmailTemplateProps {
   url: string;
 }
 
-export const CheckingFinishedEmailTemplate: React.FC<
-  Readonly<EmailTemplateProps>
-> = ({ studentName, title, url }) => (
+export const CheckingFinishedEmailTemplate = ({
+  studentName,
+  title,
+  url,
+}: EmailTemplateProps): React.ReactElement => (
   <Html>
     <Head />
     <Preview>View your answer sheet with this link</Preview>
