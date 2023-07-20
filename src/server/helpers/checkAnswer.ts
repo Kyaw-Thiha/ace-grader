@@ -13,16 +13,14 @@ interface MarksAndFeedback {
 
 import { backOff } from "exponential-backoff";
 
-export const config = {
-  runtime: "edge",
-};
-
 export const checkAnswer = async (
   prisma: PrismaClient,
   worksheetId: string,
   answerSheetId: string
 ) => {
-  await markAsChecking(prisma, answerSheetId);
+  console.time("Function Execution Time");
+
+  void markAsChecking(prisma, answerSheetId);
 
   const worksheet = await fetchWorksheet(prisma, worksheetId);
   const answerSheet = await fetchAnswerSheet(prisma, answerSheetId);
@@ -34,6 +32,8 @@ export const checkAnswer = async (
   const longAnswerQuestionAnswers: LongAnswerQuestionAnswer[] = [];
 
   let totalMarks = 0;
+
+  console.time("Setting Up Questions");
   for (const answer of answers) {
     if (answer.answerType == "MultipleChoiceQuestionAnswer") {
       const question = questions.at(answer.order - 1)?.multipleChoiceQuestion;
@@ -53,7 +53,7 @@ export const checkAnswer = async (
         // Updating the total marks
         totalMarks = totalMarks + 1;
       } else {
-        await prisma.multipleChoiceQuestionAnswer.update({
+        void prisma.multipleChoiceQuestionAnswer.update({
           where: {
             id: multipleChoiceQuestionAnswer?.id,
           },
@@ -73,58 +73,60 @@ export const checkAnswer = async (
       );
     }
   }
+  console.timeEnd("Setting Up Questions");
 
+  console.time("ChatGPT");
   // Fetching the explanation and updating it
-  // const res = await backOff(() =>
-  //   openaiAPI.longAnswerQuestion.batchGenerateMarksAndFeedback(
-  //     longAnswerQuestions,
-  //     longAnswerQuestionAnswers
-  //   )
-  // );
-
-  const res = await openaiAPI.longAnswerQuestion.batchGenerateMarksAndFeedback(
-    longAnswerQuestions,
-    longAnswerQuestionAnswers
+  const res = await backOff(() =>
+    openaiAPI.longAnswerQuestion.batchGenerateMarksAndFeedback(
+      longAnswerQuestions,
+      longAnswerQuestionAnswers
+    )
   );
-  console.log(res);
+  console.timeEnd("ChatGPT");
 
-  // const data = res.data.choices[0]?.message?.content ?? "";
-  // const answerResponses = JSON.parse(data) as MarksAndFeedback[];
+  const data = res.data.choices[0]?.message?.content ?? "";
+  const answerResponses = JSON.parse(data) as MarksAndFeedback[];
 
-  // for (let i = 0; i < longAnswerQuestionAnswers.length; i++) {
-  //   const answer = longAnswerQuestionAnswers[i];
-  //   const answerResponse = answerResponses[i];
+  console.time("Updating Questions");
 
-  //   const marks = answerResponse?.marks ?? 0;
-  //   const feedback = answerResponse?.feedback ?? "";
+  for (let i = 0; i < longAnswerQuestionAnswers.length; i++) {
+    const answer = longAnswerQuestionAnswers[i];
+    const answerResponse = answerResponses[i];
 
-  //   void prisma.longAnswerQuestionAnswer.update({
-  //     where: {
-  //       id: answer?.id,
-  //     },
-  //     data: {
-  //       marks: marks,
-  //       feedback: feedback,
-  //     },
-  //   });
+    const marks = answerResponse?.marks ?? 0;
+    const feedback = answerResponse?.feedback ?? "";
 
-  //   totalMarks = totalMarks + marks;
-  // }
+    void prisma.longAnswerQuestionAnswer.update({
+      where: {
+        id: answer?.id,
+      },
+      data: {
+        marks: marks,
+        feedback: feedback,
+      },
+    });
 
-  // void setTotalMarks(prisma, answerSheetId, totalMarks);
-  // await markAsReturned(prisma, answerSheetId);
+    totalMarks = totalMarks + marks;
+  }
+  console.timeEnd("Updating Questions");
 
-  // const baseUrl =
-  //   process.env.NODE_ENV == "development"
-  //     ? process.env.VERCEL_URL ?? "localhost:3000"
-  //     : "https://acegrader.com";
+  void setTotalMarks(prisma, answerSheetId, totalMarks);
+  void markAsReturned(prisma, answerSheetId);
 
-  // void sendEmail(
-  //   answerSheet?.studentEmail ?? "",
-  //   answerSheet?.studentName ?? "",
-  //   worksheet?.title ?? "",
-  //   `${baseUrl}/published-worksheets/${worksheetId}/answer/${answerSheetId}`
-  // );
+  const baseUrl =
+    process.env.NODE_ENV == "development"
+      ? process.env.VERCEL_URL ?? "localhost:3000"
+      : "https://acegrader.com";
+
+  void sendEmail(
+    answerSheet?.studentEmail ?? "",
+    answerSheet?.studentName ?? "",
+    worksheet?.title ?? "",
+    `${baseUrl}/published-worksheets/${worksheetId}/answer/${answerSheetId}`
+  );
+
+  console.time("Function Execution Time");
 };
 
 // Fetching the worksheet from the server
