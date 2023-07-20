@@ -8,7 +8,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
-import { checkAnswer } from "@/server/helpers/checkAnswer";
+import checkAnswer from "@/defer/checkAnswer";
 import { TRPCError } from "@trpc/server";
 
 // Create a new ratelimiter, that allows 1 request per 1 minute

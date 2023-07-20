@@ -53,7 +53,7 @@ export const checkAnswer = async (
         // Updating the total marks
         totalMarks = totalMarks + 1;
       } else {
-        void prisma.multipleChoiceQuestionAnswer.update({
+        await prisma.multipleChoiceQuestionAnswer.update({
           where: {
             id: multipleChoiceQuestionAnswer?.id,
           },
@@ -97,7 +97,7 @@ export const checkAnswer = async (
     const marks = answerResponse?.marks ?? 0;
     const feedback = answerResponse?.feedback ?? "";
 
-    void prisma.longAnswerQuestionAnswer.update({
+    await prisma.longAnswerQuestionAnswer.update({
       where: {
         id: answer?.id,
       },
@@ -111,22 +111,22 @@ export const checkAnswer = async (
   }
   console.timeEnd("Updating Questions");
 
-  void setTotalMarks(prisma, answerSheetId, totalMarks);
-  void markAsReturned(prisma, answerSheetId);
+  await setTotalMarks(prisma, answerSheetId, totalMarks);
+  await markAsReturned(prisma, answerSheetId);
 
   const baseUrl =
     process.env.NODE_ENV == "development"
       ? process.env.VERCEL_URL ?? "localhost:3000"
       : "https://acegrader.com";
 
-  void sendEmail(
+  await sendEmail(
     answerSheet?.studentEmail ?? "",
     answerSheet?.studentName ?? "",
     worksheet?.title ?? "",
     `${baseUrl}/published-worksheets/${worksheetId}/answer/${answerSheetId}`
   );
 
-  console.time("Function Execution Time");
+  console.timeEnd("Function Execution Time");
 };
 
 // Fetching the worksheet from the server
