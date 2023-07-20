@@ -75,12 +75,18 @@ export const checkAnswer = async (
   }
 
   // Fetching the explanation and updating it
-  const res = await backOff(() =>
-    openaiAPI.longAnswerQuestion.batchGenerateMarksAndFeedback(
-      longAnswerQuestions,
-      longAnswerQuestionAnswers
-    )
+  // const res = await backOff(() =>
+  //   openaiAPI.longAnswerQuestion.batchGenerateMarksAndFeedback(
+  //     longAnswerQuestions,
+  //     longAnswerQuestionAnswers
+  //   )
+  // );
+
+  const res = await openaiAPI.longAnswerQuestion.batchGenerateMarksAndFeedback(
+    longAnswerQuestions,
+    longAnswerQuestionAnswers
   );
+  console.log(res);
 
   // const data = res.data.choices[0]?.message?.content ?? "";
   // const answerResponses = JSON.parse(data) as MarksAndFeedback[];
