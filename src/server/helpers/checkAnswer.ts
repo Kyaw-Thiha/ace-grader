@@ -92,7 +92,7 @@ export const checkAnswer = async (
     const marks = answerResponse?.marks ?? 0;
     const feedback = answerResponse?.feedback ?? "";
 
-    await prisma.longAnswerQuestionAnswer.update({
+    void prisma.longAnswerQuestionAnswer.update({
       where: {
         id: answer?.id,
       },
@@ -105,7 +105,7 @@ export const checkAnswer = async (
     totalMarks = totalMarks + marks;
   }
 
-  await setTotalMarks(prisma, answerSheetId, totalMarks);
+  void setTotalMarks(prisma, answerSheetId, totalMarks);
   await markAsReturned(prisma, answerSheetId);
 
   const baseUrl =
@@ -113,7 +113,7 @@ export const checkAnswer = async (
       ? process.env.VERCEL_URL ?? "localhost:3000"
       : "https://acegrader.com";
 
-  await sendEmail(
+  void sendEmail(
     answerSheet?.studentEmail ?? "",
     answerSheet?.studentName ?? "",
     worksheet?.title ?? "",
