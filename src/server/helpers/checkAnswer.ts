@@ -4,6 +4,8 @@ import type { RouterOutputs } from "@/utils/api";
 import { openaiAPI } from "@/server/openai/api";
 import { Resend } from "resend";
 import { CheckingFinishedEmailTemplate } from "@/components/emails/CheckingFinished";
+import { backOff } from "exponential-backoff";
+import { prisma } from "@/server/db";
 
 type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
 interface MarksAndFeedback {
@@ -11,10 +13,7 @@ interface MarksAndFeedback {
   feedback: string;
 }
 
-import { backOff } from "exponential-backoff";
-
 export const checkAnswer = async (
-  prisma: PrismaClient,
   worksheetId: string,
   answerSheetId: string
 ) => {
