@@ -59,10 +59,19 @@ export const worksheetRouter = createTRPCRouter({
               multipleChoiceQuestion: {
                 include: {
                   choices: true,
+                  images: true,
                 },
               },
-              shortAnswerQuestion: true,
-              longAnswerQuestion: true,
+              shortAnswerQuestion: {
+                include: {
+                  images: true,
+                },
+              },
+              longAnswerQuestion: {
+                include: {
+                  images: true,
+                },
+              },
             },
           },
         },

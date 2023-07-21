@@ -25,6 +25,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { AutosizeInput } from "@/components/ui/resize-input";
+import Images from "@/components/worksheet/Images";
 
 type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
 
@@ -37,6 +38,11 @@ const LongAnswerQuestion: React.FC<Props> = (props) => {
   return (
     <div className="flex flex-col gap-6 px-12">
       <Text question={props.question} refetch={props.refetch} />
+      <Images
+        question={props.question}
+        questionType="LongAnswerQuestion"
+        refetch={props.refetch}
+      />
       <Marks question={props.question} refetch={props.refetch} />
       <MarkingScheme question={props.question} refetch={props.refetch} />
       <Explanation question={props.question} refetch={props.refetch} />
@@ -201,6 +207,15 @@ const MarkingSchemeForm: React.FC<Props> = (props) => {
               add a marking point.
             </p>
             <div className="mt-4 flex flex-col gap-4">
+              {markingScheme.length == 0 && (
+                // Initial blank text if there is not marking schemes
+                <Input
+                  key={0}
+                  value={""}
+                  className="text-black dark:text-white"
+                  onChange={(e) => handleOnChange(0, e.target.value)}
+                />
+              )}
               {markingScheme?.map((marking, index) => {
                 return (
                   <Input

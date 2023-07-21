@@ -12,6 +12,7 @@ import { multipleChoiceQuestionAnswerRouter } from "./routers/multipleChoiceQues
 import { shortAnswerQuestionAnswerRouter } from "./routers/shortAnswerQuestionAnswer";
 import { longAnswerQuestionAnswerRouter } from "./routers/longAnswerQuestionAnswer";
 import { userRouter } from "./routers/user";
+import { imageRouter } from "./routers/image";
 
 /**
  * This is the primary router for your server.
@@ -32,6 +33,7 @@ export const appRouter = createTRPCRouter({
   multipleChoiceQuestionAnswer: multipleChoiceQuestionAnswerRouter,
   shortAnswerQuestionAnswer: shortAnswerQuestionAnswerRouter,
   longAnswerQuestionAnswer: longAnswerQuestionAnswerRouter,
+  image: imageRouter,
 });
 
 // export type definition of API

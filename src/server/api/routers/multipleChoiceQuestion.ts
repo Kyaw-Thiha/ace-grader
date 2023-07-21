@@ -31,6 +31,7 @@ export const multipleChoiceQuestionRouter = createTRPCRouter({
         },
         include: {
           choices: true,
+          images: true,
         },
       });
     }),
@@ -75,6 +76,30 @@ export const multipleChoiceQuestionRouter = createTRPCRouter({
               choices: {
                 create: input.choices,
               },
+            },
+          },
+        },
+      });
+    }),
+
+  addImage: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        url: z.string(),
+        caption: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.longAnswerQuestion.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          images: {
+            create: {
+              url: input.url,
+              caption: input.caption,
             },
           },
         },

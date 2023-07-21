@@ -24,6 +24,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import Images from "@/components/worksheet/Images";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 
@@ -36,6 +37,11 @@ const MultipleChoiceQuestion: React.FC<Props> = (props) => {
   return (
     <div className="flex flex-col gap-6">
       <Text question={props.question} refetch={props.refetch} />
+      <Images
+        question={props.question}
+        questionType="MultipleChoiceQuestion"
+        refetch={props.refetch}
+      />
       <div className="flex flex-col">
         {props.question?.choices.map((choice) => (
           <div key={choice.index} className="my-2">

@@ -14,6 +14,9 @@ export const shortAnswerQuestionRouter = createTRPCRouter({
         where: {
           id: input.id,
         },
+        include: {
+          images: true,
+        },
       });
     }),
 
@@ -42,6 +45,30 @@ export const shortAnswerQuestionRouter = createTRPCRouter({
               marks: input.marks ?? 1,
               answer: input.answer ?? "",
               explanation: input.explanation ?? "",
+            },
+          },
+        },
+      });
+    }),
+
+  addImage: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        url: z.string(),
+        caption: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.longAnswerQuestion.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          images: {
+            create: {
+              url: input.url,
+              caption: input.caption,
             },
           },
         },

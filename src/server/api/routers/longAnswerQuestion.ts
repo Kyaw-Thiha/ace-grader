@@ -29,6 +29,9 @@ export const longAnswerQuestionRouter = createTRPCRouter({
         where: {
           id: input.id,
         },
+        include: {
+          images: true,
+        },
       });
     }),
 
@@ -59,6 +62,30 @@ export const longAnswerQuestionRouter = createTRPCRouter({
               markingScheme: input.markingScheme ?? [],
               sampleAnswer: input.sampleAnswer ?? "",
               explanation: input.explanation ?? "",
+            },
+          },
+        },
+      });
+    }),
+
+  addImage: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        url: z.string(),
+        caption: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.longAnswerQuestion.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          images: {
+            create: {
+              url: input.url,
+              caption: input.caption,
             },
           },
         },

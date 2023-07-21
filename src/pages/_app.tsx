@@ -6,6 +6,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Toast from "@/components/Toast";
 import TopNavLayout from "@/components/TopNavLayout";
 
+// Stylesheet for upload thing widgets
+import "@uploadthing/react/styles.css";
+
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <ClerkProvider {...pageProps}>
