@@ -271,7 +271,7 @@ const Explanation: React.FC<Props> = (props) => {
   };
 
   // Fetching openai's response for generating explanations
-  const generateExplanation = () => {
+  const generateExplanation = async () => {
     const markingScheme = props.question?.markingScheme as string[];
 
     if (props.question?.text.trim() == "") {
@@ -282,7 +282,7 @@ const Explanation: React.FC<Props> = (props) => {
       toast.error("Marks must be added");
     } else {
       setLoading(true);
-      void toast.promise(fetchExplanation, {
+      await toast.promise(fetchExplanation, {
         pending: "Generating Explanation",
         success: "Explanation generated 👌",
         error: "Error in explanation generation 🤯",
