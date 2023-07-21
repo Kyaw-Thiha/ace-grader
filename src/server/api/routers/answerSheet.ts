@@ -230,7 +230,7 @@ export const answerSheetRouter = createTRPCRouter({
 
       if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
 
-      return checkAnswer(ctx.prisma, input.worksheetId, input.answerSheetId);
+      return checkAnswer(input.worksheetId, input.answerSheetId);
     }),
 
   delete: publicProcedure

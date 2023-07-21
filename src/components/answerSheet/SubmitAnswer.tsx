@@ -97,7 +97,7 @@ export const CheckAnswerButton: React.FC<SubmitAnswerDialogProps> = (props) => {
   const submitAnswer = () => {
     props.onSubmit();
 
-    void checkAnswer.mutateAsync({
+    checkAnswer.mutate({
       worksheetId: props.worksheetId,
       answerSheetId: props.answerSheetId,
     });
