@@ -41,6 +41,7 @@ model TeacherNotification {
 //  Image
 model Image {
     id              String          @id @default(cuid())
+    fileKey         String          @db.Text
     url             String          @db.VarChar(1024)
     caption         String          @db.VarChar(1024)    
     multipleChoiceQuestionId        String? 

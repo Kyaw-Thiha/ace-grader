@@ -56,6 +56,7 @@ export const shortAnswerQuestionRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         url: z.string(),
+        fileKey: z.string(),
         caption: z.string(),
       })
     )
@@ -68,6 +69,7 @@ export const shortAnswerQuestionRouter = createTRPCRouter({
           images: {
             create: {
               url: input.url,
+              fileKey: input.fileKey,
               caption: input.caption,
             },
           },

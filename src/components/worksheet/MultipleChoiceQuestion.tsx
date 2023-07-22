@@ -322,7 +322,7 @@ const Explanation: React.FC<Props> = (props) => {
         />
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <Button
                 onClick={() => void generateExplanation()}
                 disabled={loading}

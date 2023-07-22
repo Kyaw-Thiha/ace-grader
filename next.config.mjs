@@ -18,6 +18,9 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    domains: ["uploadthing.com"],
+  },
   // For uploadthing
   experimental: {
     esmExternals: false, // THIS IS THE FLAG THAT MATTERS

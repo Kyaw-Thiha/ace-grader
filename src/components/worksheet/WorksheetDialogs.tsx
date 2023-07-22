@@ -151,9 +151,11 @@ export const DeleteWorksheetButton: React.FC<DeleteWorksheetButtonProps> = ({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Delete Worksheet</DialogTitle>
-          <DialogDescription>
-            <p>Are you sure you want to delete this worksheet?</p>
-            <p>Note: This process is irreversible.</p>
+          <DialogDescription asChild>
+            <div>
+              <p>Are you sure you want to delete this worksheet?</p>
+              <p>Note: This process is irreversible.</p>
+            </div>
           </DialogDescription>
         </DialogHeader>
 

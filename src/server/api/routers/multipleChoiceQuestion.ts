@@ -87,11 +87,12 @@ export const multipleChoiceQuestionRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         url: z.string(),
+        fileKey: z.string(),
         caption: z.string(),
       })
     )
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.longAnswerQuestion.update({
+      return ctx.prisma.multipleChoiceQuestion.update({
         where: {
           id: input.id,
         },
@@ -99,6 +100,7 @@ export const multipleChoiceQuestionRouter = createTRPCRouter({
           images: {
             create: {
               url: input.url,
+              fileKey: input.fileKey,
               caption: input.caption,
             },
           },
