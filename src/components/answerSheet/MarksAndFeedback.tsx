@@ -47,7 +47,7 @@ const MarksAndFeedback: React.FC<Props> = (props) => {
           </AccordionTrigger>
           <AccordionContent>
             {/* <MarkdownText text={props.question?.explanation ?? ""} /> */}
-            <p className="text-lg leading-loose">
+            <p className="whitespace-pre-line text-lg leading-loose">
               {props.question?.explanation ?? ""}
             </p>
           </AccordionContent>

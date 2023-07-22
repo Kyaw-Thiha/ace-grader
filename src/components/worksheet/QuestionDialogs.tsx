@@ -159,13 +159,25 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
     const questionsPayload = [];
 
     for (const question of questions) {
-      const choices = [];
-      const originalChoices = question.multipleChoiceQuestion?.choices ?? [];
-      for (const choice of originalChoices) {
-        choices.push({ index: choice.index ?? 1, text: choice.text ?? "" });
-      }
-
       if (question.questionType == "MultipleChoiceQuestion") {
+        // Copying the choices
+        const choices = [];
+        const originalChoices = question.multipleChoiceQuestion?.choices ?? [];
+        for (const choice of originalChoices) {
+          choices.push({ index: choice.index ?? 1, text: choice.text ?? "" });
+        }
+
+        // Copying the images
+        const images = [];
+        const originalImages = question.multipleChoiceQuestion?.images ?? [];
+        for (const image of originalImages) {
+          images.push({
+            url: image.url,
+            fileKey: image.fileKey,
+            caption: image.caption,
+          });
+        }
+
         questionsPayload.push({
           order: question.order,
           questionType: question.questionType,
@@ -177,6 +189,9 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
               answer: question.multipleChoiceQuestion?.answer ?? 0,
               choices: {
                 create: choices,
+              },
+              images: {
+                create: images,
               },
             },
           },
@@ -196,6 +211,17 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
       //   });
       // }
       else if (question.questionType == "LongAnswerQuestion") {
+        // Copying the images
+        const images = [];
+        const originalImages = question.longAnswerQuestion?.images ?? [];
+        for (const image of originalImages) {
+          images.push({
+            url: image.url,
+            fileKey: image.fileKey,
+            caption: image.caption,
+          });
+        }
+
         questionsPayload.push({
           order: question.order,
           questionType: question.questionType,
@@ -207,6 +233,9 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
                 ?.markingScheme as string[],
               explanation: question.longAnswerQuestion?.explanation ?? "",
               sampleAnswer: question.longAnswerQuestion?.sampleAnswer ?? "",
+              images: {
+                create: images,
+              },
             },
           },
         });

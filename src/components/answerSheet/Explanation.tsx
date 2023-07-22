@@ -40,19 +40,21 @@ const Explanation: React.FC<Props> = (props) => {
 
   if (showExplanation) {
     return (
-      <Accordion className="w-full" type="single" collapsible>
-        <AccordionItem value="item-1">
-          <AccordionTrigger>
-            <h3 className="text-lg">Explanation</h3>
-          </AccordionTrigger>
-          <AccordionContent>
-            {/* <MarkdownText text={props.question?.explanation ?? ""} /> */}
-            <p className="text-md leading-relaxed">
-              {props.question?.explanation ?? ""}
-            </p>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+      <>
+        <Accordion className="w-full" type="single" collapsible>
+          <AccordionItem value="item-1">
+            <AccordionTrigger>
+              <h3 className="text-lg">Explanation</h3>
+            </AccordionTrigger>
+            <AccordionContent>
+              {/* <MarkdownText text={props.question?.explanation ?? ""} /> */}
+              <p className="text-md whitespace-pre-line leading-relaxed">
+                {props.question?.explanation ?? ""}
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </>
     );
   } else {
     return <></>;

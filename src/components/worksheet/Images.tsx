@@ -233,17 +233,19 @@ const EditCaptionDialog: React.FC<ImageProps> = (props) => {
   const confirm = () => {
     setOpen(false);
 
-    void toast.promise(
-      editCaption.mutateAsync({
-        id: props.image?.id ?? "",
-        caption: caption,
-      }),
-      {
-        pending: "Editing Caption",
-        success: "Caption Edited 👌",
-        error: "Error in Caption Editing 🤯",
-      }
-    );
+    if (caption != props.image?.caption) {
+      void toast.promise(
+        editCaption.mutateAsync({
+          id: props.image?.id ?? "",
+          caption: caption,
+        }),
+        {
+          pending: "Editing Caption",
+          success: "Caption Edited 👌",
+          error: "Error in Caption Editing 🤯",
+        }
+      );
+    }
   };
 
   return (
@@ -253,7 +255,9 @@ const EditCaptionDialog: React.FC<ImageProps> = (props) => {
           variant="ghost"
           className="w-full text-ellipsis text-center text-muted-foreground"
         >
-          {props.image?.caption}
+          {props.image?.caption != ""
+            ? props.image?.caption
+            : "Click here to add caption"}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

@@ -17,6 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Image from "next/image";
 
 type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
 type LongAnswerQuestionAnswer =
@@ -61,6 +62,21 @@ const LongAnswerQuestion: React.FC<Props> = (props) => {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        <div className="my-4 flex w-full flex-col items-center justify-center gap-2">
+          {props.question?.images.map((image) => {
+            return (
+              <div key={image.id}>
+                <Image
+                  src={image.url}
+                  alt={image.caption}
+                  width="300"
+                  height="300"
+                />
+              </div>
+            );
+          })}
+        </div>
+
         <form>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
@@ -73,12 +89,11 @@ const LongAnswerQuestion: React.FC<Props> = (props) => {
             </div>
           </div>
         </form>
-        {hasAnswered ? (
+
+        {hasAnswered && (
           <div className="mt-4 rounded-md border-2 px-4 py-2">
             Feedback: {props.answer?.feedback}
           </div>
-        ) : (
-          <></>
         )}
       </CardContent>
 

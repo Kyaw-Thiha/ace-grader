@@ -135,6 +135,15 @@ export const publishedWorksheetRouter = createTRPCRouter({
                       })
                     ),
                   }),
+                  images: z.object({
+                    create: z.array(
+                      z.object({
+                        url: z.string(),
+                        fileKey: z.string(),
+                        caption: z.string(),
+                      })
+                    ),
+                  }),
                 }),
               })
               .optional(),
@@ -156,6 +165,15 @@ export const publishedWorksheetRouter = createTRPCRouter({
                   markingScheme: z.array(z.string()),
                   explanation: z.string(),
                   sampleAnswer: z.string(),
+                  images: z.object({
+                    create: z.array(
+                      z.object({
+                        url: z.string(),
+                        fileKey: z.string(),
+                        caption: z.string(),
+                      })
+                    ),
+                  }),
                 }),
               })
               .optional(),
@@ -173,15 +191,6 @@ export const publishedWorksheetRouter = createTRPCRouter({
           profileId: input.profileId,
           worksheetId: input.worksheetId,
           questions: {
-            // create: [
-            //   {
-            //     order: 1,
-            //     questionType: "MultipleChoiceQuestion",
-            //     multipleChoiceQuestion: {
-            //       create: { text: "", explanation: "", marks: 0 },
-            //     },
-            //   },
-            // ],
             create: input.questions,
           },
         },

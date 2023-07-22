@@ -16,6 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Image from "next/image";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 type MultipleChoiceQuestionAnswer =
@@ -36,7 +37,7 @@ const MultipleChoiceQuestion: React.FC<Props> = (props) => {
     props.status == "returned-studentview";
 
   return (
-    <div className="flex w-full flex-col gap-6">
+    <div className="flex w-full flex-col">
       <CardHeader>
         <CardTitle>
           <MarkdownText text={props.question?.text ?? ""} />
@@ -60,6 +61,21 @@ const MultipleChoiceQuestion: React.FC<Props> = (props) => {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        <div className="my-4 flex w-full flex-col items-center justify-center gap-2">
+          {props.question?.images.map((image) => {
+            return (
+              <div key={image.id}>
+                <Image
+                  src={image.url}
+                  alt={image.caption}
+                  width="300"
+                  height="300"
+                />
+              </div>
+            );
+          })}
+        </div>
+
         <form>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
