@@ -170,7 +170,7 @@ const AddImageDialog: React.FC<Props> = (props) => {
           <DialogDescription asChild>
             <div>
               <p>Upload your image and write the captions</p>
-              <p>The caption will be used in AI processing.</p>
+              {/* <p>The caption will be used in AI processing.</p> */}
             </div>
           </DialogDescription>
         </DialogHeader>
