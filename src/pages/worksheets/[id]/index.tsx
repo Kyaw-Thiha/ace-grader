@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import ToggleTheme from "@/components/ToggleTheme";
 import { ChangeOwnerDialog } from "@/components/worksheet/CollaboratorsDialog";
+import ReorderButtons from "@/components/worksheet/ReorderButtons";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
@@ -172,6 +173,11 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
             <Card>
               <div className="relative">
                 <label className="absolute right-1 top-1 md:right-2 md:top-2">
+                  <ReorderButtons
+                    questions={questions}
+                    order={question.order}
+                    refetch={refetchWorksheet}
+                  />
                   <DeleteQuestionButton
                     id={question.id}
                     order={question.order}
