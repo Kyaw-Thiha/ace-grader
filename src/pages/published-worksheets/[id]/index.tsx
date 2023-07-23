@@ -127,12 +127,19 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
 
   const router = useRouter();
 
-  //Fetching list of worksheets
+  //Fetching the worksheet
   const {
     data: publishedWorksheet,
     isLoading,
     isError,
   } = api.publishedWorksheet.get.useQuery({ id: props.id });
+
+  //Fetching list of worksheets
+  const { data: answerSheet, refetch: fetchCurrentAnswerSheet } =
+    api.answerSheet.getCurrentAnswerSheet.useQuery(
+      { email: email },
+      { enabled: false }
+    );
 
   //Function for creating answer sheet
   const createAnswerSheet = api.answerSheet.create.useMutation({
@@ -141,7 +148,7 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
     },
   });
 
-  const addAnswerSheet = () => {
+  const addAnswerSheet = async () => {
     if (name.trim() == "") {
       // If title is not entered
       toast.error("Enter your name");
@@ -155,19 +162,25 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
       // If title is above character limit
       toast.error("Your email is in invalid format");
     } else {
-      void toast.promise(
-        createAnswerSheet.mutateAsync({
-          studentName: name,
-          studentEmail: email,
-          publishedWorksheetId: props.id,
-          answers: getAnswers(),
-        }),
-        {
-          pending: "Creating Answer Sheet",
-          success: "Answer Sheet Created 👌",
-          error: "Error in Answer Sheet Creation 🤯",
-        }
-      );
+      const { data: answerSheet } = await fetchCurrentAnswerSheet();
+
+      if (answerSheet) {
+        void router.push(`${props.id}/answer/${answerSheet.id}`);
+      } else {
+        void toast.promise(
+          createAnswerSheet.mutateAsync({
+            studentName: name,
+            studentEmail: email,
+            publishedWorksheetId: props.id,
+            answers: getAnswers(),
+          }),
+          {
+            pending: "Creating Answer Sheet",
+            success: "Answer Sheet Created 👌",
+            error: "Error in Answer Sheet Creation 🤯",
+          }
+        );
+      }
     }
   };
 
@@ -246,7 +259,7 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
         <CardFooter className="flex justify-between">
           {/* <Button variant="outline">Cancel</Button> */}
           <div></div>
-          <Button onClick={addAnswerSheet}>Confirm</Button>
+          <Button onClick={() => void addAnswerSheet()}>Confirm</Button>
         </CardFooter>
       </Card>
     </div>

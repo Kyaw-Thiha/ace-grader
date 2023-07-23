@@ -35,6 +35,20 @@ export const answerSheetRouter = createTRPCRouter({
       });
     }),
 
+  getCurrentAnswerSheet: publicProcedure
+    .input(z.object({ email: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.answerSheet.findFirst({
+        where: {
+          studentEmail: input.email,
+          status: "answering",
+        },
+        orderBy: {
+          startTime: "desc",
+        },
+      });
+    }),
+
   getAnswers: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
