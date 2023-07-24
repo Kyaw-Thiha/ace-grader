@@ -19,7 +19,7 @@ export const checkAnswer = async (
 ) => {
   console.time("Function Execution Time");
 
-  void markAsChecking(prisma, answerSheetId);
+  await markAsChecking(prisma, answerSheetId);
 
   const worksheet = await fetchWorksheet(prisma, worksheetId);
   const answerSheet = await fetchAnswerSheet(prisma, answerSheetId);
