@@ -7,11 +7,9 @@ import {
 } from "@/server/api/trpc";
 
 export const questionRouter = createTRPCRouter({
-  getAll: publicProcedure
-    .input(z.object({ id: z.string() }))
-    .query(({ ctx, input }) => {
-      return ctx.prisma.question.findMany({});
-    }),
+  getAll: publicProcedure.input(z.object({})).query(({ ctx, input }) => {
+    return ctx.prisma.question.findMany({});
+  }),
 
   get: publicProcedure
     .input(z.object({ id: z.string() }))
