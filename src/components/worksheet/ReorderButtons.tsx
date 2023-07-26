@@ -5,7 +5,6 @@ import { MoveDown, MoveUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type Questions = RouterOutputs["question"]["getAll"];
-type Question = RouterOutputs["question"]["get"];
 interface Props {
   questions: Questions;
   order: number;
