@@ -58,17 +58,22 @@ const ReorderButtons: React.FC<Props> = (props) => {
               ];
 
             // Ensure that the order number are correct
-            // !!!Currently not working yet. Has to find way to update
             const temp =
               newWorksheet.questions[(question?.order ?? 0) - 1]?.order;
 
             // @ts-expect-error: Let's ignore a compile error like this unreachable code
-            newWorksheet.questions[(question?.order ?? 0) - 1].order =
-              newWorksheet.questions[(swappedQuestion?.order ?? 0) - 1]?.order;
+            newWorksheet.questions[(question?.order ?? 0) - 1] = {
+              ...newWorksheet.questions[(question?.order ?? 0) - 1],
+              order:
+                newWorksheet.questions[(swappedQuestion?.order ?? 0) - 1]
+                  ?.order ?? 0,
+            };
 
             // @ts-expect-error: Let's ignore a compile error like this unreachable code
-            newWorksheet.questions[(swappedQuestion?.order ?? 0) - 1].order =
-              temp;
+            newWorksheet.questions[(swappedQuestion?.order ?? 0) - 1] = {
+              ...newWorksheet.questions[(swappedQuestion?.order ?? 0) - 1],
+              order: temp ?? 0,
+            };
 
             // console.log(newWorksheet.questions[(question?.order ?? 0) - 1]?.order)
             // console.log(newWorksheet.questions[(swappedQuestion?.order ?? 0) - 1]?.order)
