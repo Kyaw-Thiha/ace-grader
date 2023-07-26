@@ -98,19 +98,6 @@ const ReorderButtons: React.FC<Props> = (props) => {
     },
   });
 
-  const swapElements = (
-    array: Array<object>,
-    index1: number,
-    index2: number
-  ) => {
-    [array[index1], array[index2]] = [
-      array[index2] as object,
-      array[index1] as object,
-    ];
-
-    return array;
-  };
-
   // Note: order starts at 1.
 
   const moveUp = () => {
