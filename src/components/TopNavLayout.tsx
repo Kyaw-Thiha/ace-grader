@@ -63,6 +63,12 @@ const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
             </Button>
 
             <div className="flex flex-row items-center gap-4">
+              <SignedIn>
+                <Button asChild variant="outline">
+                  <Link href="/worksheets">My Worksheets</Link>
+                </Button>
+              </SignedIn>
+
               <ToggleTheme />
               <SignedOut>
                 <Button asChild>
