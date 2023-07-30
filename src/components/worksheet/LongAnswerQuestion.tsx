@@ -1,5 +1,4 @@
 import { useState } from "react";
-import MarkdownEditor from "@/components/MarkdownEditor";
 import { useAutosave } from "react-autosave";
 import { api, type RouterOutputs } from "@/utils/api";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
@@ -26,6 +25,7 @@ import {
 } from "@/components/ui/tooltip";
 import { AutosizeInput } from "@/components/ui/resize-input";
 import Images from "@/components/worksheet/Images";
+import { MathInputDialog } from "@/components/MathInputDialog";
 
 type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
 
@@ -71,22 +71,26 @@ const Text: React.FC<Props> = (props) => {
     onSave: updateText,
   });
 
+  const handleMathSave = (mathText: string) => {
+    setText(text + ` \\[ ` + mathText + ` \\] `);
+    updateText();
+  };
+
   return (
-    // <MarkdownEditor
-    //   text={text}
-    //   label="Question"
-    //   onChange={(e) => setText(e.target.value)}
-    // />
     <div>
       <p className="text-slate-400">Question</p>
-      <AutosizeInput
-        placeholder="Type here"
-        className="mt-2 transition-all"
-        value={text}
-        onChange={(e) => {
-          setText(e.target.value);
-        }}
-      />
+      <div className="flex items-center justify-center gap-4">
+        <AutosizeInput
+          placeholder="Type here"
+          className="mt-2 transition-all"
+          value={text}
+          onChange={(e) => {
+            setText(e.target.value);
+          }}
+        />
+
+        <MathInputDialog onSave={handleMathSave} />
+      </div>
     </div>
   );
 };

@@ -2,9 +2,11 @@ import { useState } from "react";
 import { api, type RouterOutputs } from "@/utils/api";
 import { convertIntegerToASCII } from "@/utils/helper";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
-import MarkdownText from "@/components/MarkdownText";
+// import MarkdownText from "@/components/MarkdownText";
 import { type AnswerSheetStatus } from "@/utils/interface";
-import Explanation from "./Explanation";
+import Explanation from "@/components/answerSheet/Explanation";
+import "katex/dist/katex.min.css";
+import Latex from "react-latex-next";
 
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -40,24 +42,36 @@ const MultipleChoiceQuestion: React.FC<Props> = (props) => {
     <div className="flex w-full flex-col">
       <CardHeader>
         <CardTitle>
-          <MarkdownText text={props.question?.text ?? ""} />
+          <Latex
+            delimiters={[
+              { left: "$$", right: "$$", display: true },
+              { left: "\\(", right: "\\)", display: false },
+              { left: "$", right: "$", display: false },
+              { left: "\\[", right: "\\]", display: false },
+            ]}
+          >
+            {props.question?.text}
+          </Latex>
+          {/* <MarkdownText text={props.question?.text ?? ""} /> */}
         </CardTitle>
         <CardDescription>
-          {props.status.startsWith("returned-") ? (
-            <span
-              className={`rounded-md border-2 px-2 py-1 ${
-                props.answer?.marks == props.question?.marks
-                  ? "bg-green-100"
-                  : "bg-red-100"
-              }`}
-            >
-              Marks: {props.answer?.marks} / {props.question?.marks}
-            </span>
-          ) : (
-            <span className="rounded-md border-2 px-2 py-1">
-              Marks: {props.question?.marks}
-            </span>
-          )}
+          <div className="mt-2">
+            {props.status.startsWith("returned-") ? (
+              <span
+                className={`rounded-md border-2 px-2 py-1 ${
+                  props.answer?.marks == props.question?.marks
+                    ? "bg-green-100"
+                    : "bg-red-100"
+                }`}
+              >
+                Marks: {props.answer?.marks} / {props.question?.marks}
+              </span>
+            ) : (
+              <span className="rounded-md border-2 px-2 py-1">
+                Marks: {props.question?.marks}
+              </span>
+            )}
+          </div>
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -97,11 +111,6 @@ const MultipleChoiceQuestion: React.FC<Props> = (props) => {
       ) : (
         <></>
       )}
-      {/* {hasAnswered ?? (
-        <CardFooter className="mt-8">
-          <Explanation question={props.question} status={props.status} />
-        </CardFooter>
-      )} */}
     </div>
   );
 };

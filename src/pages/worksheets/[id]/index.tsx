@@ -193,6 +193,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
                 <div>
                   {question.questionType == "MultipleChoiceQuestion" ? (
                     <MultipleChoiceQuestion
+                      worksheetId={worksheetId}
                       question={question.multipleChoiceQuestion}
                       refetch={refetchWorksheet}
                     />

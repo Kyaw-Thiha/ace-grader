@@ -191,24 +191,6 @@ export const longAnswerQuestionRouter = createTRPCRouter({
       });
     }),
 
-  editMathSymbol: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        mathSymbol: z.boolean(),
-      })
-    )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.multipleChoiceQuestion.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          mathSymbol: input.mathSymbol,
-        },
-      });
-    }),
-
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(({ ctx, input }) => {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import MarkdownEditor from "@/components/MarkdownEditor";
+import MarkdownEditor from "@/archive/MarkdownEditor";
 import { useAutosave } from "react-autosave";
 import { api, type RouterOutputs } from "@/utils/api";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";

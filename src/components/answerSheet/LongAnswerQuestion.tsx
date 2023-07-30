@@ -1,11 +1,13 @@
 import { useState } from "react";
-import MarkdownEditor from "@/components/MarkdownEditor";
+import MarkdownEditor from "@/archive/MarkdownEditor";
 import { useAutosave } from "react-autosave";
 import { api, type RouterOutputs } from "@/utils/api";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
-import Explanation from "./Explanation";
+import Explanation from "@/components/answerSheet/Explanation";
 import type { AnswerSheetStatus } from "@/utils/interface";
-import MarkdownText from "@/components/MarkdownText";
+import "katex/dist/katex.min.css";
+import Latex from "react-latex-next";
+// import MarkdownText from "@/components/MarkdownText";
 import SampleAnswer from "./SampleAnswer";
 
 import { AutosizeInput } from "@/components/ui/resize-input";
@@ -41,24 +43,35 @@ const LongAnswerQuestion: React.FC<Props> = (props) => {
     <div className="flex flex-col">
       <CardHeader>
         <CardTitle>
-          <MarkdownText text={props.question?.text ?? ""} />
+          <Latex
+            delimiters={[
+              { left: "$$", right: "$$", display: true },
+              { left: "\\(", right: "\\)", display: false },
+              { left: "$", right: "$", display: false },
+              { left: "\\[", right: "\\]", display: false },
+            ]}
+          >
+            {props.question?.text}
+          </Latex>
         </CardTitle>
         <CardDescription>
-          {props.status.startsWith("returned-") ? (
-            <span
-              className={`rounded-md border-2 px-2 py-1 ${
-                props.answer?.marks == props.question?.marks
-                  ? "bg-green-100"
-                  : "bg-red-100"
-              }`}
-            >
-              Marks: {props.answer?.marks} / {props.question?.marks}
-            </span>
-          ) : (
-            <span className="rounded-md border-2 px-2 py-1">
-              Marks: {props.question?.marks}
-            </span>
-          )}
+          <div className="mt-2">
+            {props.status.startsWith("returned-") ? (
+              <span
+                className={`rounded-md border-2 px-2 py-1 ${
+                  props.answer?.marks == props.question?.marks
+                    ? "bg-green-100"
+                    : "bg-red-100"
+                }`}
+              >
+                Marks: {props.answer?.marks} / {props.question?.marks}
+              </span>
+            ) : (
+              <span className="rounded-md border-2 px-2 py-1">
+                Marks: {props.question?.marks}
+              </span>
+            )}
+          </div>
         </CardDescription>
       </CardHeader>
       <CardContent>
