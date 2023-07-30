@@ -24,6 +24,7 @@ import {
 import { Label } from "@/components/ui/label";
 import TopNavLayout from "@/components/TopNavLayout";
 import ToggleTheme from "@/components/ToggleTheme";
+import { formatDate } from "@/utils/helper";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
@@ -125,6 +126,8 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
+  const [showPrevAnswerSheets, setShowPrevAnswerSheets] = useState(false);
+
   const router = useRouter();
 
   //Fetching the worksheet
@@ -135,8 +138,15 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
   } = api.publishedWorksheet.get.useQuery({ id: props.id });
 
   //Fetching list of worksheets
-  const { data: answerSheet, refetch: fetchCurrentAnswerSheet } =
+  const { refetch: fetchCurrentAnswerSheet } =
     api.answerSheet.getCurrentAnswerSheet.useQuery(
+      { email: email },
+      { enabled: false }
+    );
+
+  //Fetching list of returned answersheets of student
+  const { data: prevAnswerSheets, refetch: fetchPreviousAnswerSheets } =
+    api.answerSheet.getReturnedAnswerSheetByEmail.useQuery(
       { email: email },
       { enabled: false }
     );
@@ -167,19 +177,28 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
       if (answerSheet) {
         void router.push(`${props.id}/answer/${answerSheet.id}`);
       } else {
-        void toast.promise(
-          createAnswerSheet.mutateAsync({
-            studentName: name,
-            studentEmail: email,
-            publishedWorksheetId: props.id,
-            answers: getAnswers(),
-          }),
-          {
-            pending: "Creating Answer Sheet",
-            success: "Answer Sheet Created 👌",
-            error: "Error in Answer Sheet Creation 🤯",
-          }
-        );
+        const { data: answerSheets } = await fetchPreviousAnswerSheets();
+        if (
+          !showPrevAnswerSheets &&
+          answerSheets?.length &&
+          answerSheets?.length > 0
+        ) {
+          setShowPrevAnswerSheets(true);
+        } else {
+          void toast.promise(
+            createAnswerSheet.mutateAsync({
+              studentName: name,
+              studentEmail: email,
+              publishedWorksheetId: props.id,
+              answers: getAnswers(),
+            }),
+            {
+              pending: "Creating Answer Sheet",
+              success: "Answer Sheet Created 👌",
+              error: "Error in Answer Sheet Creation 🤯",
+            }
+          );
+        }
       }
     }
   };
@@ -226,42 +245,88 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
 
   return (
     <div className="mt-12 flex justify-center">
-      <Card className="px-4 py-8">
-        <CardHeader>
-          <CardTitle>Create Answer Sheet</CardTitle>
-          <CardDescription>
-            You will be contacted by email after your worksheet is graded.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Name</Label>
-                <Input
-                  id="name"
-                  placeholder="Your name"
-                  onChange={(e) => setName(e.target.value)}
-                />
+      <div className="flex flex-col gap-8">
+        <Card className="px-4 py-8">
+          <CardHeader>
+            <CardTitle>Create Answer Sheet</CardTitle>
+            <CardDescription>
+              You will be contacted by email after your worksheet is graded.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form>
+              <div className="grid w-full items-center gap-4">
+                <div className="flex flex-col space-y-1.5">
+                  <Label htmlFor="name">Name</Label>
+                  <Input
+                    id="name"
+                    placeholder="Your name"
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col space-y-1.5">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Your email"
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
               </div>
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Your email"
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-            </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          {/* <Button variant="outline">Cancel</Button> */}
-          <div></div>
-          <Button onClick={() => void addAnswerSheet()}>Confirm</Button>
-        </CardFooter>
-      </Card>
+            </form>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            {/* <Button variant="outline">Cancel</Button> */}
+            <div></div>
+            <Button onClick={() => void addAnswerSheet()}>Confirm</Button>
+          </CardFooter>
+        </Card>
+
+        {showPrevAnswerSheets && (
+          <Card className="px-4 py-8">
+            <CardHeader>
+              <CardTitle>Previous Answer Sheeets</CardTitle>
+              <CardDescription>
+                Click confirm again to reattempt the worksheet
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              {prevAnswerSheets?.map((answerSheet) => {
+                return (
+                  <div
+                    key={answerSheet.id}
+                    className=" flex items-center space-x-4 rounded-md border p-4"
+                  >
+                    <div className="flex-1 space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        {answerSheet.studentName}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {/* {answerSheet.endTime?.toLocaleDateString("default", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })} */}
+                        {formatDate(answerSheet.endTime ?? new Date())}
+                      </p>
+                    </div>
+                    <Button asChild>
+                      <Link href={`${props.id}/answer/${answerSheet.id}`}>
+                        View
+                      </Link>
+                    </Button>
+                  </div>
+                );
+              })}
+            </CardContent>
+            <CardFooter className="flex justify-between">
+              <div></div>
+              <Button onClick={() => void addAnswerSheet()}>Confirm</Button>
+            </CardFooter>
+          </Card>
+        )}
+      </div>
     </div>
   );
 };
