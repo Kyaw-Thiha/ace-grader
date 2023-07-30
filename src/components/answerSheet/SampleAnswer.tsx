@@ -1,6 +1,5 @@
 import { type RouterOutputs } from "@/utils/api";
 import { type AnswerSheetStatus } from "@/utils/interface";
-import MarkdownText from "@/components/MarkdownText";
 import {
   Accordion,
   AccordionContent,

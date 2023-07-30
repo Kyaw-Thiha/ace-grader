@@ -1,6 +1,5 @@
 import { type RouterOutputs } from "@/utils/api";
 import { type AnswerSheetStatus } from "@/utils/interface";
-import MarkdownText from "@/components/MarkdownText";
 import {
   Accordion,
   AccordionContent,
@@ -47,7 +46,6 @@ const Explanation: React.FC<Props> = (props) => {
               <h3 className="text-lg">Explanation</h3>
             </AccordionTrigger>
             <AccordionContent>
-              {/* <MarkdownText text={props.question?.explanation ?? ""} /> */}
               <p className="text-md whitespace-pre-line leading-relaxed">
                 {props.question?.explanation ?? ""}
               </p>
