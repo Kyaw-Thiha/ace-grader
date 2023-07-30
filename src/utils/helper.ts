@@ -49,7 +49,10 @@ export const convertASCIIToInteger = (string: string) => {
  * @param Date
  * @returns formattedDate
  */
-export const formatDate = (date: Date) => {
+export const formatDateWithSuffix = (date: Date | null | undefined) => {
+  if (date == undefined) {
+    date = new Date();
+  }
   const day = date.getDate();
   const monthNames = [
     "Jan",

@@ -24,7 +24,7 @@ import {
 import { Label } from "@/components/ui/label";
 import TopNavLayout from "@/components/TopNavLayout";
 import ToggleTheme from "@/components/ToggleTheme";
-import { formatDate } from "@/utils/helper";
+import { formatDateWithSuffix } from "@/utils/helper";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
@@ -303,12 +303,9 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
                         {answerSheet.studentName}
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        {/* {answerSheet.endTime?.toLocaleDateString("default", {
-                          day: "numeric",
-                          month: "short",
-                          year: "numeric",
-                        })} */}
-                        {formatDate(answerSheet.endTime ?? new Date())}
+                        {formatDateWithSuffix(
+                          answerSheet.endTime ?? new Date()
+                        )}
                       </p>
                     </div>
                     <Button asChild>

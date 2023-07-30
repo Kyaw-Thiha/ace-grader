@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import TopNavLayout from "@/components/TopNavLayout";
 import { ShareLinkGuideDialog } from "@/components/worksheet/ShareLinkGuideDialog";
 import { ShareDialog } from "@/components/worksheet/ShareDialog";
+import { formatDateWithSuffix } from "@/utils/helper";
 
 // https://github.com/jherr/notetaker
 type Profile = RouterOutputs["teacherProfile"]["getWorksheets"];
@@ -138,9 +139,9 @@ const WorksheetList: React.FC<Props> = (props) => {
                 <h2 className="mb-2 text-xl font-semibold">
                   {worksheet.title}
                 </h2>
-                <h3>
-                  {`Last Edited: ${worksheet.lastEdited.toLocaleDateString()}`}
-                </h3>
+                <h3>{`Last Edited: ${formatDateWithSuffix(
+                  worksheet.lastEdited
+                )}`}</h3>
               </div>
             </Link>
 

@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/table";
 import TopNavLayout from "@/components/TopNavLayout";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { formatDateWithSuffix } from "@/utils/helper";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
@@ -103,7 +104,7 @@ const AnswerSheetList: React.FC<Props> = ({ id }) => {
                           {publishedWorksheet.totalMarks}
                         </TableCell>
                         <TableCell>
-                          {answerSheet.endTime?.toLocaleDateString()}
+                          {formatDateWithSuffix(answerSheet.endTime)}
                         </TableCell>
                         <TableCell>
                           <Button asChild>
