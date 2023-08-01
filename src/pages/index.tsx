@@ -17,8 +17,10 @@ import CheckWorksheetImage from "public/images/features/check-worksheet.png";
 const Home: NextPage = () => {
   return (
     <TopNavLayout>
-      <HeroSection />
-      <FeatureSection />
+      <div className="mb-20 flex flex-col gap-12">
+        <HeroSection />
+        <FeatureSection />
+      </div>
     </TopNavLayout>
   );
 };
@@ -119,11 +121,11 @@ const FeatureSection = () => {
   const [currentFeature, setCurrentFeature] = useState(features[0]);
 
   return (
-    <section className="mb-20">
+    <section>
       <h1 className="mb-8 text-center text-2xl font-medium text-gray-900 sm:text-3xl">
         Features
       </h1>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="flex grid-cols-3 flex-col-reverse gap-4 md:grid">
         <div className="flex flex-col items-center justify-center gap-4">
           {features.map((feature, index) => {
             return (
@@ -143,7 +145,7 @@ const FeatureSection = () => {
             );
           })}
         </div>
-        <div className="col-span-2 flex items-center justify-center rounded-md border px-8 py-8">
+        <div className="col-span-2 flex items-center justify-center rounded-md border md:px-8 md:py-8">
           <Image
             className="max-h-96 w-auto"
             src={currentFeature?.image ?? EditWorksheetImage}
