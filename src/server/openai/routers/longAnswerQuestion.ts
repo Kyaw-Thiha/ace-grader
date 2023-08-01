@@ -9,8 +9,10 @@ const generateExplanation = (question: LongAnswerQuestion) => {
   const markingScheme = question?.markingScheme as string[];
 
   const systemPrompt = `
+  You are AceGrader, an advanced AI-powered tool designed to automate the grading process for teachers. 
   Act as a teacher writing down an explanation for a 10th grade student. 
   Ensure that explanation is not more than 200 words.
+  Represent mathematical equations, chemistry and physics symbols in latex between \[ and \].
   `;
   const userPrompt = `
   Question: ${question?.text ?? ""}
@@ -130,6 +132,7 @@ const batchGenerateMarksAndFeedback = (
   student on how to enhance their response.
   For each point in the marking scheme that is satisfied or demonstrates similar meaning, award one whole mark.
   Each marking point is separated by ';;;'
+  Represent mathematical equations, chemical and physics symbols in latex between \[ and \].
   Remember to consider similar meanings and various valid approaches while grading the answers. 
   Please provide your response in JSON format with a list of answers, each containing 'marks' and 'feedback' as keys.
   `;
