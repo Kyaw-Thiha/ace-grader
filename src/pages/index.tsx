@@ -7,7 +7,7 @@ import { SignedIn, SignedOut } from "@clerk/nextjs";
 import TopNavLayout from "@/components/TopNavLayout";
 import { cn } from "@/lib/utils";
 
-import HeroImage from "public/images/hero.jpg";
+import HeroImage from "public/images/hero.png";
 import EditWorksheetImage from "public/images/features/edit-worksheet.png";
 import GenerateExplanationImage from "public/images/features/generate-explanation.png";
 import ShareWorksheetImage from "public/images/features/share-worksheet.png";
@@ -80,7 +80,8 @@ const HeroSection = () => {
               // width="1000"
               // height="500"
               alt="Hero Image"
-              className="h-full w-full object-cover object-center"
+              // className="h-full w-full object-cover object-center"
+              className="h-auto w-full"
             />
           </div>
         </section>
@@ -118,7 +119,7 @@ const FeatureSection = () => {
   const [currentFeature, setCurrentFeature] = useState(features[0]);
 
   return (
-    <section>
+    <section className="mb-20">
       <h1 className="mb-8 text-center text-2xl font-medium text-gray-900 sm:text-3xl">
         Features
       </h1>
