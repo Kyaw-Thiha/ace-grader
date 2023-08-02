@@ -59,6 +59,10 @@ const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
           property="og:image"
           content="https://acegrader.com/images/logo-light.png"
         />
+        <meta
+          name="google-site-verification"
+          content="_mt6hEbOYE3j512avV9XfozjKS4vbe7LqsukKSYmtfA"
+        />
       </Head>
       <div className="flex min-h-screen flex-col">
         <header className="border-b">
