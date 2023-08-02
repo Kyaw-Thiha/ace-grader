@@ -5,7 +5,6 @@ import Image from "next/image";
 import Head from "next/head";
 import { useTheme } from "next-themes";
 
-import { SignedOut, SignedIn, UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import ToggleTheme from "@/components/ToggleTheme";
 
@@ -26,7 +25,7 @@ export const metadata: Metadata = {
   },
 };
 
-const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
+const AnswerSheetNavLayout = ({ children }: { children: React.ReactNode }) => {
   const { resolvedTheme } = useTheme();
 
   const [mounted, setMounted] = useState(false);
@@ -81,25 +80,7 @@ const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
               </Link>
             </Button>
 
-            <div className="flex flex-row items-center gap-4">
-              <SignedIn>
-                <Button className="hidden sm:block" asChild variant="outline">
-                  <Link href="/worksheets">My Worksheets</Link>
-                </Button>
-              </SignedIn>
-
-              <ToggleTheme />
-              <SignedOut>
-                <Button asChild>
-                  <Link href="/sign-in">Sign In</Link>
-                </Button>
-              </SignedOut>
-              <SignedIn>
-                <Button asChild>
-                  <UserButton />
-                </Button>
-              </SignedIn>
-            </div>
+            <ToggleTheme />
           </nav>
         </header>
         <main className="container mx-auto flex-grow px-4 py-8">
@@ -110,4 +91,4 @@ const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default TopNavLayout;
+export default AnswerSheetNavLayout;

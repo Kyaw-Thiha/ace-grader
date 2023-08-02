@@ -122,7 +122,7 @@ const FeatureSection = () => {
 
   return (
     <section>
-      <h1 className="mb-8 text-center text-2xl font-medium text-gray-900 sm:text-3xl">
+      <h1 className="mb-8 text-center text-2xl font-medium text-gray-900 dark:text-gray-100 sm:text-3xl">
         Features
       </h1>
       <div className="flex grid-cols-3 flex-col-reverse gap-4 md:grid">
@@ -146,11 +146,19 @@ const FeatureSection = () => {
           })}
         </div>
         <div className="col-span-2 flex items-center justify-center rounded-md border md:px-8 md:py-8">
-          <Image
-            className="max-h-96 w-auto"
-            src={currentFeature?.image ?? EditWorksheetImage}
-            alt={currentFeature?.text ?? ""}
-          />
+          {features.map((feature) => {
+            return (
+              <Image
+                key={feature.text}
+                className={cn(
+                  "max-h-96 w-auto",
+                  feature.image != currentFeature?.image && "hidden"
+                )}
+                src={feature.image}
+                alt={feature.text}
+              />
+            );
+          })}
         </div>
       </div>
     </section>

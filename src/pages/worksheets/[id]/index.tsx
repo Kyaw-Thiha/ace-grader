@@ -89,8 +89,16 @@ const WorksheetLayout: React.FC<WorksheetHeaderProps> = ({
       <Head>
         <title>Ace Grader</title>
         <meta
-          name="description"
-          content="A website where teachers can automate their workflow"
+          property="og:title"
+          content="AceGrader - Empowering Teachers & Students"
+        />
+        <meta
+          property="og:description"
+          content="AceGrader is an AI-powered innovative website software designed to streamline the daily tasks of teachers and enhance student learning."
+        />
+        <meta
+          property="og:image"
+          content="https://acegrader.com/images/logo-light.png"
         />
       </Head>
       <div className="flex min-h-screen flex-col">

@@ -7,10 +7,8 @@ import { useRouter } from "next/router";
 import { api } from "@/utils/api";
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { toast } from "react-toastify";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
-import Head from "next/head";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -22,9 +20,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import TopNavLayout from "@/components/TopNavLayout";
-import ToggleTheme from "@/components/ToggleTheme";
 import { formatDateWithSuffix } from "@/utils/helper";
+import AnswerSheetNavLayout from "@/components/AnswerSheetNavLayout";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
@@ -42,54 +39,14 @@ const Answer: NextPage<
 > = ({ id }) => {
   return (
     <>
-      <Head>
-        <title>Ace Grader</title>
-        <meta
-          name="description"
-          content="AceGrader is an AI-powered innovative website software designed to streamline the daily tasks of teachers and enhance student learning. 
-          With our intelligent grading and feedback system, you can say goodbye to the tedious and time-consuming process of manually 
-          grading worksheets."
-        />
-        <meta
-          property="og:title"
-          content="AceGrader - Empowering Teachers & Students"
-        />
-        <meta
-          property="og:description"
-          content="AceGrader is an AI-powered innovative website software designed to streamline the daily tasks of teachers and enhance student learning."
-        />
-        <meta
-          property="og:image"
-          content="https://acegrader.com/images/logo-icon.png"
-        />
-      </Head>
-      <div className="flex min-h-screen flex-col">
-        <header className="border-b">
-          <nav className="container mx-auto flex justify-between px-4 py-4">
-            <Button asChild className="flex gap-2 px-4 py-6" variant="outline">
-              <Link href="/">
-                <Image
-                  src="/images/logo-icon.png"
-                  alt="Logo"
-                  width="32"
-                  height="32"
-                />
-                <span className="text-2xl font-bold">AceGrader</span>
-              </Link>
-            </Button>
-
-            <ToggleTheme />
-          </nav>
-        </header>
-        <main className="container mx-auto flex-grow px-4 py-8">
-          <SignedIn>
-            <RedirectIfUserCreatedWorksheet id={id} />
-          </SignedIn>
-          <SignedOut>
-            <StudentCredentialsForm id={id} />
-          </SignedOut>
-        </main>
-      </div>
+      <AnswerSheetNavLayout>
+        <SignedIn>
+          <RedirectIfUserCreatedWorksheet id={id} />
+        </SignedIn>
+        <SignedOut>
+          <StudentCredentialsForm id={id} />
+        </SignedOut>
+      </AnswerSheetNavLayout>
     </>
   );
 };

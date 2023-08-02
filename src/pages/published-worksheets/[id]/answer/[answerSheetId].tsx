@@ -3,20 +3,14 @@ import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from "next";
-import Head from "next/head";
-import { useRouter } from "next/router";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { api } from "@/utils/api";
-import Link from "next/link";
 import Image from "next/image";
-import { toast } from "react-toastify";
 import Loading from "@/components/Loading";
-import ToggleTheme from "@/components/ToggleTheme";
 import { type AnswerSheetStatus } from "@/utils/interface";
 import MultipleChoiceQuestion from "@/components/answerSheet/MultipleChoiceQuestion";
 import ShortAnswerQuestion from "@/components/answerSheet/ShortAnswerQuestion";
 import LongAnswerQuestion from "@/components/answerSheet/LongAnswerQuestion";
-import { Button } from "@/components/ui/button";
 import {
   CheckAnswerButton,
   SubmitAnswerDialog,
@@ -24,6 +18,7 @@ import {
 import CheckingInProgress from "@/components/answerSheet/CheckingInProgress";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
+import AnswerSheetNavLayout from "@/components/AnswerSheetNavLayout";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"] as string;
@@ -43,60 +38,20 @@ const SampleAnswerSheet: NextPage<
 > = ({ id, answerSheetId }) => {
   return (
     <>
-      <Head>
-        <title>Ace Grader</title>
-        <meta
-          name="description"
-          content="AceGrader is an AI-powered innovative website software designed to streamline the daily tasks of teachers and enhance student learning. 
-          With our intelligent grading and feedback system, you can say goodbye to the tedious and time-consuming process of manually 
-          grading worksheets."
-        />
-        <meta
-          property="og:title"
-          content="AceGrader - Empowering Teachers & Students"
-        />
-        <meta
-          property="og:description"
-          content="AceGrader is an AI-powered innovative website software designed to streamline the daily tasks of teachers and enhance student learning."
-        />
-        <meta
-          property="og:image"
-          content="https://acegrader.com/images/logo-icon.png"
-        />
-      </Head>
-      <div className="flex min-h-screen flex-col">
-        <header className="border-b">
-          <nav className="container mx-auto flex justify-between px-4 py-4">
-            <Button asChild className="flex gap-2 px-4 py-6" variant="outline">
-              <Link href="/">
-                <Image
-                  src="/images/logo-icon.png"
-                  alt="Logo"
-                  width="32"
-                  height="32"
-                />
-                <span className="text-2xl font-bold">AceGrader</span>
-              </Link>
-            </Button>
-
-            <ToggleTheme />
-          </nav>
-        </header>
-        <main className="container mx-auto flex-grow px-4 py-8">
-          <SignedIn>
-            <CheckIfUserCreatedWorksheet
-              publishedWorksheetId={id}
-              answerSheedId={answerSheetId}
-            />
-          </SignedIn>
-          <SignedOut>
-            <QuestionList
-              publishedWorksheetId={id}
-              answerSheedId={answerSheetId}
-            />
-          </SignedOut>
-        </main>
-      </div>
+      <AnswerSheetNavLayout>
+        <SignedIn>
+          <CheckIfUserCreatedWorksheet
+            publishedWorksheetId={id}
+            answerSheedId={answerSheetId}
+          />
+        </SignedIn>
+        <SignedOut>
+          <QuestionList
+            publishedWorksheetId={id}
+            answerSheedId={answerSheetId}
+          />
+        </SignedOut>
+      </AnswerSheetNavLayout>
     </>
   );
 };

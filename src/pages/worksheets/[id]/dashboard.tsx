@@ -3,25 +3,11 @@ import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from "next";
-import { useRouter } from "next/router";
 import { api } from "@/utils/api";
-import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { toast } from "react-toastify";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
-import Head from "next/head";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { formatDateWithSuffix } from "@/utils/helper";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -32,8 +18,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import TopNavLayout from "@/components/TopNavLayout";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { formatDateWithSuffix } from "@/utils/helper";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
