@@ -1,0 +1,11 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /worksheets
+Disallow: /published-worksheets
+
+# Host
+Host: https://acegrader.com
+
+# Sitemaps
+Sitemap: https://acegrader.com/sitemap.xml
