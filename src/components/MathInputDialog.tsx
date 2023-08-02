@@ -12,11 +12,11 @@ import {
 import { Sigma } from "lucide-react";
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import MathInput from "react-math-keyboard";
 
 interface Props {
   onSave: (text: string) => void;
+  buttonLabel?: React.ReactNode;
 }
 
 export const MathInputDialog: React.FC<Props> = (props) => {
@@ -27,9 +27,10 @@ export const MathInputDialog: React.FC<Props> = (props) => {
 
   const save = () => {
     setOpen(false);
-    setText("");
 
-    props.onSave(text);
+    props.onSave(` \\[ ` + text + ` \\] `);
+
+    setText("");
   };
 
   const numericToolbarKeys = [
@@ -93,7 +94,13 @@ export const MathInputDialog: React.FC<Props> = (props) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">
-          Add <Sigma className="h-4 w-4" />
+          {props.buttonLabel ? (
+            props.buttonLabel
+          ) : (
+            <>
+              Add <Sigma className="h-4 w-4" />
+            </>
+          )}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

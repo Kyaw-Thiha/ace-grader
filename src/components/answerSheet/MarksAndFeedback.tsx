@@ -6,6 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import Latex from "react-latex-next";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 type ShortAnswerQuestion = RouterOutputs["shortAnswerQuestion"]["get"];
@@ -46,9 +47,18 @@ const MarksAndFeedback: React.FC<Props> = (props) => {
           </AccordionTrigger>
           <AccordionContent>
             {/* <MarkdownText text={props.question?.explanation ?? ""} /> */}
-            <p className="whitespace-pre-line text-lg leading-loose">
-              {props.question?.explanation ?? ""}
-            </p>
+            <div className="text-md whitespace-pre-line leading-relaxed">
+              <Latex
+                delimiters={[
+                  { left: "$$", right: "$$", display: true },
+                  { left: "\\(", right: "\\)", display: false },
+                  { left: "$", right: "$", display: false },
+                  { left: "\\[", right: "\\]", display: false },
+                ]}
+              >
+                {props.question?.explanation ?? ""}
+              </Latex>
+            </div>
           </AccordionContent>
         </AccordionItem>
       </Accordion>

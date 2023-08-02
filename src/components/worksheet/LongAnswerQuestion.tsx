@@ -3,7 +3,7 @@ import { useAutosave } from "react-autosave";
 import { api, type RouterOutputs } from "@/utils/api";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
 import { openaiAPI } from "@/server/openai/api";
-import { Bot, Sparkles } from "lucide-react";
+import { Bot, Sigma, Sparkles } from "lucide-react";
 
 import {
   Dialog,
@@ -72,7 +72,8 @@ const Text: React.FC<Props> = (props) => {
   });
 
   const handleMathSave = (mathText: string) => {
-    setText(text + ` \\[ ` + mathText + ` \\] `);
+    // setText(text + ` \\[ ` + mathText + ` \\] `);
+    setText(text + mathText);
     updateText();
   };
 
@@ -222,12 +223,19 @@ const MarkingSchemeForm: React.FC<Props> = (props) => {
               )}
               {markingScheme?.map((marking, index) => {
                 return (
-                  <Input
-                    key={index}
-                    value={marking}
-                    className="text-black dark:text-white"
-                    onChange={(e) => handleOnChange(index, e.target.value)}
-                  />
+                  <div key={index} className="flex gap-2">
+                    <Input
+                      value={marking}
+                      className="text-black dark:text-white"
+                      onChange={(e) => handleOnChange(index, e.target.value)}
+                    />
+                    <MathInputDialog
+                      onSave={(mathText) => {
+                        handleOnChange(index, marking + mathText);
+                      }}
+                      buttonLabel={<Sigma className="h-2 w-2" />}
+                    />
+                  </div>
                 );
               })}
             </div>

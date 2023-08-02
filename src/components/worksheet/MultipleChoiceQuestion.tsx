@@ -88,7 +88,8 @@ const Text: React.FC<Props> = (props) => {
   });
 
   const handleMathSave = (mathText: string) => {
-    setText(text + ` \\[ ` + mathText + ` \\] `);
+    // setText(text + ` \\[ ` + mathText + ` \\] `);
+    setText(text + mathText);
     updateText();
   };
 
