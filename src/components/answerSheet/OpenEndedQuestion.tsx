@@ -21,18 +21,17 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 
-type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
-type LongAnswerQuestionAnswer =
-  RouterOutputs["longAnswerQuestionAnswer"]["get"];
+type OpenEndedQuestion = RouterOutputs["openEndedQuestion"]["get"];
+type OpenEndedQuestionAnswer = RouterOutputs["openEndedQuestionAnswer"]["get"];
 
 interface Props {
-  question: LongAnswerQuestion;
-  answer?: LongAnswerQuestionAnswer;
+  question: OpenEndedQuestion;
+  answer?: OpenEndedQuestionAnswer;
   refetch: QueryObserverBaseResult["refetch"];
   status: AnswerSheetStatus;
 }
 
-const LongAnswerQuestion: React.FC<Props> = (props) => {
+const OpenEndedQuestion: React.FC<Props> = (props) => {
   const hasAnswered =
     props.status == "sample-teacherview" ||
     props.status == "checking-teacherview" ||
@@ -126,12 +125,12 @@ const LongAnswerQuestion: React.FC<Props> = (props) => {
   );
 };
 
-export default LongAnswerQuestion;
+export default OpenEndedQuestion;
 
 const StudentAnswer: React.FC<Props> = (props) => {
   const [answer, setAnswer] = useState(props.answer?.studentAnswer ?? "");
 
-  const editAnswer = api.longAnswerQuestionAnswer.editAnswer.useMutation({
+  const editAnswer = api.openEndedQuestionAnswer.editAnswer.useMutation({
     onSuccess: () => {
       void props.refetch();
     },

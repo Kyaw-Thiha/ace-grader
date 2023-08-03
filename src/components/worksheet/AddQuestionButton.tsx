@@ -90,15 +90,15 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
   };
 
   //Function for creating multiple choice question
-  const createLongAnswerQuestion = api.longAnswerQuestion.create.useMutation({
+  const createOpenEndedQuestion = api.openEndedQuestion.create.useMutation({
     onSuccess: () => {
       void refetch();
     },
   });
 
-  const addLongAnwerQuestion = () => {
+  const addOpenAddedQuestion = () => {
     void toast.promise(
-      createLongAnswerQuestion.mutateAsync({
+      createOpenEndedQuestion.mutateAsync({
         order: order,
         worksheetId: id,
         text: "",
@@ -115,7 +115,6 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
   const questionTypes = [
     {
       label: "Multiple Choice",
-      dialogId: "create-multiple-choice-question",
       create: addMultipleChoiceQuestion,
     },
     // {
@@ -124,9 +123,8 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
     //   create: addShortAnswerQuestion,
     // },
     {
-      label: "Long Answer",
-      dialogId: "create-long-answer-question",
-      create: addLongAnwerQuestion,
+      label: "Open-Ended",
+      create: addOpenAddedQuestion,
     },
   ];
 

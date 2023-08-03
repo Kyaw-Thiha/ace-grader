@@ -9,7 +9,7 @@ import Loading from "@/components/Loading";
 
 import MultipleChoiceQuestion from "@/components/answerSheet/MultipleChoiceQuestion";
 import ShortAnswerQuestion from "@/components/answerSheet/ShortAnswerQuestion";
-import LongAnswerQuestion from "@/components/answerSheet/LongAnswerQuestion";
+import OpenEndedQuestion from "@/components/answerSheet/OpenEndedQuestion";
 import { Card } from "@/components/ui/card";
 import AnswerSheetNavLayout from "@/components/AnswerSheetNavLayout";
 
@@ -111,7 +111,7 @@ const QuestionList: React.FC<Props> = ({ publishedWorksheetId }) => {
                     <></>
                   )}
                   {question.questionType == "LongAnswerQuestion" ? (
-                    <LongAnswerQuestion
+                    <OpenEndedQuestion
                       question={question.longAnswerQuestion}
                       refetch={refetchWorksheet}
                       status="sample-teacherview"

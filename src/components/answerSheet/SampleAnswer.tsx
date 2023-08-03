@@ -7,13 +7,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
-type LongAnswerQuestionAnswer =
-  RouterOutputs["longAnswerQuestionAnswer"]["get"];
+type OpenEndedQuestion = RouterOutputs["openEndedQuestion"]["get"];
+type OpenEndedQuestionAnswer = RouterOutputs["openEndedQuestionAnswer"]["get"];
 
 interface Props {
-  question: LongAnswerQuestion;
-  answer?: LongAnswerQuestionAnswer;
+  question: OpenEndedQuestion;
+  answer?: OpenEndedQuestionAnswer;
   status: AnswerSheetStatus;
 }
 

@@ -10,7 +10,7 @@ import Loading from "@/components/Loading";
 import { type AnswerSheetStatus } from "@/utils/interface";
 import MultipleChoiceQuestion from "@/components/answerSheet/MultipleChoiceQuestion";
 import ShortAnswerQuestion from "@/components/answerSheet/ShortAnswerQuestion";
-import LongAnswerQuestion from "@/components/answerSheet/LongAnswerQuestion";
+import OpenEndedQuestion from "@/components/answerSheet/OpenEndedQuestion";
 import {
   CheckAnswerButton,
   SubmitAnswerDialog,
@@ -204,7 +204,7 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
                     <></>
                   )}
                   {question.questionType == "LongAnswerQuestion" ? (
-                    <LongAnswerQuestion
+                    <OpenEndedQuestion
                       question={question.longAnswerQuestion}
                       answer={answers.at(index)?.longAnswerQuestionAnswer}
                       refetch={refetchWorksheet}

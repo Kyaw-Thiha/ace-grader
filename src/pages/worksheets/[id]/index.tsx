@@ -12,7 +12,7 @@ import AddQuestionButton from "@/components/worksheet/AddQuestionButton";
 import Loading from "@/components/Loading";
 import MultipleChoiceQuestion from "@/components/worksheet/MultipleChoiceQuestion";
 import ShortAnswerQuestion from "@/components/worksheet/ShortAnswerQuestion";
-import LongAnswerQuestion from "@/components/worksheet/LongAnswerQuestion";
+import OpenEndedQuestion from "@/components/worksheet/OpenEndedQuestion";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import {
   DeleteQuestionButton,
@@ -217,7 +217,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
                     <></>
                   )}
                   {question.questionType == "LongAnswerQuestion" ? (
-                    <LongAnswerQuestion
+                    <OpenEndedQuestion
                       question={question.longAnswerQuestion}
                       refetch={refetchWorksheet}
                     />

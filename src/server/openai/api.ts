@@ -1,7 +1,7 @@
 import { multipleChoiceQuestion } from "./routers/multipleChoiceQuestion";
-import { longAnswerQuestion } from "./routers/longAnswerQuestion";
+import { openEndedQuestion } from "./routers/openEndedQuestion";
 
 export const openaiAPI = {
   multipleChoiceQuestion,
-  longAnswerQuestion,
+  openEndedQuestion,
 };

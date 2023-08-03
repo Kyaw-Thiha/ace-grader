@@ -6,7 +6,7 @@
 // import { useRef } from "react";
 
 // type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
-// type OpenEndedQuestion = RouterOutputs["longAnswerQuestion"]["get"];
+// type OpenEndedQuestion = RouterOutputs["openEndedQuestion"]["get"];
 
 // interface Props {
 //   worksheetId: string;
@@ -65,7 +65,7 @@
 //     });
 
 //   const editOpenEndedQuestion =
-//     api.longAnswerQuestion.editMathSymbol.useMutation({
+//     api.openEndedQuestion.editMathSymbol.useMutation({
 //       async onMutate(payload) {
 //         // Cancel outgoing fetches (so they don't overwrite our optimistic update)
 //         await utils.worksheet.getQuestions.cancel();
@@ -79,15 +79,15 @@
 //             // Deep-Copy
 //             const newWorksheet = structuredClone(oldWorksheet);
 //             const question = newWorksheet?.questions.find(
-//               (question) => question.longAnswerQuestion?.id == payload.id
+//               (question) => question.openEndedQuestion?.id == payload.id
 //             );
 
 //             // @ts-expect-error: Let's ignore a compile error like this unreachable code
 //             newWorksheet.questions[
 //               (question?.order ?? 0) - 1
-//             ].longAnswerQuestion = {
+//             ].openEndedQuestion = {
 //               ...newWorksheet?.questions[(question?.order ?? 0) - 1]
-//                 ?.longAnswerQuestion,
+//                 ?.openEndedQuestion,
 //               mathSymbol: payload.mathSymbol ?? false,
 //             };
 

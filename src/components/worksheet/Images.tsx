@@ -22,15 +22,15 @@ import Image from "next/image";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 type ShortAnswerQuestion = RouterOutputs["shortAnswerQuestion"]["get"];
-type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
+type OpenEndedQuestion = RouterOutputs["openEndedQuestion"]["get"];
 type Image = RouterOutputs["image"]["get"];
 
 interface Props {
   questionType:
     | "MultipleChoiceQuestion"
     | "ShortAnswerQuestion"
-    | "LongAnswerQuestion";
-  question: MultipleChoiceQuestion | ShortAnswerQuestion | LongAnswerQuestion;
+    | "OpenEndedQuestion";
+  question: MultipleChoiceQuestion | ShortAnswerQuestion | OpenEndedQuestion;
   refetch: QueryObserverBaseResult["refetch"];
 }
 
@@ -103,8 +103,8 @@ const AddImageDialog: React.FC<Props> = (props) => {
         void props.refetch();
       },
     });
-  const addImageToLongAnswerQuestion =
-    api.longAnswerQuestion.addImage.useMutation({
+  const addImageToOpenEndedQuestion =
+    api.openEndedQuestion.addImage.useMutation({
       onSuccess: () => {
         void props.refetch();
       },
@@ -130,9 +130,9 @@ const AddImageDialog: React.FC<Props> = (props) => {
             error: "Error in Image Creation 🤯",
           }
         );
-      } else if (props.questionType == "LongAnswerQuestion") {
+      } else if (props.questionType == "OpenEndedQuestion") {
         await toast.promise(
-          addImageToLongAnswerQuestion.mutateAsync({
+          addImageToOpenEndedQuestion.mutateAsync({
             id: props.question?.id ?? "",
             url: url,
             fileKey: fileKey,

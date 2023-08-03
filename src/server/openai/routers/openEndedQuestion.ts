@@ -1,11 +1,10 @@
 import openai from "../openai";
 import type { RouterOutputs } from "@/utils/api";
 
-type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
-type LongAnswerQuestionAnswer =
-  RouterOutputs["longAnswerQuestionAnswer"]["get"];
+type OpenEndedQuestion = RouterOutputs["openEndedQuestion"]["get"];
+type OpenEndedQuestionAnswer = RouterOutputs["openEndedQuestionAnswer"]["get"];
 
-const generateExplanation = (question: LongAnswerQuestion) => {
+const generateExplanation = (question: OpenEndedQuestion) => {
   const markingScheme = question?.markingScheme as string[];
 
   const systemPrompt = `
@@ -40,7 +39,7 @@ const generateExplanation = (question: LongAnswerQuestion) => {
   });
 };
 
-const generateSampleAnswer = (question: LongAnswerQuestion) => {
+const generateSampleAnswer = (question: OpenEndedQuestion) => {
   const markingScheme = question?.markingScheme as string[];
   const prompt = `
   Act as a teacher writing down a short and concise sample answer in one paragraph.
@@ -67,8 +66,8 @@ const generateSampleAnswer = (question: LongAnswerQuestion) => {
 };
 
 const generateMarksAndFeedback = (
-  question: LongAnswerQuestion,
-  answer: LongAnswerQuestionAnswer
+  question: OpenEndedQuestion,
+  answer: OpenEndedQuestionAnswer
 ) => {
   const markingScheme = question?.markingScheme as string[];
   let studentAnswer = answer?.studentAnswer;
@@ -121,8 +120,8 @@ interface QuestionPrompt {
 }
 
 const batchGenerateMarksAndFeedback = (
-  questions: LongAnswerQuestion[],
-  answers: LongAnswerQuestionAnswer[]
+  questions: OpenEndedQuestion[],
+  answers: OpenEndedQuestionAnswer[]
 ) => {
   const systemPrompt = `
   You are AceGrader, an advanced AI-powered tool designed to automate the grading process for teachers. 
@@ -177,7 +176,7 @@ const batchGenerateMarksAndFeedback = (
   });
 };
 
-export const longAnswerQuestion = {
+export const openEndedQuestion = {
   generateExplanation,
   generateSampleAnswer,
   batchGenerateMarksAndFeedback,
@@ -185,8 +184,8 @@ export const longAnswerQuestion = {
 };
 
 const generateMarksAndFeedbackLegacy = (
-  question: LongAnswerQuestion,
-  answer: LongAnswerQuestionAnswer
+  question: OpenEndedQuestion,
+  answer: OpenEndedQuestionAnswer
 ) => {
   const markingScheme = question?.markingScheme as string[];
   let studentAnswer = answer?.studentAnswer;

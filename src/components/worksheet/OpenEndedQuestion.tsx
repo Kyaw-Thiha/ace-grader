@@ -27,20 +27,20 @@ import { AutosizeInput } from "@/components/ui/resize-input";
 import Images from "@/components/worksheet/Images";
 import { MathInputDialog } from "@/components/MathInputDialog";
 
-type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
+type OpenEndedQuestion = RouterOutputs["openEndedQuestion"]["get"];
 
 interface Props {
-  question: LongAnswerQuestion;
+  question: OpenEndedQuestion;
   refetch: QueryObserverBaseResult["refetch"];
 }
 
-const LongAnswerQuestion: React.FC<Props> = (props) => {
+const OpenEndedQuestion: React.FC<Props> = (props) => {
   return (
     <div className="flex flex-col gap-6 px-12">
       <Text question={props.question} refetch={props.refetch} />
       <Images
         question={props.question}
-        questionType="LongAnswerQuestion"
+        questionType="OpenEndedQuestion"
         refetch={props.refetch}
       />
       <Marks question={props.question} refetch={props.refetch} />
@@ -51,12 +51,12 @@ const LongAnswerQuestion: React.FC<Props> = (props) => {
   );
 };
 
-export default LongAnswerQuestion;
+export default OpenEndedQuestion;
 
 const Text: React.FC<Props> = (props) => {
   const [text, setText] = useState(props.question?.text ?? "");
 
-  const editText = api.longAnswerQuestion.editText.useMutation({
+  const editText = api.openEndedQuestion.editText.useMutation({
     onSuccess: () => {
       void props.refetch();
     },
@@ -99,7 +99,7 @@ const Text: React.FC<Props> = (props) => {
 const Marks: React.FC<Props> = (props) => {
   const [marks, setMarks] = useState(props.question?.marks.toString() ?? "");
 
-  const editMarks = api.longAnswerQuestion.editMarks.useMutation({
+  const editMarks = api.openEndedQuestion.editMarks.useMutation({
     onSuccess: () => {
       void props.refetch();
     },
@@ -154,12 +154,13 @@ const MarkingSchemeForm: React.FC<Props> = (props) => {
     props.question?.markingScheme as string[]
   );
 
-  const editMarkingScheme =
-    api.longAnswerQuestion.editMarkingScheme.useMutation({
+  const editMarkingScheme = api.openEndedQuestion.editMarkingScheme.useMutation(
+    {
       onSuccess: () => {
         void props.refetch();
       },
-    });
+    }
+  );
   const updateMarkingScheme = () => {
     // Removing empty markings
     const markingSchemeCopy = markingScheme.filter(
@@ -261,7 +262,7 @@ const Explanation: React.FC<Props> = (props) => {
   );
   const [loading, setLoading] = useState(false);
 
-  const editExplanation = api.longAnswerQuestion.editExplanation.useMutation({
+  const editExplanation = api.openEndedQuestion.editExplanation.useMutation({
     onSuccess: () => {
       void props.refetch();
     },
@@ -280,14 +281,14 @@ const Explanation: React.FC<Props> = (props) => {
   });
 
   const { refetch: refetchRateLimit } =
-    api.longAnswerQuestion.checkAIRateLimit.useQuery(undefined, {
+    api.openEndedQuestion.checkAIRateLimit.useQuery(undefined, {
       enabled: false,
     });
   const fetchExplanation = async () => {
     const ratelimitResponse = await refetchRateLimit();
     if (ratelimitResponse.data) {
       // Fetching the explanation and updating it
-      const res = await openaiAPI.longAnswerQuestion.generateExplanation(
+      const res = await openaiAPI.openEndedQuestion.generateExplanation(
         props.question
       );
       const explanationResponse = res.data.choices[0]?.message?.content ?? "";
@@ -366,7 +367,7 @@ const SampleAnswer: React.FC<Props> = (props) => {
   );
   const [loading, setLoading] = useState(false);
 
-  const editSampleAnswer = api.longAnswerQuestion.editSampleAnswer.useMutation({
+  const editSampleAnswer = api.openEndedQuestion.editSampleAnswer.useMutation({
     onSuccess: () => {
       void props.refetch();
     },
@@ -384,7 +385,7 @@ const SampleAnswer: React.FC<Props> = (props) => {
   // Fetching openai's response for generating sample answer
   const fetchSampleAnswer = async () => {
     // Fetching the explanation and updating it
-    const res = await openaiAPI.longAnswerQuestion.generateSampleAnswer(
+    const res = await openaiAPI.openEndedQuestion.generateSampleAnswer(
       props.question
     );
     const data = res.data.choices[0]?.text ?? "";

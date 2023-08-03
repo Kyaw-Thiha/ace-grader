@@ -21,7 +21,7 @@ const ratelimit = new Ratelimit({
   prefix: "@upstash/ratelimit",
 });
 
-export const longAnswerQuestionRouter = createTRPCRouter({
+export const openEndedQuestionRouter = createTRPCRouter({
   get: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {

@@ -10,10 +10,10 @@ import Latex from "react-latex-next";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 type ShortAnswerQuestion = RouterOutputs["shortAnswerQuestion"]["get"];
-type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
+type OpenEndedQuestion = RouterOutputs["openEndedQuestion"]["get"];
 
 interface Props {
-  question: MultipleChoiceQuestion | ShortAnswerQuestion | LongAnswerQuestion;
+  question: MultipleChoiceQuestion | ShortAnswerQuestion | OpenEndedQuestion;
   status: AnswerSheetStatus;
 }
 

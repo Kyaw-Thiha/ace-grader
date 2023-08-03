@@ -6,11 +6,11 @@ import { worksheetRouter } from "./routers/worksheet";
 import { questionRouter } from "./routers/question";
 import { multipleChoiceQuestionRouter } from "./routers/multipleChoiceQuestion";
 import { shortAnswerQuestionRouter } from "./routers/shortAnswerQuestion";
-import { longAnswerQuestionRouter } from "./routers/longAnswerQuestion";
+import { openEndedQuestionRouter } from "./routers/openEnededQuestion";
 import { answerSheetRouter } from "./routers/answerSheet";
 import { multipleChoiceQuestionAnswerRouter } from "./routers/multipleChoiceQuestionAnswer";
 import { shortAnswerQuestionAnswerRouter } from "./routers/shortAnswerQuestionAnswer";
-import { longAnswerQuestionAnswerRouter } from "./routers/longAnswerQuestionAnswer";
+import { openEndedQuestionAnswerRouter } from "./routers/openEndedQuestionAnswer";
 import { userRouter } from "./routers/user";
 import { imageRouter } from "./routers/image";
 
@@ -28,11 +28,11 @@ export const appRouter = createTRPCRouter({
   question: questionRouter,
   multipleChoiceQuestion: multipleChoiceQuestionRouter,
   shortAnswerQuestion: shortAnswerQuestionRouter,
-  longAnswerQuestion: longAnswerQuestionRouter,
+  openEndedQuestion: openEndedQuestionRouter,
   answerSheet: answerSheetRouter,
   multipleChoiceQuestionAnswer: multipleChoiceQuestionAnswerRouter,
   shortAnswerQuestionAnswer: shortAnswerQuestionAnswerRouter,
-  longAnswerQuestionAnswer: longAnswerQuestionAnswerRouter,
+  openEndedQuestionAnswer: openEndedQuestionAnswerRouter,
   image: imageRouter,
 });
 

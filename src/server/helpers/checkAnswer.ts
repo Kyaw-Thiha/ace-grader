@@ -1,5 +1,5 @@
 //  import type { ReactElement } from "react";
-import type { LongAnswerQuestionAnswer, PrismaClient } from "@prisma/client";
+import type { PrismaClient } from "@prisma/client";
 import type { RouterOutputs } from "@/utils/api";
 import { openaiAPI } from "@/server/openai/api";
 import { Resend } from "resend";
@@ -7,7 +7,8 @@ import { CheckingFinishedEmailTemplate } from "@/components/emails/CheckingFinis
 import { backOff } from "exponential-backoff";
 import { prisma } from "@/server/db";
 
-type LongAnswerQuestion = RouterOutputs["longAnswerQuestion"]["get"];
+type OpenEndedQuestion = RouterOutputs["openEndedQuestion"]["get"];
+type OpenEndedQuestionAnswer = RouterOutputs["openEndedQuestionAnswer"]["get"];
 interface MarksAndFeedback {
   marks: number;
   feedback: string;
@@ -27,8 +28,8 @@ export const checkAnswer = async (
   const questions = worksheet?.questions ?? [];
   const answers = answerSheet?.answers ?? [];
 
-  const longAnswerQuestions: LongAnswerQuestion[] = [];
-  const longAnswerQuestionAnswers: LongAnswerQuestionAnswer[] = [];
+  const openEndedQuestions: OpenEndedQuestion[] = [];
+  const openEndedQuestionAnswers: OpenEndedQuestionAnswer[] = [];
 
   let totalMarks = 0;
 
@@ -63,13 +64,11 @@ export const checkAnswer = async (
       }
     } else if (answer.answerType == "LongAnswerQuestionAnswer") {
       const question = questions.at(answer.order - 1)
-        ?.longAnswerQuestion as LongAnswerQuestion;
-      const longAnswerQuestionAnswer = answer.longAnswerQuestionAnswer;
+        ?.longAnswerQuestion as OpenEndedQuestion;
+      const openEndedQuestionAnswer = answer.longAnswerQuestionAnswer;
 
-      longAnswerQuestions.push(question);
-      longAnswerQuestionAnswers.push(
-        longAnswerQuestionAnswer as LongAnswerQuestionAnswer
-      );
+      openEndedQuestions.push(question);
+      openEndedQuestionAnswers.push(openEndedQuestionAnswer);
     }
   }
   console.timeEnd("Setting Up Questions");
@@ -77,9 +76,9 @@ export const checkAnswer = async (
   console.time("ChatGPT");
   // Fetching the explanation and updating it
   const res = await backOff(() =>
-    openaiAPI.longAnswerQuestion.batchGenerateMarksAndFeedback(
-      longAnswerQuestions,
-      longAnswerQuestionAnswers
+    openaiAPI.openEndedQuestion.batchGenerateMarksAndFeedback(
+      openEndedQuestions,
+      openEndedQuestionAnswers
     )
   );
   console.timeEnd("ChatGPT");
@@ -89,8 +88,8 @@ export const checkAnswer = async (
 
   console.time("Updating Questions");
 
-  for (let i = 0; i < longAnswerQuestionAnswers.length; i++) {
-    const answer = longAnswerQuestionAnswers[i];
+  for (let i = 0; i < openEndedQuestionAnswers.length; i++) {
+    const answer = openEndedQuestionAnswers[i];
     const answerResponse = answerResponses[i];
 
     const marks = answerResponse?.marks ?? 0;
