@@ -86,13 +86,13 @@ const WorksheetList: React.FC<Props> = (props) => {
 
   const worksheets = props.profile?.worksheets ?? [];
 
-  // Fetching the corresponding latest published worksheet
-  const [chosenWorksheetId, setChosenWorksheetId] = useState("");
-  const { data: worksheet, refetch: refetchPublishedWorksheet } =
-    api.worksheet.getPublishedWorksheetLatestVersion.useQuery(
-      { id: chosenWorksheetId },
-      { enabled: false }
-    );
+  // // Fetching the corresponding latest published worksheet
+  // const [chosenWorksheetId, setChosenWorksheetId] = useState("");
+  // const { data: worksheet, refetch: refetchPublishedWorksheet } =
+  //   api.worksheet.getPublishedWorksheetLatestVersion.useQuery(
+  //     { id: chosenWorksheetId },
+  //     { enabled: false }
+  //   );
 
   const openDashboard = async (worksheetId: string) => {
     // const worksheet = worksheets.find((obj) => {

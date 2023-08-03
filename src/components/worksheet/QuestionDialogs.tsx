@@ -128,6 +128,12 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
    */
   const actionText = publishedWorksheetCount == 0 ? "Publish" : "Save";
 
+  //Fetching list of worksheets
+  const { refetch: fetchProfile } = api.teacherProfile.getWorksheets.useQuery(
+    undefined,
+    { enabled: false }
+  );
+
   //Creating the published worksheet
   const createWorksheet = api.publishedWorksheet.create.useMutation({
     onSuccess: () => {
@@ -265,6 +271,7 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
       }
     );
 
+    await fetchProfile();
     await router.push("/worksheets");
   };
 
