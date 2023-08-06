@@ -166,7 +166,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
         />
         <div className="flex items-center justify-center">
           <AddQuestionButton
-            id={worksheetId}
+            worksheetId={worksheetId}
             order={1}
             refetch={refetchWorksheet}
           />
@@ -231,7 +231,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
         ))}
         <div className="flex justify-center">
           <AddQuestionButton
-            id={worksheetId}
+            worksheetId={worksheetId}
             order={(questions?.length ?? 0) + 1}
             refetch={refetchWorksheet}
           />

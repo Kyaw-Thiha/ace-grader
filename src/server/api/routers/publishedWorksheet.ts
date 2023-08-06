@@ -5,6 +5,10 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
+import {
+  questionSchemaProperties,
+  nestedQuestionSchemaProperties,
+} from "@/server/api/schema";
 
 export const publishedWorksheetRouter = createTRPCRouter({
   get: publicProcedure
@@ -73,17 +77,33 @@ export const publishedWorksheetRouter = createTRPCRouter({
               order: "asc",
             },
             include: {
-              parentQuestion: {
+              nestedQuestion: {
                 // 1st Level
                 include: {
-                  // 2nd Level
                   childrenQuestions: {
                     include: {
-                      // 3rd Level
-                      childrenQuestions: {
+                      // 2nd Level
+                      nestedQuestion: {
                         include: {
-                          // 4th Level
-                          childrenQuestions: true,
+                          childrenQuestions: {
+                            include: {
+                              // 3rd Level
+                              nestedQuestion: {
+                                include: {
+                                  childrenQuestions: {
+                                    include: {
+                                      // 4th Level
+                                      nestedQuestion: {
+                                        include: {
+                                          childrenQuestions: true,
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
                         },
                       },
                     },
@@ -114,66 +134,48 @@ export const publishedWorksheetRouter = createTRPCRouter({
         worksheetId: z.string(),
         questions: z.array(
           z.object({
-            order: z.number(),
-            questionType: z.union([
-              z.literal("MultipleChoiceQuestion"),
-              z.literal("ShortAnswerQuestion"),
-              z.literal("LongAnswerQuestion"),
-            ]),
-            multipleChoiceQuestion: z
+            ...questionSchemaProperties,
+            nestedQuestion: z
               .object({
+                // 1st level
                 create: z.object({
-                  text: z.string(),
-                  explanation: z.string(),
-                  marks: z.number(),
-                  answer: z.number(),
-                  choices: z.object({
-                    create: z.array(
-                      z.object({
-                        index: z.number(),
-                        text: z.string(),
-                      })
-                    ),
-                  }),
-                  images: z.object({
-                    create: z.array(
-                      z.object({
-                        url: z.string(),
-                        fileKey: z.string(),
-                        caption: z.string(),
-                      })
-                    ),
-                  }),
-                }),
-              })
-              .optional(),
-            // shortAnswerQuestion: z
-            //   .object({
-            //     create: z.object({
-            //       text: z.string().optional(),
-            //       explanation: z.string().optional(),
-            //       marks: z.number(),
-            //       answer: z.string().optional(),
-            //     }),
-            //   })
-            //   .optional(),
-            longAnswerQuestion: z
-              .object({
-                create: z.object({
-                  text: z.string(),
-                  marks: z.number(),
-                  markingScheme: z.array(z.string()),
-                  explanation: z.string(),
-                  sampleAnswer: z.string(),
-                  images: z.object({
-                    create: z.array(
-                      z.object({
-                        url: z.string(),
-                        fileKey: z.string(),
-                        caption: z.string(),
-                      })
-                    ),
-                  }),
+                  ...nestedQuestionSchemaProperties,
+                  childrenQuestions: z
+                    .object({
+                      // 2nd level
+                      create: z.array(
+                        z.object({
+                          ...questionSchemaProperties,
+                          create: z.object({
+                            ...nestedQuestionSchemaProperties,
+                            childrenQuestions: z
+                              .object({
+                                // 3rd level
+                                create: z.array(
+                                  z.object({
+                                    ...questionSchemaProperties,
+                                    create: z.object({
+                                      ...nestedQuestionSchemaProperties,
+                                      childrenQuestions: z
+                                        .object({
+                                          // 4th level
+                                          create: z.array(
+                                            z.object({
+                                              ...questionSchemaProperties,
+                                            })
+                                          ),
+                                        })
+                                        .optional(),
+                                    }),
+                                  })
+                                ),
+                              })
+                              .optional(),
+                          }),
+                        })
+                      ),
+                    })
+                    .optional(),
                 }),
               })
               .optional(),

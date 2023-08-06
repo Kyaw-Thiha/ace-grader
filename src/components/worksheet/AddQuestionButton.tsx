@@ -13,12 +13,28 @@ import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 
 interface Props {
-  id: string;
+  worksheetId?: string;
+  nestedQuestionId?: string;
   order: number;
   refetch: QueryObserverBaseResult["refetch"];
 }
 
-const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
+const AddQuestionButton: React.FC<Props> = ({
+  worksheetId,
+  order,
+  refetch,
+}) => {
+  //Function for creating parent question
+  const createNestedQuestion = api.nestedQuestion.create.useMutation({
+    onSuccess: () => {
+      void refetch();
+    },
+  });
+
+  const addNestedQuestion = () => {
+    return;
+  };
+
   //Function for creating multiple choice question
   const createMultipleChoiceQuestion =
     api.multipleChoiceQuestion.create.useMutation({
@@ -29,32 +45,59 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
 
   const addMultipleChoiceQuestion = () => {
     void toast.promise(
-      createMultipleChoiceQuestion.mutateAsync({
-        order: order,
-        worksheetId: id,
-        text: "",
-        explanation: "",
-        marks: 1,
-        answer: 1,
-        choices: [
-          {
-            index: 1,
+      worksheetId
+        ? createMultipleChoiceQuestion.mutateAsync({
+            order: order,
+            worksheetId: worksheetId,
             text: "",
-          },
-          {
-            index: 2,
+            explanation: "",
+            marks: 1,
+            answer: 1,
+            choices: [
+              {
+                index: 1,
+                text: "",
+              },
+              {
+                index: 2,
+                text: "",
+              },
+              {
+                index: 3,
+                text: "",
+              },
+              {
+                index: 4,
+                text: "",
+              },
+            ],
+          })
+        : createMultipleChoiceQuestion.mutateAsync({
+            order: order,
+            worksheetId: worksheetId,
             text: "",
-          },
-          {
-            index: 3,
-            text: "",
-          },
-          {
-            index: 4,
-            text: "",
-          },
-        ],
-      }),
+            explanation: "",
+            marks: 1,
+            answer: 1,
+            choices: [
+              {
+                index: 1,
+                text: "",
+              },
+              {
+                index: 2,
+                text: "",
+              },
+              {
+                index: 3,
+                text: "",
+              },
+              {
+                index: 4,
+                text: "",
+              },
+            ],
+          }),
       {
         pending: "Creating Question",
         success: "Question Created 👌",
@@ -74,7 +117,7 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
     void toast.promise(
       createShortAnswerQuestion.mutateAsync({
         order: order,
-        worksheetId: id,
+        worksheetId: worksheetId,
         text: "",
         explanation: "",
         marks: 1,
@@ -100,7 +143,7 @@ const AddQuestionButton: React.FC<Props> = ({ id, order, refetch }) => {
     void toast.promise(
       createOpenEndedQuestion.mutateAsync({
         order: order,
-        worksheetId: id,
+        worksheetId: worksheetId,
         text: "",
         marks: 1,
       }),

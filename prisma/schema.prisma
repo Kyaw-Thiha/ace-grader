@@ -44,6 +44,8 @@ model Image {
     fileKey         String          @db.Text
     url             String          @db.VarChar(1024)
     caption         String          @db.VarChar(1024)    
+    nestedQuestionId                String?  
+    nestedQuestion                  NestedQuestion? @relation(fields: [nestedQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     multipleChoiceQuestionId        String? 
     multipleChoiceQuestion          MultipleChoiceQuestion? @relation(fields: [multipleChoiceQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     shortAnswerQuestionId           String? 
@@ -51,6 +53,7 @@ model Image {
     longAnswerQuestionId            String? 
     longAnswerQuestion              LongAnswerQuestion?     @relation(fields: [longAnswerQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
    
+    @@index([nestedQuestionId])
     @@index([multipleChoiceQuestionId])
     @@index([shortAnswerQuestionId])
     @@index([longAnswerQuestionId])
@@ -126,7 +129,7 @@ model Question {
     id                          String    @id @default(cuid())
     order                       Int   
     questionType                    QuestionType
-    parentQuestion                  ParentQuestion?
+    nestedQuestion                  NestedQuestion?
     multipleChoiceQuestion          MultipleChoiceQuestion?
     shortAnswerQuestion             ShortAnswerQuestion?
     longAnswerQuestion              LongAnswerQuestion? 
@@ -134,13 +137,17 @@ model Question {
     worksheet                   Worksheet? @relation(fields: [worksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     publishedWorksheetId        String?
     publishedWorksheet          PublishedWorksheet? @relation(fields: [publishedWorksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    parentId                    String?
+    parent                      NestedQuestion? @relation(name: "childrenQuestions", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
 
     @@index([worksheetId])
     @@index([publishedWorksheetId])
+    @@index([parentId])
 }
 
 enum QuestionType {
-    ParentQuestion
+    NestedQuestion
     MultipleChoiceQuestion
     ShortAnswerQuestion
     LongAnswerQuestion
@@ -159,24 +166,21 @@ enum QuestionType {
 //  Short Answer Question - A question that student has to type in. Can be checked automatically based on answer
 //  Long Answer Question - A question that student has to type in. Cannot be checked automatically. Only contains sample answer
 
-model ParentQuestion {
+model NestedQuestion {
     id                  String      @id @default(cuid())
     text                String      @db.Text
-    // images              Image[]
-    multipleChoiceQuestion       MultipleChoiceQuestion[]
-    shortAnswerQuestion          ShortAnswerQuestion[]
-    longAnswerQuestions          LongAnswerQuestion[] 
+    images              Image[]
     
     // Self-Referential relation of parent and children
-    parentQuestionId    String?
-    parentQuestion      ParentQuestion? @relation("ParentQuestion", fields: [parentQuestionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-    childrenQuestions   ParentQuestion[] @relation("ParentQuestion")
+    // parentQuestionId    String?
+    // parentQuestion      ParentQuestion?  @relation(fields: [parentQuestionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+    childrenQuestions   Question[]       @relation(name: "childrenQuestions")
     // Many-to-one relationship to question
-    questionId         String   @unique
-    question           Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    questionId          String?          @unique
+    question            Question?        @relation(fields: [questionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
     
 
-    @@index([parentQuestionId])
+    // @@index([parentQuestionId])
     @@index([questionId])
 }
 
@@ -188,12 +192,9 @@ model MultipleChoiceQuestion {
     explanation         String      @db.Text
     marks               Int    
     choices             MultipleChoiceQuestionOption[]
-    parentQuestionId    String?
-    parentQuestion      ParentQuestion?  @relation(fields: [parentQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    questionId         String   @unique
-    question           Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    questionId          String?      @unique
+    question            Question?    @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-    @@index([parentQuestionId])
     @@index([questionId])
 }
 
@@ -214,12 +215,10 @@ model ShortAnswerQuestion {
     answer              String
     explanation         String
     marks               Int    
-    parentQuestionId    String
-    parentQuestion      ParentQuestion?  @relation(fields: [parentQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    questionId         String   @unique
-    question           Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    
+    questionId         String?   @unique
+    question           Question? @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-    @@index([parentQuestionId])
     @@index([questionId])
 }
 
@@ -231,12 +230,9 @@ model LongAnswerQuestion {
     explanation         String      @db.MediumText
     markingScheme       Json        @default("[]")  
     marks               Int
-    parentQuestionId    String?
-    parentQuestion      ParentQuestion?  @relation(fields: [parentQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    questionId          String   @unique
-    question            Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    questionId          String?     @unique
+    question            Question?   @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-    @@index([parentQuestionId])
     @@index([questionId])
 }
 

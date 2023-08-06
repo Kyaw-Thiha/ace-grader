@@ -140,17 +140,44 @@ const fetchWorksheet = (prisma: PrismaClient, worksheetId: string) => {
           order: "asc",
         },
         include: {
-          parentQuestion: {
-            // 1st Level
+          nestedQuestion: {
             include: {
-              // 2nd Level
+              // 1st level
               childrenQuestions: {
                 include: {
-                  // 3rd Level
-                  childrenQuestions: {
+                  multipleChoiceQuestion: true,
+                  longAnswerQuestion: true,
+                  nestedQuestion: {
                     include: {
-                      // 4th Level
-                      childrenQuestions: true,
+                      // 2nd level
+                      childrenQuestions: {
+                        include: {
+                          multipleChoiceQuestion: true,
+                          longAnswerQuestion: true,
+                          nestedQuestion: {
+                            include: {
+                              // 3rd level
+                              childrenQuestions: {
+                                include: {
+                                  multipleChoiceQuestion: true,
+                                  longAnswerQuestion: true,
+                                  nestedQuestion: {
+                                    include: {
+                                      // 4th level
+                                      childrenQuestions: {
+                                        include: {
+                                          multipleChoiceQuestion: true,
+                                          longAnswerQuestion: true,
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
                     },
                   },
                 },
