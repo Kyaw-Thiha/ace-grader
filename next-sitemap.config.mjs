@@ -1,7 +1,7 @@
 /** @type {import('next-sitemap').IConfig} */
 
 const config = {
-  siteUrl: "https://acegrader.com",
+  siteUrl: "https://www.acegrader.com",
   generateRobotsTxt: true,
   exclude: ["/worksheets", "/published-worksheets"],
   additionalPaths: async (config) => {

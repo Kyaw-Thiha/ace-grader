@@ -5,7 +5,7 @@ Disallow: /worksheets
 Disallow: /published-worksheets
 
 # Host
-Host: https://acegrader.com
+Host: https://www.acegrader.com
 
 # Sitemaps
-Sitemap: https://acegrader.com/sitemap.xml
+Sitemap: https://www.acegrader.com/sitemap.xml
