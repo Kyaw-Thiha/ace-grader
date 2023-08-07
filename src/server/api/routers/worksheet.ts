@@ -113,7 +113,7 @@ export const worksheetRouter = createTRPCRouter({
                   images: true,
                 },
               },
-              longAnswerQuestion: {
+              openEndedQuestion: {
                 include: {
                   images: true,
                 },
