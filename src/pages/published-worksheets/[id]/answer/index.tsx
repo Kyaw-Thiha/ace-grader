@@ -8,7 +8,6 @@ import Image from "next/image";
 import Loading from "@/components/Loading";
 
 import MultipleChoiceQuestion from "@/components/answerSheet/MultipleChoiceQuestion";
-import ShortAnswerQuestion from "@/components/answerSheet/ShortAnswerQuestion";
 import OpenEndedQuestion from "@/components/answerSheet/OpenEndedQuestion";
 import { Card } from "@/components/ui/card";
 import AnswerSheetNavLayout from "@/components/AnswerSheetNavLayout";
@@ -92,32 +91,20 @@ const QuestionList: React.FC<Props> = ({ publishedWorksheetId }) => {
                   {question.order}.
                 </p>
                 <div>
-                  {question.questionType == "MultipleChoiceQuestion" ? (
+                  {question.questionType == "MultipleChoiceQuestion" && (
                     <MultipleChoiceQuestion
                       question={question.multipleChoiceQuestion}
                       refetch={refetchWorksheet}
                       status="sample-teacherview"
                     />
-                  ) : (
-                    <></>
                   )}
-                  {question.questionType == "ShortAnswerQuestion" ? (
-                    <ShortAnswerQuestion
-                      question={question.shortAnswerQuestion}
-                      refetch={refetchWorksheet}
-                      status="sample-teacherview"
-                    />
-                  ) : (
-                    <></>
-                  )}
-                  {question.questionType == "LongAnswerQuestion" ? (
+
+                  {question.questionType == "OpenEndedQuestion" && (
                     <OpenEndedQuestion
-                      question={question.longAnswerQuestion}
+                      question={question.openEndedQuestion}
                       refetch={refetchWorksheet}
                       status="sample-teacherview"
                     />
-                  ) : (
-                    <></>
                   )}
                 </div>
               </div>

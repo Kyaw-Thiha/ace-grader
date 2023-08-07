@@ -62,10 +62,10 @@ export const checkAnswer = async (
           },
         });
       }
-    } else if (answer.answerType == "LongAnswerQuestionAnswer") {
+    } else if (answer.answerType == "OpenEndedQuestionAnswer") {
       const question = questions.at(answer.order - 1)
-        ?.longAnswerQuestion as OpenEndedQuestion;
-      const openEndedQuestionAnswer = answer.longAnswerQuestionAnswer;
+        ?.openEndedQuestion as OpenEndedQuestion;
+      const openEndedQuestionAnswer = answer.openEndedQuestionAnswer;
 
       openEndedQuestions.push(question);
       openEndedQuestionAnswers.push(openEndedQuestionAnswer);
@@ -95,7 +95,7 @@ export const checkAnswer = async (
     const marks = answerResponse?.marks ?? 0;
     const feedback = answerResponse?.feedback ?? "";
 
-    await prisma.longAnswerQuestionAnswer.update({
+    await prisma.openEndedQuestionAnswer.update({
       where: {
         id: answer?.id,
       },
@@ -147,7 +147,7 @@ const fetchWorksheet = (prisma: PrismaClient, worksheetId: string) => {
               childrenQuestions: {
                 include: {
                   multipleChoiceQuestion: true,
-                  longAnswerQuestion: true,
+                  openEndedQuestion: true,
                   nestedQuestion: {
                     include: {
                       // 2nd level
@@ -155,7 +155,7 @@ const fetchWorksheet = (prisma: PrismaClient, worksheetId: string) => {
                       childrenQuestions: {
                         include: {
                           multipleChoiceQuestion: true,
-                          longAnswerQuestion: true,
+                          openEndedQuestion: true,
                           nestedQuestion: {
                             include: {
                               // 3rd level
@@ -163,7 +163,7 @@ const fetchWorksheet = (prisma: PrismaClient, worksheetId: string) => {
                               childrenQuestions: {
                                 include: {
                                   multipleChoiceQuestion: true,
-                                  longAnswerQuestion: true,
+                                  openEndedQuestion: true,
                                   nestedQuestion: {
                                     include: {
                                       // 4th level
@@ -171,7 +171,7 @@ const fetchWorksheet = (prisma: PrismaClient, worksheetId: string) => {
                                       childrenQuestions: {
                                         include: {
                                           multipleChoiceQuestion: true,
-                                          longAnswerQuestion: true,
+                                          openEndedQuestion: true,
                                         },
                                       },
                                     },
@@ -194,7 +194,7 @@ const fetchWorksheet = (prisma: PrismaClient, worksheetId: string) => {
             },
           },
           shortAnswerQuestion: true,
-          longAnswerQuestion: true,
+          openEndedQuestion: true,
         },
       },
     },
@@ -221,7 +221,7 @@ const fetchAnswerSheet = (prisma: PrismaClient, answerSheetId: string) => {
         include: {
           multipleChoiceQuestionAnswer: true,
           shortAnswerQuestionAnswer: true,
-          longAnswerQuestionAnswer: true,
+          openEndedQuestionAnswer: true,
         },
       },
     },
@@ -291,40 +291,3 @@ export const sendEmail = (
     }),
   });
 };
-
-// const question = questions.at(answer.order - 1)
-//   ?.longAnswerQuestion as LongAnswerQuestion;
-// const longAnswerQuestionAnswer = answer.longAnswerQuestionAnswer;
-// // Fetching the explanation and updating it
-// const res = await backOff(() =>
-//   openaiAPI.longAnswerQuestion.generateMarksAndFeedback(
-//     question,
-//     longAnswerQuestionAnswer
-//   )
-// );
-
-// const data = res.data.choices[0]?.message?.content ?? "";
-// const markKeyword = "Mark: ";
-// const feedbackKeyword = "Feedback: ";
-// const markIndex = data.indexOf(markKeyword);
-// const feedbackIndex = data.indexOf(feedbackKeyword);
-
-// const markString = data.substring(
-//   markIndex + markKeyword.length,
-//   feedbackIndex
-// );
-// const marks = parseInt(markString.trim());
-// const feedback = data.substring(feedbackIndex + feedbackKeyword.length);
-
-// await prisma.longAnswerQuestionAnswer.update({
-//   where: {
-//     id: longAnswerQuestionAnswer?.id,
-//   },
-//   data: {
-//     marks: marks,
-//     feedback: feedback,
-//   },
-// });
-
-// // Updating the total marks
-// totalMarks = totalMarks + marks;

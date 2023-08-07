@@ -83,9 +83,9 @@ const NestedQuestion: React.FC<Props> = (props) => {
                       refetch={props.refetch}
                     />
                   )}
-                  {question.questionType == "LongAnswerQuestion" && (
+                  {question.questionType == "OpenEndedQuestion" && (
                     <OpenEndedQuestion
-                      question={question.longAnswerQuestion}
+                      question={question.openEndedQuestion}
                       refetch={props.refetch}
                     />
                   )}

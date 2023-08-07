@@ -213,9 +213,9 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
                       refetch={refetchWorksheet}
                     />
                   )}
-                  {question.questionType == "LongAnswerQuestion" && (
+                  {question.questionType == "OpenEndedQuestion" && (
                     <OpenEndedQuestion
-                      question={question.longAnswerQuestion}
+                      question={question.openEndedQuestion}
                       refetch={refetchWorksheet}
                     />
                   )}

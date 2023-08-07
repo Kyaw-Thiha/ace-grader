@@ -25,7 +25,7 @@ export const nestedQuestionRouter = createTRPCRouter({
                   choices: true,
                 },
               },
-              longAnswerQuestion: {
+              openEndedQuestion: {
                 include: {
                   images: true,
                 },
@@ -42,7 +42,7 @@ export const nestedQuestionRouter = createTRPCRouter({
                           choices: true,
                         },
                       },
-                      longAnswerQuestion: {
+                      openEndedQuestion: {
                         include: {
                           images: true,
                         },
@@ -59,7 +59,7 @@ export const nestedQuestionRouter = createTRPCRouter({
                                   choices: true,
                                 },
                               },
-                              longAnswerQuestion: {
+                              openEndedQuestion: {
                                 include: {
                                   images: true,
                                 },
@@ -243,8 +243,8 @@ export const nestedQuestionRouter = createTRPCRouter({
           childrenQuestions: {
             create: {
               order: input.order,
-              questionType: "LongAnswerQuestion",
-              longAnswerQuestion: {
+              questionType: "OpenEndedQuestion",
+              openEndedQuestion: {
                 create: {
                   text: input.text ?? "",
                   marks: input.marks ?? 1,

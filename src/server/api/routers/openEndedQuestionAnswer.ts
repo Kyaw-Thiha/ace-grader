@@ -10,7 +10,7 @@ export const openEndedQuestionAnswerRouter = createTRPCRouter({
   get: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
-      return ctx.prisma.longAnswerQuestionAnswer.findFirst({
+      return ctx.prisma.openEndedQuestionAnswer.findFirst({
         where: {
           id: input.id,
         },
@@ -33,9 +33,9 @@ export const openEndedQuestionAnswerRouter = createTRPCRouter({
       return ctx.prisma.answer.create({
         data: {
           order: input.order,
-          answerType: "LongAnswerQuestionAnswer",
+          answerType: "OpenEndedQuestionAnswer",
           answerSheetId: input.answerSheetId,
-          longAnswerQuestionAnswer: {
+          openEndedQuestionAnswer: {
             create: {
               studentAnswer: input.studentAnswer,
               // studentImages: {
@@ -56,7 +56,7 @@ export const openEndedQuestionAnswerRouter = createTRPCRouter({
       })
     )
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.longAnswerQuestionAnswer.update({
+      return ctx.prisma.openEndedQuestionAnswer.update({
         where: {
           id: input.id,
         },
@@ -74,7 +74,7 @@ export const openEndedQuestionAnswerRouter = createTRPCRouter({
       })
     )
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.longAnswerQuestionAnswer.update({
+      return ctx.prisma.openEndedQuestionAnswer.update({
         where: {
           id: input.id,
         },
@@ -87,7 +87,7 @@ export const openEndedQuestionAnswerRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.longAnswerQuestionAnswer.delete({
+      return ctx.prisma.openEndedQuestionAnswer.delete({
         where: {
           id: input.id,
         },

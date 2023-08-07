@@ -51,7 +51,7 @@ export const worksheetRouter = createTRPCRouter({
                           choices: true,
                         },
                       },
-                      longAnswerQuestion: {
+                      openEndedQuestion: {
                         include: {
                           images: true,
                         },
@@ -68,7 +68,7 @@ export const worksheetRouter = createTRPCRouter({
                                   choices: true,
                                 },
                               },
-                              longAnswerQuestion: {
+                              openEndedQuestion: {
                                 include: {
                                   images: true,
                                 },
@@ -85,7 +85,7 @@ export const worksheetRouter = createTRPCRouter({
                                           choices: true,
                                         },
                                       },
-                                      longAnswerQuestion: {
+                                      openEndedQuestion: {
                                         include: {
                                           images: true,
                                         },

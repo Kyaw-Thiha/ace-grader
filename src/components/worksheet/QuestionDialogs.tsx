@@ -152,8 +152,8 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
       //   const marks = question.shortAnswerQuestion?.marks ?? 0;
       //   totalMarks = totalMarks + marks;
       // }
-      if (question.questionType == "LongAnswerQuestion") {
-        const marks = question.longAnswerQuestion?.marks ?? 0;
+      if (question.questionType == "OpenEndedQuestion") {
+        const marks = question.openEndedQuestion?.marks ?? 0;
         totalMarks = totalMarks + marks;
       }
     }
@@ -216,10 +216,10 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
       //     },
       //   });
       // }
-      else if (question.questionType == "LongAnswerQuestion") {
+      else if (question.questionType == "OpenEndedQuestion") {
         // Copying the images
         const images = [];
-        const originalImages = question.longAnswerQuestion?.images ?? [];
+        const originalImages = question.openEndedQuestion?.images ?? [];
         for (const image of originalImages) {
           images.push({
             url: image.url,
@@ -231,14 +231,14 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
         questionsPayload.push({
           order: question.order,
           questionType: question.questionType,
-          longAnswerQuestion: {
+          openEndedQuestion: {
             create: {
-              text: question.longAnswerQuestion?.text ?? "",
-              marks: question.longAnswerQuestion?.marks ?? 1,
-              markingScheme: question.longAnswerQuestion
+              text: question.openEndedQuestion?.text ?? "",
+              marks: question.openEndedQuestion?.marks ?? 1,
+              markingScheme: question.openEndedQuestion
                 ?.markingScheme as string[],
-              explanation: question.longAnswerQuestion?.explanation ?? "",
-              sampleAnswer: question.longAnswerQuestion?.sampleAnswer ?? "",
+              explanation: question.openEndedQuestion?.explanation ?? "",
+              sampleAnswer: question.openEndedQuestion?.sampleAnswer ?? "",
               images: {
                 create: images,
               },

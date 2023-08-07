@@ -193,25 +193,14 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
                   ) : (
                     <></>
                   )}
-                  {question.questionType == "ShortAnswerQuestion" ? (
-                    <ShortAnswerQuestion
-                      question={question.shortAnswerQuestion}
-                      answer={answers.at(index)?.shortAnswerQuestionAnswer}
-                      refetch={refetchWorksheet}
-                      status={status}
-                    />
-                  ) : (
-                    <></>
-                  )}
-                  {question.questionType == "LongAnswerQuestion" ? (
+
+                  {question.questionType == "OpenEndedQuestion" && (
                     <OpenEndedQuestion
-                      question={question.longAnswerQuestion}
-                      answer={answers.at(index)?.longAnswerQuestionAnswer}
+                      question={question.openEndedQuestion}
+                      answer={answers.at(index)?.openEndedQuestionAnswer}
                       refetch={refetchWorksheet}
                       status={status}
                     />
-                  ) : (
-                    <></>
                   )}
                 </div>
               </div>

@@ -37,7 +37,7 @@ export const multipleChoiceQuestionSchema = z.object({
   }),
 });
 
-export const longAnswerQuestionSchema = z.object({
+export const openEndedQuestionSchema = z.object({
   text: z.string(),
   marks: z.number(),
   markingScheme: z.array(z.string()),
@@ -58,7 +58,7 @@ export const questionTypeSchema = z.union([
   z.literal("NestedQuestion"),
   z.literal("MultipleChoiceQuestion"),
   z.literal("ShortAnswerQuestion"),
-  z.literal("LongAnswerQuestion"),
+  z.literal("OpenEndedQuestion"),
 ]);
 
 export const questionSchemaProperties = {
@@ -69,9 +69,9 @@ export const questionSchemaProperties = {
       create: multipleChoiceQuestionSchema,
     })
     .optional(),
-  longAnswerQuestion: z
+  openEndedQuestion: z
     .object({
-      create: longAnswerQuestionSchema,
+      create: openEndedQuestionSchema,
     })
     .optional(),
 };

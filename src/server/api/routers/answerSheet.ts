@@ -84,7 +84,7 @@ export const answerSheetRouter = createTRPCRouter({
             include: {
               multipleChoiceQuestionAnswer: true,
               shortAnswerQuestionAnswer: true,
-              longAnswerQuestionAnswer: true,
+              openEndedQuestionAnswer: true,
             },
           },
         },
@@ -120,7 +120,7 @@ export const answerSheetRouter = createTRPCRouter({
             answerType: z.union([
               z.literal("MultipleChoiceQuestionAnswer"),
               z.literal("ShortAnswerQuestionAnswer"),
-              z.literal("LongAnswerQuestionAnswer"),
+              z.literal("OpenEndedQuestionAnswer"),
             ]),
             multipleChoiceQuestionAnswer: z
               .object({
@@ -138,7 +138,7 @@ export const answerSheetRouter = createTRPCRouter({
                 }),
               })
               .optional(),
-            longAnswerQuestionAnswer: z
+            openEndedQuestionAnswer: z
               .object({
                 create: z.object({
                   studentAnswer: z.string(),

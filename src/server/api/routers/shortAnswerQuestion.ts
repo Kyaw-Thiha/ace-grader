@@ -61,7 +61,7 @@ export const shortAnswerQuestionRouter = createTRPCRouter({
       })
     )
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.longAnswerQuestion.update({
+      return ctx.prisma.openEndedQuestion.update({
         where: {
           id: input.id,
         },

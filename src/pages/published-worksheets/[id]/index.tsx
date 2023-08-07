@@ -167,7 +167,7 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
     type AnswerType =
       | "MultipleChoiceQuestionAnswer"
       | "ShortAnswerQuestionAnswer"
-      | "LongAnswerQuestionAnswer";
+      | "OpenEndedQuestionAnswer";
 
     for (const question of questions) {
       if (question.questionType == "MultipleChoiceQuestion") {
@@ -186,11 +186,11 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
             create: { studentAnswer: "", feedback: "" },
           },
         });
-      } else if (question.questionType == "LongAnswerQuestion") {
+      } else if (question.questionType == "OpenEndedQuestion") {
         answers.push({
           order: question.order,
-          answerType: "LongAnswerQuestionAnswer" as AnswerType,
-          longAnswerQuestionAnswer: {
+          answerType: "OpenEndedQuestionAnswer" as AnswerType,
+          openEndedQuestionAnswer: {
             create: { studentAnswer: "", feedback: "" },
           },
         });
