@@ -74,7 +74,7 @@ export const teacherProfileRouter = createTRPCRouter({
   getPublishedWorksheets: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.teacherProfile.findMany({
       where: {
-        userId: ctx.userId,
+        email: ctx.user?.emailAddresses[0]?.emailAddress,
       },
       select: {
         publishedWorksheets: {
