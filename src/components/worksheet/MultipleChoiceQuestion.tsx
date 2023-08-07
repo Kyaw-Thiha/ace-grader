@@ -24,12 +24,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Images from "@/components/worksheet/Images";
-import { MathInputDialog } from "../MathInputDialog";
+import { MathInputDialog } from "@/components/MathInputDialog";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 
 interface Props {
-  worksheetId?: string;
   question: MultipleChoiceQuestion;
   refetch: QueryObserverBaseResult["refetch"];
 }

@@ -13,6 +13,8 @@ import Loading from "@/components/Loading";
 import MultipleChoiceQuestion from "@/components/worksheet/MultipleChoiceQuestion";
 import ShortAnswerQuestion from "@/components/worksheet/ShortAnswerQuestion";
 import OpenEndedQuestion from "@/components/worksheet/OpenEndedQuestion";
+import NestedQuestion from "@/components/worksheet/NestedQuestion";
+
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import {
   DeleteQuestionButton,
@@ -199,30 +201,30 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
                   {question.order}.
                 </p>
                 <div>
-                  {question.questionType == "MultipleChoiceQuestion" ? (
+                  {question.questionType == "MultipleChoiceQuestion" && (
                     <MultipleChoiceQuestion
-                      worksheetId={worksheetId}
                       question={question.multipleChoiceQuestion}
                       refetch={refetchWorksheet}
                     />
-                  ) : (
-                    <></>
                   )}
-                  {question.questionType == "ShortAnswerQuestion" ? (
+                  {question.questionType == "ShortAnswerQuestion" && (
                     <ShortAnswerQuestion
                       question={question.shortAnswerQuestion}
                       refetch={refetchWorksheet}
                     />
-                  ) : (
-                    <></>
                   )}
-                  {question.questionType == "LongAnswerQuestion" ? (
+                  {question.questionType == "LongAnswerQuestion" && (
                     <OpenEndedQuestion
                       question={question.longAnswerQuestion}
                       refetch={refetchWorksheet}
                     />
-                  ) : (
-                    <></>
+                  )}
+                  {question.questionType == "NestedQuestion" && (
+                    <NestedQuestion
+                      question={question.nestedQuestion}
+                      refetch={refetchWorksheet}
+                      nestedLevel={2}
+                    />
                   )}
                 </div>
               </div>

@@ -143,6 +143,7 @@ const fetchWorksheet = (prisma: PrismaClient, worksheetId: string) => {
           nestedQuestion: {
             include: {
               // 1st level
+              images: true,
               childrenQuestions: {
                 include: {
                   multipleChoiceQuestion: true,
@@ -150,6 +151,7 @@ const fetchWorksheet = (prisma: PrismaClient, worksheetId: string) => {
                   nestedQuestion: {
                     include: {
                       // 2nd level
+                      images: true,
                       childrenQuestions: {
                         include: {
                           multipleChoiceQuestion: true,
@@ -157,6 +159,7 @@ const fetchWorksheet = (prisma: PrismaClient, worksheetId: string) => {
                           nestedQuestion: {
                             include: {
                               // 3rd level
+                              images: true,
                               childrenQuestions: {
                                 include: {
                                   multipleChoiceQuestion: true,
@@ -164,6 +167,7 @@ const fetchWorksheet = (prisma: PrismaClient, worksheetId: string) => {
                                   nestedQuestion: {
                                     include: {
                                       // 4th level
+                                      images: true,
                                       childrenQuestions: {
                                         include: {
                                           multipleChoiceQuestion: true,

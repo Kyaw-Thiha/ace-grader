@@ -14,90 +14,73 @@ import { Button } from "@/components/ui/button";
 
 interface Props {
   worksheetId?: string;
-  nestedQuestionId?: string;
+  parentQuestionId?: string;
   order: number;
+  hideNestedQuestion?: boolean;
   refetch: QueryObserverBaseResult["refetch"];
 }
 
-const AddQuestionButton: React.FC<Props> = ({
-  worksheetId,
-  order,
-  refetch,
-}) => {
+const AddQuestionButton: React.FC<Props> = (props) => {
   //Function for creating parent question
   const createNestedQuestion = api.nestedQuestion.create.useMutation({
     onSuccess: () => {
-      void refetch();
+      void props.refetch();
     },
   });
 
   const addNestedQuestion = () => {
-    return;
+    void toast.promise(
+      createNestedQuestion.mutateAsync({
+        order: props.order,
+        worksheetId: props.worksheetId,
+        parentId: props.parentQuestionId,
+        text: "",
+      }),
+      {
+        pending: "Creating Question",
+        success: "Question Created 👌",
+        error: "Error in Question Creation 🤯",
+      }
+    );
   };
 
   //Function for creating multiple choice question
   const createMultipleChoiceQuestion =
     api.multipleChoiceQuestion.create.useMutation({
       onSuccess: () => {
-        void refetch();
+        void props.refetch();
       },
     });
 
   const addMultipleChoiceQuestion = () => {
     void toast.promise(
-      worksheetId
-        ? createMultipleChoiceQuestion.mutateAsync({
-            order: order,
-            worksheetId: worksheetId,
+      createMultipleChoiceQuestion.mutateAsync({
+        order: props.order,
+        worksheetId: props.worksheetId,
+        parentId: props.parentQuestionId,
+        text: "",
+        explanation: "",
+        marks: 1,
+        answer: 1,
+        choices: [
+          {
+            index: 1,
             text: "",
-            explanation: "",
-            marks: 1,
-            answer: 1,
-            choices: [
-              {
-                index: 1,
-                text: "",
-              },
-              {
-                index: 2,
-                text: "",
-              },
-              {
-                index: 3,
-                text: "",
-              },
-              {
-                index: 4,
-                text: "",
-              },
-            ],
-          })
-        : createMultipleChoiceQuestion.mutateAsync({
-            order: order,
-            worksheetId: worksheetId,
+          },
+          {
+            index: 2,
             text: "",
-            explanation: "",
-            marks: 1,
-            answer: 1,
-            choices: [
-              {
-                index: 1,
-                text: "",
-              },
-              {
-                index: 2,
-                text: "",
-              },
-              {
-                index: 3,
-                text: "",
-              },
-              {
-                index: 4,
-                text: "",
-              },
-            ],
-          }),
+          },
+          {
+            index: 3,
+            text: "",
+          },
+          {
+            index: 4,
+            text: "",
+          },
+        ],
+      }),
       {
         pending: "Creating Question",
         success: "Question Created 👌",
@@ -109,15 +92,15 @@ const AddQuestionButton: React.FC<Props> = ({
   //Function for creating multiple choice question
   const createShortAnswerQuestion = api.shortAnswerQuestion.create.useMutation({
     onSuccess: () => {
-      void refetch();
+      void props.refetch();
     },
   });
 
   const addShortAnswerQuestion = () => {
     void toast.promise(
       createShortAnswerQuestion.mutateAsync({
-        order: order,
-        worksheetId: worksheetId,
+        order: props.order,
+        worksheetId: props.worksheetId,
         text: "",
         explanation: "",
         marks: 1,
@@ -135,15 +118,16 @@ const AddQuestionButton: React.FC<Props> = ({
   //Function for creating multiple choice question
   const createOpenEndedQuestion = api.openEndedQuestion.create.useMutation({
     onSuccess: () => {
-      void refetch();
+      void props.refetch();
     },
   });
 
   const addOpenAddedQuestion = () => {
     void toast.promise(
       createOpenEndedQuestion.mutateAsync({
-        order: order,
-        worksheetId: worksheetId,
+        order: props.order,
+        worksheetId: props.worksheetId,
+        parentId: props.parentQuestionId,
         text: "",
         marks: 1,
       }),
@@ -160,41 +144,21 @@ const AddQuestionButton: React.FC<Props> = ({
       label: "Multiple Choice",
       create: addMultipleChoiceQuestion,
     },
-    // {
-    //   label: "Short Answer",
-    //   dialogId: "create-short-answer-question",
-    //   create: addShortAnswerQuestion,
-    // },
     {
       label: "Open-Ended",
       create: addOpenAddedQuestion,
     },
+    // {
+    //   label: "Nested Question",
+    //   create: addNestedQuestion,
+    // },
   ];
+  // if (props.hideNestedQuestion) {
+  //   questionTypes.pop();
+  // }
 
   return (
     <>
-      {/* <div className="dropdown">
-        <label tabIndex={0} className="btn-ghost btn m-1">
-          Add Question
-        </label>
-        <ul
-          tabIndex={0}
-          className="dropdown-content menu rounded-box bg-base-100 w-52 gap-3 p-2 shadow"
-        >
-          {questionTypes.map((questionType) => {
-            return (
-              <li key={questionType.label} className="w-full ">
-                <button
-                  className="btn-ghost btn"
-                  onClick={() => questionType.create()}
-                >
-                  {questionType.label}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      </div> */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button className="w-[180px]">Add Question</Button>

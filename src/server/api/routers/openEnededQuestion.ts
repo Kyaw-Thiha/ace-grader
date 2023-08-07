@@ -41,6 +41,7 @@ export const openEndedQuestionRouter = createTRPCRouter({
         order: z.number(),
         worksheetId: z.string().optional(),
         publishedWorksheetId: z.string().optional(),
+        parentId: z.string().optional(),
         text: z.string().optional(),
         markingScheme: z.array(z.string()).optional(),
         marks: z.number().optional(),
@@ -55,6 +56,7 @@ export const openEndedQuestionRouter = createTRPCRouter({
           questionType: "LongAnswerQuestion",
           worksheetId: input.worksheetId,
           publishedWorksheetId: input.publishedWorksheetId,
+          parentId: input.parentId,
           longAnswerQuestion: {
             create: {
               text: input.text ?? "",

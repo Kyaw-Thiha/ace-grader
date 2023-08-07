@@ -41,34 +41,53 @@ export const worksheetRouter = createTRPCRouter({
             include: {
               nestedQuestion: {
                 include: {
-                  // 1st level
+                  // 1st level (1)
+                  images: true,
                   childrenQuestions: {
                     include: {
-                      multipleChoiceQuestion: true,
-                      longAnswerQuestion: true,
+                      multipleChoiceQuestion: {
+                        include: {
+                          images: true,
+                          choices: true,
+                        },
+                      },
+                      longAnswerQuestion: {
+                        include: {
+                          images: true,
+                        },
+                      },
                       nestedQuestion: {
                         include: {
-                          // 2nd level
+                          // 2nd level (a)
+                          images: true,
                           childrenQuestions: {
                             include: {
-                              multipleChoiceQuestion: true,
-                              longAnswerQuestion: true,
+                              multipleChoiceQuestion: {
+                                include: {
+                                  images: true,
+                                  choices: true,
+                                },
+                              },
+                              longAnswerQuestion: {
+                                include: {
+                                  images: true,
+                                },
+                              },
                               nestedQuestion: {
                                 include: {
-                                  // 3rd level
+                                  // 3rd level (i)
+                                  images: true,
                                   childrenQuestions: {
                                     include: {
-                                      multipleChoiceQuestion: true,
-                                      longAnswerQuestion: true,
-                                      nestedQuestion: {
+                                      multipleChoiceQuestion: {
                                         include: {
-                                          // 4th level
-                                          childrenQuestions: {
-                                            include: {
-                                              multipleChoiceQuestion: true,
-                                              longAnswerQuestion: true,
-                                            },
-                                          },
+                                          images: true,
+                                          choices: true,
+                                        },
+                                      },
+                                      longAnswerQuestion: {
+                                        include: {
+                                          images: true,
                                         },
                                       },
                                     },

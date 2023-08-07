@@ -15,25 +15,55 @@ export const nestedQuestionRouter = createTRPCRouter({
           id: input.id,
         },
         include: {
-          // 2nd level
+          // 2nd level (a)
+          images: true,
           childrenQuestions: {
             include: {
-              multipleChoiceQuestion: true,
-              longAnswerQuestion: true,
+              multipleChoiceQuestion: {
+                include: {
+                  images: true,
+                  choices: true,
+                },
+              },
+              longAnswerQuestion: {
+                include: {
+                  images: true,
+                },
+              },
               nestedQuestion: {
                 include: {
-                  // 3rd level
+                  // 3rd level (i)
+                  images: true,
                   childrenQuestions: {
                     include: {
-                      multipleChoiceQuestion: true,
-                      longAnswerQuestion: true,
+                      multipleChoiceQuestion: {
+                        include: {
+                          images: true,
+                          choices: true,
+                        },
+                      },
+                      longAnswerQuestion: {
+                        include: {
+                          images: true,
+                        },
+                      },
                       nestedQuestion: {
                         include: {
-                          // 4th level
+                          // 4th level (1)
+                          images: true,
                           childrenQuestions: {
                             include: {
-                              multipleChoiceQuestion: true,
-                              longAnswerQuestion: true,
+                              multipleChoiceQuestion: {
+                                include: {
+                                  images: true,
+                                  choices: true,
+                                },
+                              },
+                              longAnswerQuestion: {
+                                include: {
+                                  images: true,
+                                },
+                              },
                             },
                           },
                         },
@@ -54,6 +84,7 @@ export const nestedQuestionRouter = createTRPCRouter({
         order: z.number(),
         worksheetId: z.string().optional(),
         publishedWorksheetId: z.string().optional(),
+        parentId: z.string().optional(),
         text: z.string(),
       })
     )
@@ -64,6 +95,7 @@ export const nestedQuestionRouter = createTRPCRouter({
           questionType: "NestedQuestion",
           worksheetId: input.worksheetId,
           publishedWorksheetId: input.publishedWorksheetId,
+          parentId: input.parentId,
           nestedQuestion: {
             create: {
               text: input.text,

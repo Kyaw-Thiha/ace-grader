@@ -23,14 +23,20 @@ import Image from "next/image";
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 type ShortAnswerQuestion = RouterOutputs["shortAnswerQuestion"]["get"];
 type OpenEndedQuestion = RouterOutputs["openEndedQuestion"]["get"];
+type NestedQuestion = RouterOutputs["nestedQuestion"]["get"];
 type Image = RouterOutputs["image"]["get"];
 
 interface Props {
   questionType:
     | "MultipleChoiceQuestion"
     | "ShortAnswerQuestion"
-    | "OpenEndedQuestion";
-  question: MultipleChoiceQuestion | ShortAnswerQuestion | OpenEndedQuestion;
+    | "OpenEndedQuestion"
+    | "NestedQuestion";
+  question:
+    | MultipleChoiceQuestion
+    | ShortAnswerQuestion
+    | OpenEndedQuestion
+    | NestedQuestion;
   refetch: QueryObserverBaseResult["refetch"];
 }
 
