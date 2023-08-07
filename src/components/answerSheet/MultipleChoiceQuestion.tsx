@@ -41,7 +41,7 @@ const MultipleChoiceQuestion: React.FC<Props> = (props) => {
   return (
     <div className="flex w-full flex-col">
       <CardHeader>
-        <CardTitle>
+        <CardTitle className="whitespace-pre-line font-normal leading-relaxed">
           <Latex
             delimiters={[
               { left: "$$", right: "$$", display: true },
