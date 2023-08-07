@@ -20,6 +20,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
+import { MathInputDialog } from "../MathInputDialog";
 
 type OpenEndedQuestion = RouterOutputs["openEndedQuestion"]["get"];
 type OpenEndedQuestionAnswer = RouterOutputs["openEndedQuestionAnswer"]["get"];
@@ -145,6 +146,11 @@ const StudentAnswer: React.FC<Props> = (props) => {
   };
   useAutosave({ data: answer, onSave: updateAnswer });
 
+  const handleMathSave = (text: string) => {
+    setAnswer(answer + text);
+    updateAnswer();
+  };
+
   return (
     // <MarkdownEditor
     //   text={answer}
@@ -153,13 +159,18 @@ const StudentAnswer: React.FC<Props> = (props) => {
     //   outlined
     //   onChange={(e) => setAnswer(e.target.value)}
     // />
-    <AutosizeInput
-      minRows={4}
-      placeholder="Type here"
-      className="text-md transition-all disabled:cursor-default disabled:opacity-100"
-      disabled={props.status != "answering-studentview"}
-      value={answer}
-      onChange={(e) => setAnswer(e.target.value)}
-    />
+
+    <div className="flex items-center justify-center gap-4">
+      <AutosizeInput
+        minRows={4}
+        placeholder="Type here"
+        className="text-md transition-all disabled:cursor-default disabled:opacity-100"
+        disabled={props.status != "answering-studentview"}
+        value={answer}
+        onChange={(e) => setAnswer(e.target.value)}
+      />
+
+      <MathInputDialog onSave={handleMathSave} />
+    </div>
   );
 };
