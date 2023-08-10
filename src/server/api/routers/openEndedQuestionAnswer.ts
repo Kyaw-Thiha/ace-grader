@@ -93,4 +93,14 @@ export const openEndedQuestionAnswerRouter = createTRPCRouter({
         },
       });
     }),
+
+  deleteAnswer: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.answer.delete({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
 });

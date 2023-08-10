@@ -48,4 +48,15 @@ export const questionRouter = createTRPCRouter({
         },
       });
     }),
+
+  getAllLongAnswerQuestions: publicProcedure.query(({ ctx, input }) => {
+    return ctx.prisma.question.findMany({
+      where: {
+        questionType: "LongAnswerQuestion",
+      },
+      include: {
+        longAnswerQuestion: true,
+      },
+    });
+  }),
 });

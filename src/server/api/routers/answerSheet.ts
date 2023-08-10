@@ -25,6 +25,17 @@ const checkAnswerRateLimit = new Ratelimit({
 });
 
 export const answerSheetRouter = createTRPCRouter({
+  getAllLongAnswerQuestionAnswers: publicProcedure.query(({ ctx, input }) => {
+    return ctx.prisma.answer.findMany({
+      where: {
+        answerType: "LongAnswerQuestionAnswer",
+      },
+      include: {
+        longAnswerQuestionAnswer: true,
+      },
+    });
+  }),
+
   get: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
