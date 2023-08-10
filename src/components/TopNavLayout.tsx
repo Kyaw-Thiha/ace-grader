@@ -59,6 +59,7 @@ const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
           property="og:image"
           content="https://acegrader.com/images/logo-light.png"
         />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
       </Head>
       <div className="flex min-h-screen flex-col">
         <header className="border-b">
