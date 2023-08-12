@@ -7,8 +7,40 @@ import { CheckingFinishedEmailTemplate } from "@/components/emails/CheckingFinis
 import { backOff } from "exponential-backoff";
 import { prisma } from "@/server/db";
 
+type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
+type MultipleChoiceQuestionAnswer =
+  RouterOutputs["multipleChoiceQuestionAnswer"]["get"];
 type OpenEndedQuestion = RouterOutputs["openEndedQuestion"]["get"];
 type OpenEndedQuestionAnswer = RouterOutputs["openEndedQuestionAnswer"]["get"];
+type NestedQuestion = RouterOutputs["nestedQuestion"]["get"];
+type NestedQuestionAnswer = RouterOutputs["nestedQuestionAnswer"]["get"];
+
+interface Question {
+  order: number;
+  questionType:
+    | "NestedQuestion"
+    | "ShortAnswerQuestion"
+    | "LongAnswerQuestion"
+    | "MultipleChoiceQuestion"
+    | "OpenEndedQuestion";
+  multipleChoiceQuestion?: MultipleChoiceQuestion;
+  openEndedQuestion?: OpenEndedQuestion;
+  nestedQuestion?: NestedQuestion;
+}
+
+interface Answer {
+  order: number;
+  answerType:
+    | "NestedQuestionAnswer"
+    | "ShortAnswerQuestionAnswer"
+    | "LongAnswerQuestionAnswer"
+    | "MultipleChoiceQuestionAnswer"
+    | "OpenEndedQuestionAnswer";
+  multipleChoiceQuestionAnswer?: MultipleChoiceQuestionAnswer;
+  openEndedQuestionAnswer?: OpenEndedQuestionAnswer;
+  nestedQuestionAnswer?: NestedQuestionAnswer;
+}
+
 interface MarksAndFeedback {
   marks: number;
   feedback: string;
@@ -22,55 +54,32 @@ export const checkAnswer = async (
 
   await markAsChecking(prisma, answerSheetId);
 
-  const worksheet = await fetchWorksheet(prisma, worksheetId);
-  const answerSheet = await fetchAnswerSheet(prisma, answerSheetId);
+  const worksheet = await fetchWorksheet(worksheetId);
+  const answerSheet = await fetchAnswerSheet(answerSheetId);
 
   const questions = worksheet?.questions ?? [];
   const answers = answerSheet?.answers ?? [];
 
-  const openEndedQuestions: OpenEndedQuestion[] = [];
-  const openEndedQuestionAnswers: OpenEndedQuestionAnswer[] = [];
+  let openEndedQuestions: OpenEndedQuestion[] = [];
+  let openEndedQuestionAnswers: OpenEndedQuestionAnswer[] = [];
 
   let totalMarks = 0;
 
   console.time("Setting Up Questions");
-  for (const answer of answers) {
-    if (answer.answerType == "MultipleChoiceQuestionAnswer") {
-      const question = questions.at(answer.order - 1)?.multipleChoiceQuestion;
-      const multipleChoiceQuestionAnswer = answer.multipleChoiceQuestionAnswer;
+  const {
+    totalMarks: returnedMarks,
+    openEndedQuestions: returnedQuestions,
+    openEndedQuestionAnswers: returnedAnswers,
+  } = await handleMarking(
+    questions as Question[],
+    answers,
+    openEndedQuestions,
+    openEndedQuestionAnswers
+  );
+  totalMarks = returnedMarks;
+  openEndedQuestions = [...returnedQuestions];
+  openEndedQuestionAnswers = [...returnedAnswers];
 
-      // Checking the MCQ Questions
-      if (multipleChoiceQuestionAnswer?.studentAnswer == question?.answer) {
-        await prisma.multipleChoiceQuestionAnswer.update({
-          where: {
-            id: multipleChoiceQuestionAnswer?.id,
-          },
-          data: {
-            marks: 1,
-          },
-        });
-
-        // Updating the total marks
-        totalMarks = totalMarks + 1;
-      } else {
-        await prisma.multipleChoiceQuestionAnswer.update({
-          where: {
-            id: multipleChoiceQuestionAnswer?.id,
-          },
-          data: {
-            marks: 0,
-          },
-        });
-      }
-    } else if (answer.answerType == "OpenEndedQuestionAnswer") {
-      const question = questions.at(answer.order - 1)
-        ?.openEndedQuestion as OpenEndedQuestion;
-      const openEndedQuestionAnswer = answer.openEndedQuestionAnswer;
-
-      openEndedQuestions.push(question);
-      openEndedQuestionAnswers.push(openEndedQuestionAnswer);
-    }
-  }
   console.timeEnd("Setting Up Questions");
 
   console.time("ChatGPT");
@@ -127,8 +136,100 @@ export const checkAnswer = async (
   console.timeEnd("Function Execution Time");
 };
 
+const handleMarking = async (
+  questions: Question[],
+  answers: Answer[],
+  openEndedQuestions: OpenEndedQuestion[],
+  openEndedQuestionAnswers: OpenEndedQuestionAnswer[]
+) => {
+  let totalMarks = 0;
+
+  for (const answer of answers) {
+    if (answer.answerType == "MultipleChoiceQuestionAnswer") {
+      console.log(answer);
+      const question = questions.at(answer.order - 1)
+        ?.multipleChoiceQuestion as MultipleChoiceQuestion;
+      const multipleChoiceQuestionAnswer = answer.multipleChoiceQuestionAnswer;
+
+      console.log(multipleChoiceQuestionAnswer);
+
+      const isCorrect = await checkMCQ(
+        question,
+        multipleChoiceQuestionAnswer as MultipleChoiceQuestionAnswer
+      );
+      if (isCorrect) {
+        totalMarks = totalMarks + 1;
+      }
+    } else if (answer.answerType == "OpenEndedQuestionAnswer") {
+      const question = questions.at(answer.order - 1)
+        ?.openEndedQuestion as OpenEndedQuestion;
+      const openEndedQuestionAnswer = answer.openEndedQuestionAnswer;
+
+      openEndedQuestions.push(question);
+      openEndedQuestionAnswers.push(
+        openEndedQuestionAnswer as OpenEndedQuestionAnswer
+      );
+    } else if (answer.answerType == "NestedQuestionAnswer") {
+      const childrenQuestions =
+        questions.at(answer.order - 1)?.nestedQuestion?.childrenQuestions ?? [];
+      const childrenAnswers =
+        answer.nestedQuestionAnswer?.childrenAnswers ?? [];
+
+      const {
+        totalMarks: returnedMarks,
+        openEndedQuestions: returnedQuestions,
+        openEndedQuestionAnswers: returnedAnswers,
+      } = await handleMarking(
+        childrenQuestions,
+        childrenAnswers as Answer[],
+        openEndedQuestions,
+        openEndedQuestionAnswers
+      );
+
+      totalMarks = totalMarks + returnedMarks;
+      openEndedQuestions = [...openEndedQuestions, ...returnedQuestions];
+      openEndedQuestionAnswers = [
+        ...openEndedQuestionAnswers,
+        ...returnedAnswers,
+      ];
+    }
+  }
+
+  return { totalMarks, openEndedQuestions, openEndedQuestionAnswers };
+};
+
+const checkMCQ = async (
+  question: MultipleChoiceQuestion,
+  answer: MultipleChoiceQuestionAnswer
+) => {
+  // Checking the MCQ Questions
+  if (answer?.studentAnswer == question?.answer) {
+    await prisma.multipleChoiceQuestionAnswer.update({
+      where: {
+        id: answer?.id,
+      },
+      data: {
+        marks: 1,
+      },
+    });
+
+    return true;
+  } else {
+    await prisma.multipleChoiceQuestionAnswer.update({
+      where: {
+        id: answer?.id,
+      },
+      data: {
+        marks: 0,
+      },
+    });
+
+    return false;
+  }
+};
+
 // Fetching the worksheet from the server
-const fetchWorksheet = (prisma: PrismaClient, worksheetId: string) => {
+const fetchWorksheet = (worksheetId: string) => {
   return prisma.publishedWorksheet.findFirst({
     where: {
       id: worksheetId,
@@ -143,7 +244,6 @@ const fetchWorksheet = (prisma: PrismaClient, worksheetId: string) => {
           nestedQuestion: {
             include: {
               // 1st level
-              images: true,
               childrenQuestions: {
                 include: {
                   multipleChoiceQuestion: true,
@@ -151,7 +251,6 @@ const fetchWorksheet = (prisma: PrismaClient, worksheetId: string) => {
                   nestedQuestion: {
                     include: {
                       // 2nd level
-                      images: true,
                       childrenQuestions: {
                         include: {
                           multipleChoiceQuestion: true,
@@ -159,23 +258,10 @@ const fetchWorksheet = (prisma: PrismaClient, worksheetId: string) => {
                           nestedQuestion: {
                             include: {
                               // 3rd level
-                              images: true,
                               childrenQuestions: {
                                 include: {
                                   multipleChoiceQuestion: true,
                                   openEndedQuestion: true,
-                                  nestedQuestion: {
-                                    include: {
-                                      // 4th level
-                                      images: true,
-                                      childrenQuestions: {
-                                        include: {
-                                          multipleChoiceQuestion: true,
-                                          openEndedQuestion: true,
-                                        },
-                                      },
-                                    },
-                                  },
                                 },
                               },
                             },
@@ -202,7 +288,7 @@ const fetchWorksheet = (prisma: PrismaClient, worksheetId: string) => {
 };
 
 // Fetching the answer sheet from the server
-const fetchAnswerSheet = (prisma: PrismaClient, answerSheetId: string) => {
+const fetchAnswerSheet = (answerSheetId: string) => {
   return prisma.answerSheet.findFirst({
     where: {
       id: answerSheetId,
@@ -220,8 +306,30 @@ const fetchAnswerSheet = (prisma: PrismaClient, answerSheetId: string) => {
         },
         include: {
           multipleChoiceQuestionAnswer: true,
-          shortAnswerQuestionAnswer: true,
           openEndedQuestionAnswer: true,
+          nestedQuestionAnswer: {
+            // 2nd level
+            include: {
+              childrenAnswers: {
+                include: {
+                  multipleChoiceQuestionAnswer: true,
+                  openEndedQuestionAnswer: true,
+
+                  nestedQuestionAnswer: {
+                    //3rd level
+                    include: {
+                      childrenAnswers: {
+                        include: {
+                          multipleChoiceQuestionAnswer: true,
+                          openEndedQuestionAnswer: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       },
     },

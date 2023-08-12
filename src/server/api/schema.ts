@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+// Nested Question
 export const nestedQuestionSchemaProperties = {
   text: z.string(),
   images: z.object({
@@ -72,6 +73,35 @@ export const questionSchemaProperties = {
   openEndedQuestion: z
     .object({
       create: openEndedQuestionSchema,
+    })
+    .optional(),
+};
+
+//Nested Answer
+export const answerTypeSchema = z.union([
+  z.literal("NestedQuestionAnswer"),
+  z.literal("MultipleChoiceQuestionAnswer"),
+  z.literal("ShortAnswerQuestionAnswer"),
+  z.literal("OpenEndedQuestionAnswer"),
+]);
+
+export const answerSchemaProperties = {
+  order: z.number(),
+  answerType: answerTypeSchema,
+  multipleChoiceQuestionAnswer: z
+    .object({
+      create: z.object({
+        studentAnswer: z.number(),
+        feedback: z.string(),
+      }),
+    })
+    .optional(),
+  openEndedQuestionAnswer: z
+    .object({
+      create: z.object({
+        studentAnswer: z.string(),
+        feedback: z.string(),
+      }),
     })
     .optional(),
 };

@@ -43,7 +43,7 @@ const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
         <title>Ace Grader</title>
         <meta
           name="description"
-          content="AceGrader is an AI-powered innovative website software designed to streamline the daily tasks of teachers and enhance student learning. 
+          content="AceGrader is an AI-powered automatic grading website designed to streamline the daily tasks of teachers and enhance student learning. 
           With our intelligent grading and feedback system, you can say goodbye to the tedious and time-consuming process of manually 
           grading worksheets."
         />
@@ -59,7 +59,11 @@ const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
           property="og:image"
           content="https://acegrader.com/images/logo-light.png"
         />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link
+          rel="icon"
+          href="https://acegrader.com/images/favicon.ico"
+          sizes="any"
+        />
       </Head>
       <div className="flex min-h-screen flex-col">
         <header className="border-b">

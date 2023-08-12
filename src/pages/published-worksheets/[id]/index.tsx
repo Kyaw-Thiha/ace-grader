@@ -165,6 +165,7 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
     const questions = publishedWorksheet?.questions ?? [];
 
     type AnswerType =
+      | "NestedQuestionAnswer"
       | "MultipleChoiceQuestionAnswer"
       | "ShortAnswerQuestionAnswer"
       | "OpenEndedQuestionAnswer";
@@ -194,8 +195,88 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
             create: { studentAnswer: "", feedback: "" },
           },
         });
+      } else if (question.questionType == "NestedQuestion") {
+        // 2nd Nested Level
+        const nestedQuestions =
+          question.nestedQuestion?.childrenQuestions ?? [];
+        const nestedAnswers = [];
+
+        for (const nestedQuestion of nestedQuestions) {
+          if (nestedQuestion.questionType == "MultipleChoiceQuestion") {
+            nestedAnswers.push({
+              order: nestedQuestion.order,
+              answerType: "MultipleChoiceQuestionAnswer" as AnswerType,
+              multipleChoiceQuestionAnswer: {
+                create: { studentAnswer: 0, feedback: "" },
+              },
+            });
+          } else if (nestedQuestion.questionType == "OpenEndedQuestion") {
+            nestedAnswers.push({
+              order: nestedQuestion.order,
+              answerType: "OpenEndedQuestionAnswer" as AnswerType,
+              openEndedQuestionAnswer: {
+                create: { studentAnswer: "", feedback: "" },
+              },
+            });
+          } else if (nestedQuestion.questionType == "NestedQuestion") {
+            // 3rd Level
+            const secondNestedQuestions =
+              nestedQuestion.nestedQuestion?.childrenQuestions ?? [];
+            const secondNestedAnswers = [];
+
+            for (const secondNestedQuestion of secondNestedQuestions) {
+              if (
+                secondNestedQuestion.questionType == "MultipleChoiceQuestion"
+              ) {
+                secondNestedAnswers.push({
+                  order: secondNestedQuestion.order,
+                  answerType: "MultipleChoiceQuestionAnswer" as AnswerType,
+                  multipleChoiceQuestionAnswer: {
+                    create: { studentAnswer: 0, feedback: "" },
+                  },
+                });
+              } else if (
+                secondNestedQuestion.questionType == "OpenEndedQuestion"
+              ) {
+                secondNestedAnswers.push({
+                  order: secondNestedQuestion.order,
+                  answerType: "OpenEndedQuestionAnswer" as AnswerType,
+                  openEndedQuestionAnswer: {
+                    create: { studentAnswer: "", feedback: "" },
+                  },
+                });
+              }
+            }
+
+            nestedAnswers.push({
+              order: question.order,
+              answerType: "NestedQuestionAnswer" as AnswerType,
+              nestedQuestionAnswer: {
+                create: {
+                  childrenAnswers: {
+                    create: secondNestedAnswers,
+                  },
+                },
+              },
+            });
+          }
+        }
+
+        answers.push({
+          order: question.order,
+          answerType: "NestedQuestionAnswer" as AnswerType,
+          nestedQuestionAnswer: {
+            create: {
+              childrenAnswers: {
+                create: nestedAnswers,
+              },
+            },
+          },
+        });
       }
     }
+
+    console.log(answers);
 
     return answers;
   };

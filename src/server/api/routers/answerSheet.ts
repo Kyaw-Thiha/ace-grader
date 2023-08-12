@@ -10,6 +10,7 @@ import {
 } from "@/server/api/trpc";
 import checkAnswer from "@/defer/checkAnswer";
 import { TRPCError } from "@trpc/server";
+import { answerSchemaProperties } from "@/server/api/schema";
 
 // Create a new ratelimiter, that allows 1 request per 1 minute
 const checkAnswerRateLimit = new Ratelimit({
@@ -93,9 +94,32 @@ export const answerSheetRouter = createTRPCRouter({
               order: "asc",
             },
             include: {
+              // 1st level
               multipleChoiceQuestionAnswer: true,
               shortAnswerQuestionAnswer: true,
               openEndedQuestionAnswer: true,
+              // 2nd level
+              nestedQuestionAnswer: {
+                include: {
+                  childrenAnswers: {
+                    include: {
+                      multipleChoiceQuestionAnswer: true,
+                      openEndedQuestionAnswer: true,
+                      // 3rd level
+                      nestedQuestionAnswer: {
+                        include: {
+                          childrenAnswers: {
+                            include: {
+                              multipleChoiceQuestionAnswer: true,
+                              openEndedQuestionAnswer: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -127,39 +151,32 @@ export const answerSheetRouter = createTRPCRouter({
         publishedWorksheetId: z.string(),
         answers: z.array(
           z.object({
-            order: z.number(),
-            answerType: z.union([
-              z.literal("MultipleChoiceQuestionAnswer"),
-              z.literal("ShortAnswerQuestionAnswer"),
-              z.literal("OpenEndedQuestionAnswer"),
-            ]),
-            multipleChoiceQuestionAnswer: z
+            ...answerSchemaProperties,
+            // 2nd Level
+            nestedQuestionAnswer: z
               .object({
                 create: z.object({
-                  studentAnswer: z.number(),
-                  feedback: z.string(),
-                }),
-              })
-              .optional(),
-            shortAnswerQuestionAnswer: z
-              .object({
-                create: z.object({
-                  studentAnswer: z.string(),
-                  feedback: z.string(),
-                }),
-              })
-              .optional(),
-            openEndedQuestionAnswer: z
-              .object({
-                create: z.object({
-                  studentAnswer: z.string(),
-                  // studentImages: z.array(
-                  //   z.object({
-                  //     urL: z.string(),
-                  //     caption: z.string(),
-                  //   })
-                  // ),
-                  feedback: z.string(),
+                  childrenAnswers: z.object({
+                    create: z.array(
+                      z.object({
+                        ...answerSchemaProperties,
+                        // 3rd level
+                        nestedQuestionAnswer: z
+                          .object({
+                            create: z.object({
+                              childrenAnswers: z.object({
+                                create: z.array(
+                                  z.object({
+                                    ...answerSchemaProperties,
+                                  })
+                                ),
+                              }),
+                            }),
+                          })
+                          .optional(),
+                      })
+                    ),
+                  }),
                 }),
               })
               .optional(),
@@ -168,6 +185,7 @@ export const answerSheetRouter = createTRPCRouter({
       })
     )
     .mutation(({ ctx, input }) => {
+      console.log("Answers - ", input.answers);
       return ctx.prisma.answerSheet.create({
         data: {
           studentName: input.studentName,

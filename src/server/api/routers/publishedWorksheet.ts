@@ -19,7 +19,61 @@ export const publishedWorksheetRouter = createTRPCRouter({
           id: input.id,
         },
         include: {
-          questions: true,
+          questions: {
+            include: {
+              multipleChoiceQuestion: {
+                include: {
+                  choices: true,
+                  images: true,
+                },
+              },
+              openEndedQuestion: {
+                include: {
+                  images: true,
+                },
+              },
+              // 2nd level
+              nestedQuestion: {
+                include: {
+                  childrenQuestions: {
+                    include: {
+                      multipleChoiceQuestion: {
+                        include: {
+                          choices: true,
+                          images: true,
+                        },
+                      },
+                      openEndedQuestion: {
+                        include: {
+                          images: true,
+                        },
+                      },
+                      // 3rd level
+                      nestedQuestion: {
+                        include: {
+                          childrenQuestions: {
+                            include: {
+                              multipleChoiceQuestion: {
+                                include: {
+                                  choices: true,
+                                  images: true,
+                                },
+                              },
+                              openEndedQuestion: {
+                                include: {
+                                  images: true,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       });
     }),

@@ -262,14 +262,18 @@ model Answer {
     id                              String    @id @default(cuid())
     order                           Int   
     answerType                      AnswerType
+    nestedQuestionAnswer            NestedQuestionAnswer?           @relation(name: "NestedAnswer")
     multipleChoiceQuestionAnswer    MultipleChoiceQuestionAnswer?
     shortAnswerQuestionAnswer       ShortAnswerQuestionAnswer?
     longAnswerQuestionAnswer        LongAnswerQuestionAnswer?
     openEndedQuestionAnswer         OpenEndedQuestionAnswer?
-    answerSheetId                   String
-    answerSheet                     AnswerSheet @relation(fields: [answerSheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    answerSheetId                   String?
+    answerSheet                     AnswerSheet?                  @relation(fields: [answerSheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    parentId                        String?
+    parent                          NestedQuestionAnswer?         @relation(name: "ParentAnswer", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
     @@index([answerSheetId])
+    @@index([parentId])
 }
 
 enum AnswerType {
@@ -277,6 +281,18 @@ enum AnswerType {
     ShortAnswerQuestionAnswer
     LongAnswerQuestionAnswer
     OpenEndedQuestionAnswer
+    NestedQuestionAnswer
+}
+
+model NestedQuestionAnswer {
+    id                    String    @id @default(cuid())
+    // One-to-many relationship to question
+    answerId              String    @unique
+    answer                Answer    @relation(name: "NestedAnswer", fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    // Many-to-one relationship to question
+    childrenAnswers       Answer[]       @relation(name: "ParentAnswer")
+
+    @@index([answerId])
 }
 
 model MultipleChoiceQuestionAnswer {

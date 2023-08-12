@@ -183,18 +183,25 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
                   {question.order}.
                 </p>
                 <div className="w-full">
-                  {question.questionType == "MultipleChoiceQuestion" ? (
+                  {question.questionType == "MultipleChoiceQuestion" && (
                     <MultipleChoiceQuestion
                       question={question.multipleChoiceQuestion}
                       answer={answers.at(index)?.multipleChoiceQuestionAnswer}
                       refetch={refetchWorksheet}
                       status={status}
                     />
-                  ) : (
-                    <></>
                   )}
 
                   {question.questionType == "OpenEndedQuestion" && (
+                    <OpenEndedQuestion
+                      question={question.openEndedQuestion}
+                      answer={answers.at(index)?.openEndedQuestionAnswer}
+                      refetch={refetchWorksheet}
+                      status={status}
+                    />
+                  )}
+
+                  {question.questionType == "NestedQuestion" && (
                     <OpenEndedQuestion
                       question={question.openEndedQuestion}
                       answer={answers.at(index)?.openEndedQuestionAnswer}
