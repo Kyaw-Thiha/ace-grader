@@ -213,7 +213,7 @@
 //   return (
 //     <>
 //       <Head>
-//         <title>Ace Grader</title>
+//         <title>AceGrader</title>
 //         <meta
 //           name="description"
 //           content="A website where teachers can automate their workflow"

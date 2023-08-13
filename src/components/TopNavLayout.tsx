@@ -40,7 +40,7 @@ const TopNavLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <Head>
-        <title>Ace Grader</title>
+        <title>AceGrader</title>
         <meta
           name="description"
           content="AceGrader is an AI-powered automatic grading website designed to streamline the daily tasks of teachers and enhance student learning. 

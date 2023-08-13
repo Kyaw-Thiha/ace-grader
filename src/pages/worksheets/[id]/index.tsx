@@ -89,7 +89,7 @@ const WorksheetLayout: React.FC<WorksheetHeaderProps> = ({
   return (
     <>
       <Head>
-        <title>Ace Grader</title>
+        <title>AceGrader</title>
         <meta
           property="og:title"
           content="AceGrader - Empowering Teachers & Students"
