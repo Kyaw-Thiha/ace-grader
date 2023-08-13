@@ -15,6 +15,7 @@ import { useState } from "react";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import type { CreateQuestion } from "@/components/worksheet/types";
 
 type Questions = RouterOutputs["question"]["getAll"];
 interface DeleteQuestionButtonProps {
@@ -96,6 +97,7 @@ interface PublishWorksheetButtonProps {
   worksheetId: string;
   refetch: QueryObserverBaseResult["refetch"];
 }
+type Question = RouterOutputs["question"]["getQuestion"];
 
 export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
   props
@@ -141,19 +143,21 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
     },
   });
 
-  const calculateTotalMarks = () => {
+  const calculateTotalMarks = (questions: Question[]) => {
     let totalMarks = 0;
     for (const question of questions) {
-      if (question.questionType == "MultipleChoiceQuestion") {
+      if (question?.questionType == "MultipleChoiceQuestion") {
         const marks = question.multipleChoiceQuestion?.marks ?? 0;
         totalMarks = totalMarks + marks;
       }
-      // else if (question.questionType == "ShortAnswerQuestion") {
-      //   const marks = question.shortAnswerQuestion?.marks ?? 0;
-      //   totalMarks = totalMarks + marks;
-      // }
-      if (question.questionType == "OpenEndedQuestion") {
+      if (question?.questionType == "OpenEndedQuestion") {
         const marks = question.openEndedQuestion?.marks ?? 0;
+        totalMarks = totalMarks + marks;
+      }
+      if (question?.questionType == "NestedQuestion") {
+        const marks = calculateTotalMarks(
+          question.nestedQuestion?.childrenQuestions ?? []
+        );
         totalMarks = totalMarks + marks;
       }
     }
@@ -161,11 +165,11 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
     return totalMarks;
   };
 
-  const createQuestionsPayload = () => {
-    const questionsPayload = [];
+  const createQuestionsPayload = (questions: Question[]) => {
+    const questionsPayload: CreateQuestion[] = [];
 
     for (const question of questions) {
-      if (question.questionType == "MultipleChoiceQuestion") {
+      if (question?.questionType == "MultipleChoiceQuestion") {
         // Copying the choices
         const choices = [];
         const originalChoices = question.multipleChoiceQuestion?.choices ?? [];
@@ -202,21 +206,7 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
             },
           },
         });
-      }
-      // else if (question.questionType == "ShortAnswerQuestion") {
-      //   questionsPayload.push({
-      //     order: question.order,
-      //     questionType: question.questionType,
-      //     shortAnswerQuestion: {
-      //       create: {
-      //         text: question.shortAnswerQuestion?.text ?? "",
-      //         marks: question.shortAnswerQuestion?.marks ?? 1,
-      //         answer: question.shortAnswerQuestion?.answer ?? "",
-      //       },
-      //     },
-      //   });
-      // }
-      else if (question.questionType == "OpenEndedQuestion") {
+      } else if (question?.questionType == "OpenEndedQuestion") {
         // Copying the images
         const images = [];
         const originalImages = question.openEndedQuestion?.images ?? [];
@@ -245,9 +235,40 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
             },
           },
         });
+      } else if (question?.questionType == "NestedQuestion") {
+        // Copying the images
+        const images = [];
+        const originalImages = question.openEndedQuestion?.images ?? [];
+        for (const image of originalImages) {
+          images.push({
+            url: image.url,
+            fileKey: image.fileKey,
+            caption: image.caption,
+          });
+        }
+
+        const nestedQuestions = createQuestionsPayload(
+          question.nestedQuestion?.childrenQuestions ?? []
+        );
+        questionsPayload.push({
+          order: question.order,
+          questionType: question.questionType,
+          nestedQuestion: {
+            create: {
+              text: question.nestedQuestion?.text ?? "",
+              images: {
+                create: images,
+              },
+              childrenQuestions: {
+                create: nestedQuestions,
+              },
+            },
+          },
+        });
       }
     }
 
+    console.log("payload -", questionsPayload);
     return questionsPayload;
   };
 
@@ -258,11 +279,11 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
     await toast.promise(
       createWorksheet.mutateAsync({
         title: worksheet?.title ?? "",
-        totalMarks: calculateTotalMarks(),
+        totalMarks: calculateTotalMarks(questions),
         version: version,
         profileId: worksheet?.profileId ?? "",
         worksheetId: worksheet?.id ?? "",
-        questions: createQuestionsPayload(),
+        questions: createQuestionsPayload(questions),
       }),
       {
         pending: "Publishing Worksheet",

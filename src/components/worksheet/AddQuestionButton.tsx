@@ -16,11 +16,13 @@ interface Props {
   worksheetId?: string;
   parentQuestionId?: string;
   order: number;
-  hideNestedQuestion?: boolean;
+  nestedLevel?: number;
   refetch: QueryObserverBaseResult["refetch"];
 }
 
 const AddQuestionButton: React.FC<Props> = (props) => {
+  const MAXNESTEDLEVEL = 3;
+
   //Function for creating parent question
   const createNestedQuestion = api.nestedQuestion.create.useMutation({
     onSuccess: () => {
@@ -148,20 +150,32 @@ const AddQuestionButton: React.FC<Props> = (props) => {
       label: "Open-Ended",
       create: addOpenAddedQuestion,
     },
-    // {
-    //   label: "Nested Question",
-    //   create: addNestedQuestion,
-    // },
+    {
+      label: "Nested Question",
+      create: addNestedQuestion,
+    },
   ];
-  // if (props.hideNestedQuestion) {
-  //   questionTypes.pop();
-  // }
+  if (props.nestedLevel && props.nestedLevel >= MAXNESTEDLEVEL) {
+    questionTypes.pop();
+  }
+
+  const getButtonVariant = () => {
+    if (props.nestedLevel == 2) {
+      return "outline";
+    } else if (props.nestedLevel == 3) {
+      return "ghost";
+    } else {
+      return "default";
+    }
+  };
 
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button className="w-[180px]">Add Question</Button>
+          <Button className="w-[180px]" variant={getButtonVariant()}>
+            Add Question
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-[180px]">
           <DropdownMenuLabel>Types</DropdownMenuLabel>

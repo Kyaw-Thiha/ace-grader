@@ -6,7 +6,6 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 import { MathInputDialog } from "@/components/MathInputDialog";
 import MultipleChoiceQuestion from "@/components/worksheet/MultipleChoiceQuestion";
-import ShortAnswerQuestion from "@/components/worksheet/ShortAnswerQuestion";
 import OpenEndedQuestion from "@/components/worksheet/OpenEndedQuestion";
 import ReorderButtons from "@/components/worksheet/ReorderButtons";
 import { DeleteQuestionButton } from "@/components/worksheet/QuestionDialogs";
@@ -106,7 +105,7 @@ const NestedQuestion: React.FC<Props> = (props) => {
             parentQuestionId={props.question?.id}
             order={(questions?.length ?? 0) + 1}
             refetch={props.refetch}
-            hideNestedQuestion={props.nestedLevel >= MAXNESTEDLEVEL}
+            nestedLevel={props.nestedLevel}
           />
         </div>
       </div>
@@ -119,11 +118,7 @@ export default NestedQuestion;
 const Text: React.FC<Props> = (props) => {
   const [text, setText] = useState(props.question?.text ?? "");
 
-  const editText = api.multipleChoiceQuestion.editText.useMutation({
-    onSuccess: () => {
-      void props.refetch();
-    },
-  });
+  const editText = api.nestedQuestion.editText.useMutation({});
   const updateText = () => {
     if (text != "" && text != props.question?.text) {
       editText.mutate({ id: props.question?.id ?? "", text: text });

@@ -33,6 +33,8 @@ const NestedQuestion: React.FC<Props> = (props) => {
   const MAXNESTEDLEVEL = 3;
   const BASELEFTMARGIN = 8;
 
+  console.log("Nested Question - ", props.question);
+
   const margins = {
     1: `ml-${BASELEFTMARGIN * 1}`,
     2: `ml-${BASELEFTMARGIN * 2}`,
@@ -83,10 +85,10 @@ const NestedQuestion: React.FC<Props> = (props) => {
             margins[props.nestedLevel as keyof typeof margins]
           } mt-4`}
         >
-          {props.question?.childrenQuestions?.map((question) => (
+          {props.question?.childrenQuestions?.map((question, index) => (
             <div key={question.id} className="my-4 md:mx-8 md:rounded-md">
               <Card>
-                <div className="px-2 py-4 md:px-16 md:pb-8 md:pt-4">
+                <div className="px-2 py-2 md:px-8">
                   <p className="my-2 text-3xl text-slate-400">
                     {props.nestedLevel == 1 && <> {question.order}.</>}
                     {props.nestedLevel == 2 && (
@@ -100,6 +102,10 @@ const NestedQuestion: React.FC<Props> = (props) => {
                     {question.questionType == "MultipleChoiceQuestion" && (
                       <MultipleChoiceQuestion
                         question={question.multipleChoiceQuestion}
+                        answer={
+                          props.answer?.childrenAnswers.at(index)
+                            ?.multipleChoiceQuestionAnswer
+                        }
                         refetch={props.refetch}
                         status={props.status}
                       />
@@ -107,6 +113,10 @@ const NestedQuestion: React.FC<Props> = (props) => {
                     {question.questionType == "OpenEndedQuestion" && (
                       <OpenEndedQuestion
                         question={question.openEndedQuestion}
+                        answer={
+                          props.answer?.childrenAnswers.at(index)
+                            ?.openEndedQuestionAnswer
+                        }
                         refetch={props.refetch}
                         status={props.status}
                       />
@@ -114,6 +124,10 @@ const NestedQuestion: React.FC<Props> = (props) => {
                     {question.questionType == "NestedQuestion" && (
                       <NestedQuestion
                         question={question.nestedQuestion}
+                        answer={
+                          props.answer?.childrenAnswers.at(index)
+                            ?.nestedQuestionAnswer as NestedQuestionAnswer
+                        }
                         refetch={props.refetch}
                         nestedLevel={props.nestedLevel + 1}
                         status={props.status}

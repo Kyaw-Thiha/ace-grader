@@ -35,6 +35,7 @@ export const publishedWorksheetRouter = createTRPCRouter({
               // 2nd level
               nestedQuestion: {
                 include: {
+                  images: true,
                   childrenQuestions: {
                     include: {
                       multipleChoiceQuestion: {
@@ -51,6 +52,7 @@ export const publishedWorksheetRouter = createTRPCRouter({
                       // 3rd level
                       nestedQuestion: {
                         include: {
+                          images: true,
                           childrenQuestions: {
                             include: {
                               multipleChoiceQuestion: {
@@ -197,48 +199,35 @@ export const publishedWorksheetRouter = createTRPCRouter({
         worksheetId: z.string(),
         questions: z.array(
           z.object({
+            // 1st level
             ...questionSchemaProperties,
             nestedQuestion: z
               .object({
-                // 1st level
                 create: z.object({
                   ...nestedQuestionSchemaProperties,
-                  childrenQuestions: z
-                    .object({
-                      // 2nd level
-                      create: z.array(
-                        z.object({
-                          ...questionSchemaProperties,
-                          create: z.object({
-                            ...nestedQuestionSchemaProperties,
-                            childrenQuestions: z
-                              .object({
-                                // 3rd level
+                  childrenQuestions: z.object({
+                    create: z.array(
+                      z.object({
+                        // 2nd level
+                        ...questionSchemaProperties,
+                        nestedQuestion: z
+                          .object({
+                            create: z.object({
+                              ...nestedQuestionSchemaProperties,
+                              childrenQuestions: z.object({
                                 create: z.array(
                                   z.object({
+                                    // 3rd level
                                     ...questionSchemaProperties,
-                                    create: z.object({
-                                      ...nestedQuestionSchemaProperties,
-                                      childrenQuestions: z
-                                        .object({
-                                          // 4th level
-                                          create: z.array(
-                                            z.object({
-                                              ...questionSchemaProperties,
-                                            })
-                                          ),
-                                        })
-                                        .optional(),
-                                    }),
                                   })
                                 ),
-                              })
-                              .optional(),
-                          }),
-                        })
-                      ),
-                    })
-                    .optional(),
+                              }),
+                            }),
+                          })
+                          .optional(),
+                      })
+                    ),
+                  }),
                 }),
               })
               .optional(),

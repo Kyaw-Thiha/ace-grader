@@ -11,6 +11,7 @@ import MultipleChoiceQuestion from "@/components/answerSheet/MultipleChoiceQuest
 import OpenEndedQuestion from "@/components/answerSheet/OpenEndedQuestion";
 import { Card } from "@/components/ui/card";
 import AnswerSheetNavLayout from "@/components/AnswerSheetNavLayout";
+import NestedQuestion from "@/components/answerSheet/NestedQuestion";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
@@ -103,6 +104,15 @@ const QuestionList: React.FC<Props> = ({ publishedWorksheetId }) => {
                     <OpenEndedQuestion
                       question={question.openEndedQuestion}
                       refetch={refetchWorksheet}
+                      status="sample-teacherview"
+                    />
+                  )}
+
+                  {question.questionType == "NestedQuestion" && (
+                    <NestedQuestion
+                      question={question.nestedQuestion}
+                      refetch={refetchWorksheet}
+                      nestedLevel={2}
                       status="sample-teacherview"
                     />
                   )}

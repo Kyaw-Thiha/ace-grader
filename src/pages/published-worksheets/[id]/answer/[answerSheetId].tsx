@@ -19,6 +19,7 @@ import CheckingInProgress from "@/components/answerSheet/CheckingInProgress";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import AnswerSheetNavLayout from "@/components/AnswerSheetNavLayout";
+import NestedQuestion from "@/components/answerSheet/NestedQuestion";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"] as string;
@@ -202,10 +203,11 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
                   )}
 
                   {question.questionType == "NestedQuestion" && (
-                    <OpenEndedQuestion
-                      question={question.openEndedQuestion}
-                      answer={answers.at(index)?.openEndedQuestionAnswer}
+                    <NestedQuestion
+                      question={question.nestedQuestion}
+                      answer={answers.at(index)?.nestedQuestionAnswer}
                       refetch={refetchWorksheet}
+                      nestedLevel={2}
                       status={status}
                     />
                   )}

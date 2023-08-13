@@ -21,6 +21,71 @@ export const questionRouter = createTRPCRouter({
       });
     }),
 
+  getQuestion: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.question.findFirst({
+        where: {
+          id: input.id,
+        },
+        include: {
+          multipleChoiceQuestion: {
+            include: {
+              choices: true,
+              images: true,
+            },
+          },
+          openEndedQuestion: {
+            include: {
+              images: true,
+            },
+          },
+          // 2nd level
+          nestedQuestion: {
+            include: {
+              images: true,
+              childrenQuestions: {
+                include: {
+                  multipleChoiceQuestion: {
+                    include: {
+                      choices: true,
+                      images: true,
+                    },
+                  },
+                  openEndedQuestion: {
+                    include: {
+                      images: true,
+                    },
+                  },
+                  // 3rd level
+                  nestedQuestion: {
+                    include: {
+                      images: true,
+                      childrenQuestions: {
+                        include: {
+                          multipleChoiceQuestion: {
+                            include: {
+                              choices: true,
+                              images: true,
+                            },
+                          },
+                          openEndedQuestion: {
+                            include: {
+                              images: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+    }),
+
   editOrder: protectedProcedure
     .input(
       z.object({
