@@ -20,7 +20,6 @@ interface Question {
   questionType:
     | "NestedQuestion"
     | "ShortAnswerQuestion"
-    | "LongAnswerQuestion"
     | "MultipleChoiceQuestion"
     | "OpenEndedQuestion";
   multipleChoiceQuestion?: MultipleChoiceQuestion;
@@ -33,7 +32,6 @@ interface Answer {
   answerType:
     | "NestedQuestionAnswer"
     | "ShortAnswerQuestionAnswer"
-    | "LongAnswerQuestionAnswer"
     | "MultipleChoiceQuestionAnswer"
     | "OpenEndedQuestionAnswer";
   multipleChoiceQuestionAnswer?: MultipleChoiceQuestionAnswer;

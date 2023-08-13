@@ -50,15 +50,12 @@ model Image {
     multipleChoiceQuestion          MultipleChoiceQuestion? @relation(fields: [multipleChoiceQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     shortAnswerQuestionId           String? 
     shortAnswerQuestion             ShortAnswerQuestion?    @relation(fields: [shortAnswerQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    longAnswerQuestionId            String? 
-    longAnswerQuestion              LongAnswerQuestion?     @relation(fields: [longAnswerQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     openEndedQuestionId             String? 
     openEndedQuestion               OpenEndedQuestion?     @relation(fields: [openEndedQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
    
     @@index([nestedQuestionId])
     @@index([multipleChoiceQuestionId])
     @@index([shortAnswerQuestionId])
-    @@index([longAnswerQuestionId])
     @@index([openEndedQuestionId])
 }
 
@@ -135,7 +132,6 @@ model Question {
     nestedQuestion                  NestedQuestion?     @relation(name: "NestedQuestion")
     multipleChoiceQuestion          MultipleChoiceQuestion?
     shortAnswerQuestion             ShortAnswerQuestion?
-    longAnswerQuestion              LongAnswerQuestion? 
     openEndedQuestion               OpenEndedQuestion? 
     worksheetId                 String?
     worksheet                   Worksheet?              @relation(fields: [worksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -154,7 +150,6 @@ enum QuestionType {
     NestedQuestion
     MultipleChoiceQuestion
     ShortAnswerQuestion
-    LongAnswerQuestion
     OpenEndedQuestion
 }
 
@@ -227,20 +222,6 @@ model ShortAnswerQuestion {
     @@index([questionId])
 }
 
-model LongAnswerQuestion {
-    id                  String      @id @default(cuid())
-    text                String      @db.Text
-    images              Image[]
-    sampleAnswer        String      @db.MediumText
-    explanation         String      @db.MediumText
-    markingScheme       Json        @default("[]")  
-    marks               Int
-    questionId          String?     @unique
-    question            Question?   @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-    @@index([questionId])
-}
-
 model OpenEndedQuestion {
     id                  String      @id @default(cuid())
     text                String      @db.Text
@@ -265,7 +246,6 @@ model Answer {
     nestedQuestionAnswer            NestedQuestionAnswer?           @relation(name: "NestedAnswer")
     multipleChoiceQuestionAnswer    MultipleChoiceQuestionAnswer?
     shortAnswerQuestionAnswer       ShortAnswerQuestionAnswer?
-    longAnswerQuestionAnswer        LongAnswerQuestionAnswer?
     openEndedQuestionAnswer         OpenEndedQuestionAnswer?
     answerSheetId                   String?
     answerSheet                     AnswerSheet?                  @relation(fields: [answerSheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -279,7 +259,6 @@ model Answer {
 enum AnswerType {
     MultipleChoiceQuestionAnswer
     ShortAnswerQuestionAnswer
-    LongAnswerQuestionAnswer
     OpenEndedQuestionAnswer
     NestedQuestionAnswer
 }
@@ -312,17 +291,6 @@ model ShortAnswerQuestionAnswer {
     feedback              String    @db.Text
     marks                 Int       @default(0)
     answerId              String    @unique
-    answer                Answer    @relation(fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-    @@index([answerId])
-}
-
-model LongAnswerQuestionAnswer {
-    id                    String    @id @default(cuid())
-    studentAnswer         String    @db.MediumText
-    feedback              String    @db.Text
-    marks                 Int       @default(0)
-    answerId              String    @unique 
     answer                Answer    @relation(fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([answerId])
