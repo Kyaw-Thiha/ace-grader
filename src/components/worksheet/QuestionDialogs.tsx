@@ -268,7 +268,6 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
       }
     }
 
-    console.log("payload -", questionsPayload);
     return questionsPayload;
   };
 

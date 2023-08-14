@@ -134,7 +134,6 @@ export const openEndedQuestionRouter = createTRPCRouter({
 
   checkAIRateLimit: protectedProcedure.query(async ({ ctx }) => {
     const { success } = await ratelimit.limit(ctx.userId);
-    console.log(success);
 
     return success;
   }),

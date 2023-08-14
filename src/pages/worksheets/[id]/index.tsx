@@ -80,7 +80,6 @@ const WorksheetLayout: React.FC<WorksheetHeaderProps> = ({
   });
   const updateTitle = () => {
     if (title != "") {
-      console.log("hello");
       editTitle.mutate({ id: worksheetId, title: title });
     }
   };

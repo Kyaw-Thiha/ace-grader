@@ -144,12 +144,9 @@ const handleMarking = async (
 
   for (const answer of answers) {
     if (answer.answerType == "MultipleChoiceQuestionAnswer") {
-      console.log(answer);
       const question = questions.at(answer.order - 1)
         ?.multipleChoiceQuestion as MultipleChoiceQuestion;
       const multipleChoiceQuestionAnswer = answer.multipleChoiceQuestionAnswer;
-
-      console.log(multipleChoiceQuestionAnswer);
 
       const isCorrect = await checkMCQ(
         question,

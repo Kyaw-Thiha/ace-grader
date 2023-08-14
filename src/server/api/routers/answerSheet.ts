@@ -174,7 +174,6 @@ export const answerSheetRouter = createTRPCRouter({
       })
     )
     .mutation(({ ctx, input }) => {
-      console.log("Answers - ", input.answers);
       return ctx.prisma.answerSheet.create({
         data: {
           studentName: input.studentName,

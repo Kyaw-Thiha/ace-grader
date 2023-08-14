@@ -26,8 +26,6 @@ const ReorderButtons: React.FC<Props> = (props) => {
       // Get the data from the queryCache
       const prevData = utils.worksheet.getQuestions.getData();
 
-      console.log(props.questions.at(0)?.worksheetId ?? "");
-
       // Optimistically update the data with our new post
       utils.question.getAll.setData({}, (oldQuestions) => oldQuestions);
       utils.worksheet.getQuestions.setData(
@@ -73,9 +71,6 @@ const ReorderButtons: React.FC<Props> = (props) => {
               ...newWorksheet.questions[(swappedQuestion?.order ?? 0) - 1],
               order: temp ?? 0,
             };
-
-            // console.log(newWorksheet.questions[(question?.order ?? 0) - 1]?.order)
-            // console.log(newWorksheet.questions[(swappedQuestion?.order ?? 0) - 1]?.order)
           }
 
           return newWorksheet;

@@ -166,7 +166,7 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
                 answerSheetId={props.answerSheedId}
                 refetch={refetchAnswerSheet}
                 onSubmit={() => {
-                  console.log("Submited");
+                  return;
                 }}
               />
             </div>
