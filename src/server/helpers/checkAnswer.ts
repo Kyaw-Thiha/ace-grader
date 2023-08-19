@@ -78,10 +78,13 @@ export const checkAnswer = async (
   openEndedQuestions = [...returnedQuestions];
   openEndedQuestionAnswers = [...returnedAnswers];
 
+  console.log("Open Ended Ques - ", openEndedQuestions);
+  console.log("Open Ended Ans - ", openEndedQuestionAnswers);
+
   console.timeEnd("Setting Up Questions");
 
   console.time("ChatGPT");
-  // Fetching the explanation and updating it
+  // Fetching the marks and feedback
   const res = await backOff(() =>
     openaiAPI.openEndedQuestion.batchGenerateMarksAndFeedback(
       openEndedQuestions,
@@ -138,7 +141,8 @@ const handleMarking = async (
   questions: Question[],
   answers: Answer[],
   openEndedQuestions: OpenEndedQuestion[],
-  openEndedQuestionAnswers: OpenEndedQuestionAnswer[]
+  openEndedQuestionAnswers: OpenEndedQuestionAnswer[],
+  parentQuestionText?: string
 ) => {
   let totalMarks = 0;
 
@@ -147,6 +151,11 @@ const handleMarking = async (
       const question = questions.at(answer.order - 1)
         ?.multipleChoiceQuestion as MultipleChoiceQuestion;
       const multipleChoiceQuestionAnswer = answer.multipleChoiceQuestionAnswer;
+
+      // Adding question text of parent question if it exists
+      if (question && parentQuestionText) {
+        question.text = parentQuestionText + question.text;
+      }
 
       const isCorrect = await checkMCQ(
         question,
@@ -159,6 +168,11 @@ const handleMarking = async (
       const question = questions.at(answer.order - 1)
         ?.openEndedQuestion as OpenEndedQuestion;
       const openEndedQuestionAnswer = answer.openEndedQuestionAnswer;
+
+      // Adding question text of parent question if it exists
+      if (question && parentQuestionText) {
+        question.text = parentQuestionText + question.text;
+      }
 
       openEndedQuestions.push(question);
       openEndedQuestionAnswers.push(
@@ -178,7 +192,8 @@ const handleMarking = async (
         childrenQuestions,
         childrenAnswers as Answer[],
         openEndedQuestions,
-        openEndedQuestionAnswers
+        openEndedQuestionAnswers,
+        questions.at(answer.order - 1)?.nestedQuestion?.text
       );
 
       totalMarks = totalMarks + returnedMarks;
