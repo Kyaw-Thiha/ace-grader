@@ -138,7 +138,7 @@ model Question {
     publishedWorksheetId        String?
     publishedWorksheet          PublishedWorksheet?     @relation(fields: [publishedWorksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     parentId                    String?
-    parent                      NestedQuestion?         @relation(name: "ParentQuestion", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    parent                      NestedQuestion?         @relation(name: "ParentQuestion", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
 
     @@index([worksheetId])
@@ -173,7 +173,7 @@ model NestedQuestion {
     
     // One-to-one relationship to question
     questionId          String?          @unique
-    question            Question?        @relation(name: "NestedQuestion", fields: [questionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+    question            Question?        @relation(name: "NestedQuestion", fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     // Self-Referential relation of parent and children
     // parentQuestionId    String?
     // parentQuestion      ParentQuestion?  @relation(fields: [parentQuestionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
