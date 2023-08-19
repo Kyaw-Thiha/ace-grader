@@ -37,6 +37,18 @@ export const DeleteQuestionButton: React.FC<DeleteQuestionButtonProps> = (
     },
   });
 
+  //Function for deleting nested question's children
+  const deleteNestedChildrenQuestion =
+    api.nestedQuestion.deleteNestedChildren.useMutation();
+  const deleteChildrenQuestion =
+    api.nestedQuestion.deleteChildren.useMutation();
+
+  const removeNestedQuestion = async () => {
+    await deleteNestedChildrenQuestion.mutateAsync({ id: props.id });
+    await deleteChildrenQuestion.mutateAsync({ id: props.id });
+    await deleteQuestion.mutateAsync({ id: props.id });
+  };
+
   //Function for editing question
   const editQuestion = api.question.editOrder.useMutation({
     onSuccess: () => {
@@ -47,24 +59,50 @@ export const DeleteQuestionButton: React.FC<DeleteQuestionButtonProps> = (
   const removeQuestion = () => {
     setOpen(false);
 
-    void toast
-      .promise(
-        deleteQuestion.mutateAsync({
-          id: props.id,
-        }),
-        {
+    const question = props.questions.find((obj) => {
+      return obj.id === props.id;
+    });
+
+    if (question?.questionType == "NestedQuestion") {
+      void toast
+        .promise(removeNestedQuestion, {
           pending: "Removing Question",
           success: "Question Removed 👌",
           error: "Error in Question Deletion 🤯",
-        }
-      )
-      .then(() => {
-        for (const question of props.questions) {
-          if (question.order > props.order) {
-            editQuestion.mutate({ id: question.id, order: question.order - 1 });
+        })
+        .then(() => {
+          for (const question of props.questions) {
+            if (question.order > props.order) {
+              editQuestion.mutate({
+                id: question.id,
+                order: question.order - 1,
+              });
+            }
           }
-        }
-      });
+        });
+    } else {
+      void toast
+        .promise(
+          deleteQuestion.mutateAsync({
+            id: props.id,
+          }),
+          {
+            pending: "Removing Question",
+            success: "Question Removed 👌",
+            error: "Error in Question Deletion 🤯",
+          }
+        )
+        .then(() => {
+          for (const question of props.questions) {
+            if (question.order > props.order) {
+              editQuestion.mutate({
+                id: question.id,
+                order: question.order - 1,
+              });
+            }
+          }
+        });
+    }
   };
 
   return (

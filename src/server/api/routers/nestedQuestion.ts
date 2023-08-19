@@ -259,6 +259,26 @@ export const nestedQuestionRouter = createTRPCRouter({
       });
     }),
 
+  deleteNestedChildren: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.question.deleteMany({
+        where: {
+          parent: { question: { parent: { questionId: input.id } } },
+        },
+      });
+    }),
+
+  deleteChildren: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.question.deleteMany({
+        where: {
+          parent: { questionId: input.id },
+        },
+      });
+    }),
+
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(({ ctx, input }) => {
