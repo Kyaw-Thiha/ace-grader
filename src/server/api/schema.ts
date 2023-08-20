@@ -55,11 +55,34 @@ export const openEndedQuestionSchema = z.object({
   }),
 });
 
+export const essayQuestionSchema = z.object({
+  text: z.string(),
+  grammar: z.number(),
+  focus: z.number(),
+  exposition: z.number(),
+  organization: z.number(),
+  plot: z.number(),
+  narrative_techniques: z.number(),
+  vocabulary: z.number(),
+  content: z.number(),
+  content_points: z.string(),
+  images: z.object({
+    create: z.array(
+      z.object({
+        url: z.string(),
+        fileKey: z.string(),
+        caption: z.string(),
+      })
+    ),
+  }),
+});
+
 export const questionTypeSchema = z.union([
   z.literal("NestedQuestion"),
   z.literal("MultipleChoiceQuestion"),
   z.literal("ShortAnswerQuestion"),
   z.literal("OpenEndedQuestion"),
+  z.literal("EssayQuestion"),
 ]);
 
 export const questionSchemaProperties = {
@@ -75,6 +98,11 @@ export const questionSchemaProperties = {
       create: openEndedQuestionSchema,
     })
     .optional(),
+  essayQuestion: z
+    .object({
+      create: essayQuestionSchema,
+    })
+    .optional(),
 };
 
 //Nested Answer
@@ -83,6 +111,7 @@ export const answerTypeSchema = z.union([
   z.literal("MultipleChoiceQuestionAnswer"),
   z.literal("ShortAnswerQuestionAnswer"),
   z.literal("OpenEndedQuestionAnswer"),
+  z.literal("EssayAnswer"),
 ]);
 
 export const answerSchemaProperties = {
@@ -101,6 +130,32 @@ export const answerSchemaProperties = {
       create: z.object({
         studentAnswer: z.string(),
         feedback: z.string(),
+      }),
+    })
+    .optional(),
+  essayQuestionAnswer: z
+    .object({
+      create: z.object({
+        studentAnswer: z.string(),
+        overallImpression: z.string(),
+        criteria: z.object({
+          create: z.array(
+            z.object({
+              name: z.union([
+                z.literal("Grammar"),
+                z.literal("Focus"),
+                z.literal("Exposition"),
+                z.literal("Organization"),
+                z.literal("Plot"),
+                z.literal("Narrative Techniques"),
+                z.literal("Language and Vocabulary"),
+                z.literal("Content"),
+              ]),
+              evaluation: z.string(),
+              suggestion: z.string(),
+            })
+          ),
+        }),
       }),
     })
     .optional(),

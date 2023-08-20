@@ -13,6 +13,11 @@ datasource db {
     relationMode = "prisma"
 }
 
+// TinyText - 255 Characters (~50 words)
+// Text - 65,535 characters (~13 000 words)
+// Medium Text - 16,777,215 characters (~16,500,000 words)
+// Long Text -4,294,967,295 characters (~850,000,000 words)
+
 // https://clerk.com/docs/users/sync-data-to-your-backend
 model TeacherProfile {
     id            String    @id @default(cuid())
@@ -23,6 +28,7 @@ model TeacherProfile {
     publishedWorksheets     PublishedWorksheet[]
 
     @@index([userId])
+    @@index([email])
 }
 
 model TeacherNotification {
@@ -52,11 +58,14 @@ model Image {
     shortAnswerQuestion             ShortAnswerQuestion?    @relation(fields: [shortAnswerQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     openEndedQuestionId             String? 
     openEndedQuestion               OpenEndedQuestion?     @relation(fields: [openEndedQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    essayId                         String? 
+    essayQuestion                   EssayQuestion?     @relation(fields: [essayId], references: [id], onDelete: Cascade, onUpdate: Cascade)
    
     @@index([nestedQuestionId])
     @@index([multipleChoiceQuestionId])
     @@index([shortAnswerQuestionId])
     @@index([openEndedQuestionId])
+    @@index([essayId])
 }
 
 //  Worksheet, Published Worksheet and Answer Sheet
@@ -104,7 +113,7 @@ enum WorksheetStatus {
 model AnswerSheet {
     id                  String          @id @default(cuid())
     studentName         String          @db.TinyText
-    studentEmail        String          @db.TinyText
+    studentEmail        String          @db.VarChar(255)
     studentPassword     String?         //This should be stored in hash.
     status              AnswerSheetStatus 
     startTime           DateTime        @default(now())
@@ -115,6 +124,9 @@ model AnswerSheet {
     publishedWorksheet           PublishedWorksheet @relation(fields: [publishedWorksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([publishedWorksheetId])
+
+    // Index the email of the student to query efficiently in the future
+    @@index([studentEmail])
 }
 
 enum AnswerSheetStatus {
@@ -133,6 +145,7 @@ model Question {
     multipleChoiceQuestion          MultipleChoiceQuestion?
     shortAnswerQuestion             ShortAnswerQuestion?
     openEndedQuestion               OpenEndedQuestion? 
+    essayQuestion                   EssayQuestion? 
     worksheetId                 String?
     worksheet                   Worksheet?              @relation(fields: [worksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     publishedWorksheetId        String?
@@ -151,6 +164,7 @@ enum QuestionType {
     MultipleChoiceQuestion
     ShortAnswerQuestion
     OpenEndedQuestion
+    EssayQuestion
 }
 
 
@@ -236,6 +250,27 @@ model OpenEndedQuestion {
     @@index([questionId])
 }
 
+// Grammar, focus, exposition, organization, plot, narrative_techniques, vocabulary and content 
+// represent the marks given for each criteria.
+// If the mark is 0, it means that the criteria is not considered when grading.
+model EssayQuestion {
+    id                  String      @id @default(cuid())
+    text                String      @db.Text
+    images              Image[]
+    grammar             Int         @default(0)
+    focus               Int         @default(0)
+    exposition          Int         @default(0)
+    organization        Int         @default(0)
+    plot                Int         @default(0)
+    narrative_techniques    Int     @default(0)
+    vocabulary          Int         @default(0)
+    content             Int         @default(0)
+    content_points      String      @default("")
+    questionId          String?     @unique
+    question            Question?   @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+    @@index([questionId])
+}
 
 // ***      Answers     ***
 
@@ -247,6 +282,7 @@ model Answer {
     multipleChoiceQuestionAnswer    MultipleChoiceQuestionAnswer?
     shortAnswerQuestionAnswer       ShortAnswerQuestionAnswer?
     openEndedQuestionAnswer         OpenEndedQuestionAnswer?
+    essayAnswer                     EssayAnswer?
     answerSheetId                   String?
     answerSheet                     AnswerSheet?                  @relation(fields: [answerSheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     parentId                        String?
@@ -261,6 +297,7 @@ enum AnswerType {
     ShortAnswerQuestionAnswer
     OpenEndedQuestionAnswer
     NestedQuestionAnswer
+    EssayAnswer
 }
 
 model NestedQuestionAnswer {
@@ -305,4 +342,34 @@ model OpenEndedQuestionAnswer {
     answer                Answer    @relation(fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([answerId])
+}
+
+model EssayAnswer {
+    id                    String    @id @default(cuid())
+    answerId              String    @unique 
+    answer                Answer    @relation(fields: [answerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    studentAnswer         String    @db.MediumText
+    
+    // - Grammar 
+    // - Focus 
+    // - Exposition 
+    // - Organization 
+    // - Plot 
+    // - Narrative Techniques 
+    // - Language and Vocabulary 
+    criteria              EssayAnswerCriteria[]
+    overallImpression     String    @db.Text
+
+    @@index([answerId])
+}
+
+model EssayAnswerCriteria {
+    id                    String    @id @default(cuid())
+    name                  String    @db.TinyText
+    evaluation            String    @db.Text
+    suggestion            String    @db.Text
+    essayAnswerId         String    @unique 
+    essayAnswer           EssayAnswer    @relation(fields: [essayAnswerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+    @@index([essayAnswerId])
 }

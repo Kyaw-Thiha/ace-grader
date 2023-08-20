@@ -21,7 +21,8 @@ interface Question {
     | "NestedQuestion"
     | "ShortAnswerQuestion"
     | "MultipleChoiceQuestion"
-    | "OpenEndedQuestion";
+    | "OpenEndedQuestion"
+    | "EssayQuestion";
   multipleChoiceQuestion?: MultipleChoiceQuestion;
   openEndedQuestion?: OpenEndedQuestion;
   nestedQuestion?: NestedQuestion;
@@ -33,7 +34,8 @@ interface Answer {
     | "NestedQuestionAnswer"
     | "ShortAnswerQuestionAnswer"
     | "MultipleChoiceQuestionAnswer"
-    | "OpenEndedQuestionAnswer";
+    | "OpenEndedQuestionAnswer"
+    | "EssayAnswer";
   multipleChoiceQuestionAnswer?: MultipleChoiceQuestionAnswer;
   openEndedQuestionAnswer?: OpenEndedQuestionAnswer;
   nestedQuestionAnswer?: NestedQuestionAnswer;

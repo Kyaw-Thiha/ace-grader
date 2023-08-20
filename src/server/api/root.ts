@@ -15,6 +15,8 @@ import { userRouter } from "./routers/user";
 import { imageRouter } from "./routers/image";
 import { nestedQuestionRouter } from "./routers/nestedQuestion";
 import { nestedQuestionAnswerRouter } from "./routers/nestedQuestionAnswer";
+import { essayQuestionRouter } from "./routers/essayQuestion";
+import { essayAnswerRouter } from "./routers/essayAnswer";
 
 /**
  * This is the primary router for your server.
@@ -32,11 +34,13 @@ export const appRouter = createTRPCRouter({
   multipleChoiceQuestion: multipleChoiceQuestionRouter,
   shortAnswerQuestion: shortAnswerQuestionRouter,
   openEndedQuestion: openEndedQuestionRouter,
+  essayQuestion: essayQuestionRouter,
   answerSheet: answerSheetRouter,
   nestedQuestionAnswer: nestedQuestionAnswerRouter,
   multipleChoiceQuestionAnswer: multipleChoiceQuestionAnswerRouter,
   shortAnswerQuestionAnswer: shortAnswerQuestionAnswerRouter,
   openEndedQuestionAnswer: openEndedQuestionAnswerRouter,
+  essayAnswer: essayAnswerRouter,
   image: imageRouter,
 });
 
