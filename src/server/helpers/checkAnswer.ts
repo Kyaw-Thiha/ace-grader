@@ -14,6 +14,8 @@ type OpenEndedQuestion = RouterOutputs["openEndedQuestion"]["get"];
 type OpenEndedQuestionAnswer = RouterOutputs["openEndedQuestionAnswer"]["get"];
 type NestedQuestion = RouterOutputs["nestedQuestion"]["get"];
 type NestedQuestionAnswer = RouterOutputs["nestedQuestionAnswer"]["get"];
+type EssayQuestion = RouterOutputs["essayQuestion"]["get"];
+type EssayAnswer = RouterOutputs["essayAnswer"]["get"];
 
 interface Question {
   order: number;
@@ -26,6 +28,7 @@ interface Question {
   multipleChoiceQuestion?: MultipleChoiceQuestion;
   openEndedQuestion?: OpenEndedQuestion;
   nestedQuestion?: NestedQuestion;
+  essayQuestion?: EssayQuestion;
 }
 
 interface Answer {
@@ -39,11 +42,29 @@ interface Answer {
   multipleChoiceQuestionAnswer?: MultipleChoiceQuestionAnswer;
   openEndedQuestionAnswer?: OpenEndedQuestionAnswer;
   nestedQuestionAnswer?: NestedQuestionAnswer;
+  essayAnswer?: EssayAnswer;
 }
 
 interface MarksAndFeedback {
   marks: number;
   feedback: string;
+}
+
+interface EssayQuestionCriteria {
+  mark: number;
+  evaluation: string;
+  suggestion: string;
+}
+interface EssayResponse {
+  Grammar?: EssayQuestionCriteria;
+  Focus?: EssayQuestionCriteria;
+  Exposition?: EssayQuestionCriteria;
+  Organization?: EssayQuestionCriteria;
+  Plot?: EssayQuestionCriteria;
+  "Narrative Techniques"?: EssayQuestionCriteria;
+  "Language and Vocabulary"?: EssayQuestionCriteria;
+  Content?: EssayQuestionCriteria;
+  "Overall Impression"?: string;
 }
 
 export const checkAnswer = async (
@@ -180,6 +201,27 @@ const handleMarking = async (
       openEndedQuestionAnswers.push(
         openEndedQuestionAnswer as OpenEndedQuestionAnswer
       );
+    } else if (answer.answerType == "EssayAnswer") {
+      console.time("Checking Essay");
+      const question = questions.at(answer.order - 1)
+        ?.essayQuestion as EssayQuestion;
+      const essayAnswer = answer.essayAnswer as EssayAnswer;
+
+      // Adding question text of parent question if it exists
+      if (question && parentQuestionText) {
+        question.text = parentQuestionText + question.text;
+      }
+
+      // Fetching the marks and feedback
+      const res = await backOff(() =>
+        openaiAPI.essayQuestion.generateMarksAndFeedback(question, essayAnswer)
+      );
+      const data = res.data.choices[0]?.message?.content ?? "";
+      const answerResponse = JSON.parse(data) as EssayResponse;
+
+      await updateEssayAnswer(essayAnswer?.id ?? "", answerResponse);
+
+      console.timeEnd("Checking Essay");
     } else if (answer.answerType == "NestedQuestionAnswer") {
       const childrenQuestions =
         questions.at(answer.order - 1)?.nestedQuestion?.childrenQuestions ?? [];
@@ -238,6 +280,60 @@ const checkMCQ = async (
 
     return false;
   }
+};
+
+const updateEssayAnswer = async (answerId: string, response: EssayResponse) => {
+  const editCriteria = async (id: string, criteria: EssayQuestionCriteria) => {
+    await prisma.essayAnswer.update({
+      where: {
+        id: id,
+      },
+      data: {
+        criteria: {
+          update: {
+            where: {
+              essayAnswerId: id,
+            },
+            data: criteria,
+          },
+        },
+      },
+    });
+  };
+
+  if (response.Grammar) {
+    await editCriteria(answerId, response.Grammar);
+  }
+  if (response.Focus) {
+    await editCriteria(answerId, response.Focus);
+  }
+  if (response.Exposition) {
+    await editCriteria(answerId, response.Exposition);
+  }
+  if (response.Organization) {
+    await editCriteria(answerId, response.Organization);
+  }
+  if (response.Plot) {
+    await editCriteria(answerId, response.Plot);
+  }
+  if (response["Narrative Techniques"]) {
+    await editCriteria(answerId, response["Narrative Techniques"]);
+  }
+  if (response["Language and Vocabulary"]) {
+    await editCriteria(answerId, response["Language and Vocabulary"]);
+  }
+  if (response.Content) {
+    await editCriteria(answerId, response.Content);
+  }
+
+  await prisma.essayAnswer.update({
+    where: {
+      id: answerId,
+    },
+    data: {
+      overallImpression: response["Overall Impression"],
+    },
+  });
 };
 
 // Fetching the worksheet from the server

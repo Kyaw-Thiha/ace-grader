@@ -62,10 +62,10 @@ export const essayQuestionSchema = z.object({
   exposition: z.number(),
   organization: z.number(),
   plot: z.number(),
-  narrative_techniques: z.number(),
+  narrativeTechniques: z.number(),
   vocabulary: z.number(),
   content: z.number(),
-  content_points: z.string(),
+  contentPoints: z.string(),
   images: z.object({
     create: z.array(
       z.object({

@@ -194,7 +194,7 @@ export const essayQuestionRouter = createTRPCRouter({
           id: input.id,
         },
         data: {
-          narrative_techniques: input.narrativeTechniques,
+          narrativeTechniques: input.narrativeTechniques,
         },
       });
     }),
@@ -248,7 +248,7 @@ export const essayQuestionRouter = createTRPCRouter({
           id: input.id,
         },
         data: {
-          content_points: input.contentPoints,
+          contentPoints: input.contentPoints,
         },
       });
     }),
