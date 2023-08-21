@@ -257,19 +257,20 @@ model EssayQuestion {
     id                  String      @id @default(cuid())
     text                String      @db.Text
     images              Image[]
-    grammar             Int         @default(0)
-    focus               Int         @default(0)
-    exposition          Int         @default(0)
-    organization        Int         @default(0)
-    plot                Int         @default(0)
-    narrativeTechniques    Int     @default(0)
-    vocabulary          Int         @default(0)
-    content             Int         @default(0)
-    contentPoints       String      @default("")
+    criteria            EssayQuestionCriteria[]
     questionId          String?     @unique
     question            Question?   @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([questionId])
+}
+model EssayQuestionCriteria {
+    id                    String    @id @default(cuid())
+    name                  String    @db.TinyText
+    marks                 Int       @default(0)
+    essayQuestionId       String          
+    essayQuestion         EssayQuestion    @relation(fields: [essayQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+    @@index([essayQuestionId])
 }
 
 // ***      Answers     ***
@@ -359,6 +360,7 @@ model EssayAnswer {
     // - Language and Vocabulary 
     criteria              EssayAnswerCriteria[]
     overallImpression     String    @db.Text
+    marks                 Int       @default(0)
 
     @@index([answerId])
 }
@@ -366,9 +368,10 @@ model EssayAnswer {
 model EssayAnswerCriteria {
     id                    String    @id @default(cuid())
     name                  String    @db.TinyText
+    marks                 Int       @default(0)
     evaluation            String    @db.Text
     suggestion            String    @db.Text
-    essayAnswerId         String    @unique 
+    essayAnswerId         String    
     essayAnswer           EssayAnswer    @relation(fields: [essayAnswerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([essayAnswerId])

@@ -24,6 +24,7 @@ type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 type ShortAnswerQuestion = RouterOutputs["shortAnswerQuestion"]["get"];
 type OpenEndedQuestion = RouterOutputs["openEndedQuestion"]["get"];
 type NestedQuestion = RouterOutputs["nestedQuestion"]["get"];
+type EssayQuestion = RouterOutputs["essayQuestion"]["get"];
 type Image = RouterOutputs["image"]["get"];
 
 interface Props {
@@ -36,7 +37,8 @@ interface Props {
     | MultipleChoiceQuestion
     | ShortAnswerQuestion
     | OpenEndedQuestion
-    | NestedQuestion;
+    | NestedQuestion
+    | EssayQuestion;
   refetch: QueryObserverBaseResult["refetch"];
 }
 

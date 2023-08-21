@@ -51,10 +51,11 @@ export const answerSheetRouter = createTRPCRouter({
     }),
 
   getReturnedAnswerSheetByEmail: publicProcedure
-    .input(z.object({ email: z.string() }))
+    .input(z.object({ email: z.string(), publishedWorksheetId: z.string() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.answerSheet.findMany({
         where: {
+          publishedWorksheetId: input.publishedWorksheetId,
           studentEmail: input.email,
           status: "returned",
         },
@@ -87,6 +88,11 @@ export const answerSheetRouter = createTRPCRouter({
               multipleChoiceQuestionAnswer: true,
               shortAnswerQuestionAnswer: true,
               openEndedQuestionAnswer: true,
+              essayAnswer: {
+                include: {
+                  criteria: true,
+                },
+              },
               // 2nd level
               nestedQuestionAnswer: {
                 include: {
@@ -94,6 +100,11 @@ export const answerSheetRouter = createTRPCRouter({
                     include: {
                       multipleChoiceQuestionAnswer: true,
                       openEndedQuestionAnswer: true,
+                      essayAnswer: {
+                        include: {
+                          criteria: true,
+                        },
+                      },
                       // 3rd level
                       nestedQuestionAnswer: {
                         include: {
@@ -101,6 +112,11 @@ export const answerSheetRouter = createTRPCRouter({
                             include: {
                               multipleChoiceQuestionAnswer: true,
                               openEndedQuestionAnswer: true,
+                              essayAnswer: {
+                                include: {
+                                  criteria: true,
+                                },
+                              },
                             },
                           },
                         },

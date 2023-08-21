@@ -15,6 +15,7 @@ export const essayQuestionRouter = createTRPCRouter({
           id: input.id,
         },
         include: {
+          criteria: true,
           images: true,
         },
       });
@@ -34,13 +35,49 @@ export const essayQuestionRouter = createTRPCRouter({
       return ctx.prisma.question.create({
         data: {
           order: input.order,
-          questionType: "NestedQuestion",
+          questionType: "EssayQuestion",
           worksheetId: input.worksheetId,
           publishedWorksheetId: input.publishedWorksheetId,
           parentId: input.parentId,
           essayQuestion: {
             create: {
               text: input.text ?? "",
+              criteria: {
+                create: [
+                  {
+                    name: "Grammar",
+                    marks: 0,
+                  },
+                  {
+                    name: "Focus",
+                    marks: 0,
+                  },
+                  {
+                    name: "Exposition",
+                    marks: 0,
+                  },
+                  {
+                    name: "Organization",
+                    marks: 0,
+                  },
+                  {
+                    name: "Plot",
+                    marks: 0,
+                  },
+                  {
+                    name: "Narrative Techniques",
+                    marks: 0,
+                  },
+                  {
+                    name: "Language and Vocabulary",
+                    marks: 0,
+                  },
+                  {
+                    name: "Content",
+                    marks: 0,
+                  },
+                ],
+              },
             },
           },
         },
@@ -91,164 +128,31 @@ export const essayQuestionRouter = createTRPCRouter({
       });
     }),
 
-  editGrammar: protectedProcedure
+  editCriteria: publicProcedure
     .input(
       z.object({
         id: z.string(),
-        grammar: z.number(),
+        name: z.union([
+          z.literal("Grammar"),
+          z.literal("Focus"),
+          z.literal("Exposition"),
+          z.literal("Organization"),
+          z.literal("Plot"),
+          z.literal("Narrative Techniques"),
+          z.literal("Language and Vocabulary"),
+          z.literal("Content"),
+        ]),
+        marks: z.number(),
       })
     )
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.essayQuestion.update({
+      return ctx.prisma.essayQuestionCriteria.update({
         where: {
           id: input.id,
         },
         data: {
-          grammar: input.grammar,
-        },
-      });
-    }),
-
-  editFocus: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        focus: z.number(),
-      })
-    )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.essayQuestion.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          focus: input.focus,
-        },
-      });
-    }),
-
-  editExposition: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        exposition: z.number(),
-      })
-    )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.essayQuestion.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          exposition: input.exposition,
-        },
-      });
-    }),
-
-  editOrganization: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        organization: z.number(),
-      })
-    )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.essayQuestion.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          organization: input.organization,
-        },
-      });
-    }),
-
-  editPlot: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        plot: z.number(),
-      })
-    )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.essayQuestion.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          plot: input.plot,
-        },
-      });
-    }),
-
-  editNarrativeTechniques: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        narrativeTechniques: z.number(),
-      })
-    )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.essayQuestion.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          narrativeTechniques: input.narrativeTechniques,
-        },
-      });
-    }),
-
-  editVocabulary: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        grammar: z.number(),
-      })
-    )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.essayQuestion.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          grammar: input.grammar,
-        },
-      });
-    }),
-
-  editContent: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        content: z.number(),
-      })
-    )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.essayQuestion.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          content: input.content,
-        },
-      });
-    }),
-
-  editContentPoints: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        contentPoints: z.string(),
-      })
-    )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.essayQuestion.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          contentPoints: input.contentPoints,
+          name: input.name,
+          marks: input.marks,
         },
       });
     }),

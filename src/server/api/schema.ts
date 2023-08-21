@@ -55,17 +55,34 @@ export const openEndedQuestionSchema = z.object({
   }),
 });
 
+export type EssayCriteriaName =
+  | "Grammar"
+  | "Focus"
+  | "Exposition"
+  | "Organization"
+  | "Plot"
+  | "Narrative Techniques"
+  | "Language and Vocabulary"
+  | "Content";
 export const essayQuestionSchema = z.object({
   text: z.string(),
-  grammar: z.number(),
-  focus: z.number(),
-  exposition: z.number(),
-  organization: z.number(),
-  plot: z.number(),
-  narrativeTechniques: z.number(),
-  vocabulary: z.number(),
-  content: z.number(),
-  contentPoints: z.string(),
+  criteria: z.object({
+    create: z.array(
+      z.object({
+        name: z.union([
+          z.literal("Grammar"),
+          z.literal("Focus"),
+          z.literal("Exposition"),
+          z.literal("Organization"),
+          z.literal("Plot"),
+          z.literal("Narrative Techniques"),
+          z.literal("Language and Vocabulary"),
+          z.literal("Content"),
+        ]),
+        marks: z.number(),
+      })
+    ),
+  }),
   images: z.object({
     create: z.array(
       z.object({
@@ -133,7 +150,7 @@ export const answerSchemaProperties = {
       }),
     })
     .optional(),
-  essayQuestionAnswer: z
+  essayAnswer: z
     .object({
       create: z.object({
         studentAnswer: z.string(),

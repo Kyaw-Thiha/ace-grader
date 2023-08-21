@@ -109,36 +109,22 @@ export const essayAnswerRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-        criteria: z.object({
-          name: z.union([
-            z.literal("Grammar"),
-            z.literal("Focus"),
-            z.literal("Exposition"),
-            z.literal("Organization"),
-            z.literal("Plot"),
-            z.literal("Narrative Techniques"),
-            z.literal("Language and Vocabulary"),
-            z.literal("Content"),
-          ]),
-          evaluation: z.string(),
-          suggestion: z.string(),
-        }),
+        name: z.string(),
+        marks: z.number(),
+        evaluation: z.string(),
+        suggestion: z.string(),
       })
     )
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.essayAnswer.update({
+      return ctx.prisma.essayAnswerCriteria.update({
         where: {
           id: input.id,
         },
         data: {
-          criteria: {
-            update: {
-              where: {
-                essayAnswerId: input.id,
-              },
-              data: input.criteria,
-            },
-          },
+          name: input.name,
+          marks: input.marks,
+          evaluation: input.evaluation,
+          suggestion: input.suggestion,
         },
       });
     }),

@@ -20,6 +20,7 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import AnswerSheetNavLayout from "@/components/AnswerSheetNavLayout";
 import NestedQuestion from "@/components/answerSheet/NestedQuestion";
+import EssayQuestion from "@/components/answerSheet/EssayQuestion";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"] as string;
@@ -197,6 +198,15 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
                     <OpenEndedQuestion
                       question={question.openEndedQuestion}
                       answer={answers.at(index)?.openEndedQuestionAnswer}
+                      refetch={refetchWorksheet}
+                      status={status}
+                    />
+                  )}
+
+                  {question.questionType == "EssayQuestion" && (
+                    <EssayQuestion
+                      question={question.essayQuestion}
+                      answer={answers.at(index)?.essayAnswer}
                       refetch={refetchWorksheet}
                       status={status}
                     />

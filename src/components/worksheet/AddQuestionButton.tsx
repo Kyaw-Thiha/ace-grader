@@ -117,7 +117,7 @@ const AddQuestionButton: React.FC<Props> = (props) => {
     );
   };
 
-  //Function for creating multiple choice question
+  //Function for creating open-ended question
   const createOpenEndedQuestion = api.openEndedQuestion.create.useMutation({
     onSuccess: () => {
       void props.refetch();
@@ -141,6 +141,29 @@ const AddQuestionButton: React.FC<Props> = (props) => {
     );
   };
 
+  //Function for creating essay question
+  const createEssayQuestion = api.essayQuestion.create.useMutation({
+    onSuccess: () => {
+      void props.refetch();
+    },
+  });
+
+  const addEssayQuestion = () => {
+    void toast.promise(
+      createEssayQuestion.mutateAsync({
+        order: props.order,
+        worksheetId: props.worksheetId,
+        parentId: props.parentQuestionId,
+        text: "",
+      }),
+      {
+        pending: "Creating Question",
+        success: "Question Created 👌",
+        error: "Error in Question Creation 🤯",
+      }
+    );
+  };
+
   const questionTypes = [
     {
       label: "Multiple Choice",
@@ -149,6 +172,10 @@ const AddQuestionButton: React.FC<Props> = (props) => {
     {
       label: "Open-Ended",
       create: addOpenAddedQuestion,
+    },
+    {
+      label: "Essay Question",
+      create: addEssayQuestion,
     },
     {
       label: "Nested Question",

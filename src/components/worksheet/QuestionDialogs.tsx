@@ -15,7 +15,10 @@ import { useState } from "react";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import type { CreateQuestion } from "@/components/worksheet/types";
+import type {
+  CreateQuestion,
+  EssayCriteria,
+} from "@/components/worksheet/types";
 
 type Questions = RouterOutputs["question"]["getAll"];
 interface DeleteQuestionButtonProps {
@@ -192,6 +195,24 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
         const marks = question.openEndedQuestion?.marks ?? 0;
         totalMarks = totalMarks + marks;
       }
+      if (question?.questionType == "EssayQuestion") {
+        const getMarks = (name: string) => {
+          return (
+            question.essayQuestion?.criteria.find((x) => x.name == name)
+              ?.marks ?? 0
+          );
+        };
+        const marks =
+          getMarks("Grammar") +
+          getMarks("Focus") +
+          getMarks("Exposition") +
+          getMarks("Organization") +
+          getMarks("Plot") +
+          getMarks("Narrative Techniques") +
+          getMarks("Language and Vocabulary") +
+          getMarks("Content");
+        totalMarks = totalMarks + marks;
+      }
       if (question?.questionType == "NestedQuestion") {
         const marks = calculateTotalMarks(
           question.nestedQuestion?.childrenQuestions ?? []
@@ -267,6 +288,43 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
                 ?.markingScheme as string[],
               explanation: question.openEndedQuestion?.explanation ?? "",
               sampleAnswer: question.openEndedQuestion?.sampleAnswer ?? "",
+              images: {
+                create: images,
+              },
+            },
+          },
+        });
+      } else if (question?.questionType == "EssayQuestion") {
+        // Copying the images
+        const images = [];
+        const originalImages = question.essayQuestion?.images ?? [];
+        for (const image of originalImages) {
+          images.push({
+            url: image.url,
+            fileKey: image.fileKey,
+            caption: image.caption,
+          });
+        }
+
+        // Copying the criteria
+        const criteria = [];
+        const originalCriteria = question.essayQuestion?.criteria ?? [];
+        for (const criterion of originalCriteria) {
+          criteria.push({
+            name: criterion.name,
+            marks: criterion.marks,
+          } as EssayCriteria);
+        }
+
+        questionsPayload.push({
+          order: question.order,
+          questionType: question.questionType,
+          essayQuestion: {
+            create: {
+              text: question.essayQuestion?.text ?? "",
+              criteria: {
+                create: criteria,
+              },
               images: {
                 create: images,
               },

@@ -32,6 +32,12 @@ export const publishedWorksheetRouter = createTRPCRouter({
                   images: true,
                 },
               },
+              essayQuestion: {
+                include: {
+                  criteria: true,
+                  images: true,
+                },
+              },
               // 2nd level
               nestedQuestion: {
                 include: {
@@ -49,6 +55,12 @@ export const publishedWorksheetRouter = createTRPCRouter({
                           images: true,
                         },
                       },
+                      essayQuestion: {
+                        include: {
+                          criteria: true,
+                          images: true,
+                        },
+                      },
                       // 3rd level
                       nestedQuestion: {
                         include: {
@@ -63,6 +75,12 @@ export const publishedWorksheetRouter = createTRPCRouter({
                               },
                               openEndedQuestion: {
                                 include: {
+                                  images: true,
+                                },
+                              },
+                              essayQuestion: {
+                                include: {
+                                  criteria: true,
                                   images: true,
                                 },
                               },
@@ -151,6 +169,12 @@ export const publishedWorksheetRouter = createTRPCRouter({
                           images: true,
                         },
                       },
+                      essayQuestion: {
+                        include: {
+                          criteria: true,
+                          images: true,
+                        },
+                      },
                       nestedQuestion: {
                         include: {
                           images: true,
@@ -165,6 +189,12 @@ export const publishedWorksheetRouter = createTRPCRouter({
                               },
                               openEndedQuestion: {
                                 include: {
+                                  images: true,
+                                },
+                              },
+                              essayQuestion: {
+                                include: {
+                                  criteria: true,
                                   images: true,
                                 },
                               },
@@ -183,6 +213,12 @@ export const publishedWorksheetRouter = createTRPCRouter({
                 },
               },
               openEndedQuestion: { include: { images: true } },
+              essayQuestion: {
+                include: {
+                  criteria: true,
+                  images: true,
+                },
+              },
             },
           },
         },

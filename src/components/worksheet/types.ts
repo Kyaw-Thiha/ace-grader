@@ -41,6 +41,34 @@ interface CreateOpenEnded {
     };
   };
 }
+interface CreateEssay {
+  order: number;
+  questionType: "EssayQuestion";
+  essayQuestion: {
+    create: {
+      text: string;
+      criteria: {
+        create: EssayCriteria[];
+      };
+      images: {
+        create: Image[];
+      };
+    };
+  };
+}
+export type EssayCriteriaName =
+  | "Grammar"
+  | "Focus"
+  | "Exposition"
+  | "Organization"
+  | "Plot"
+  | "Narrative Techniques"
+  | "Language and Vocabulary"
+  | "Content";
+export interface EssayCriteria {
+  name: EssayCriteriaName;
+  marks: number;
+}
 interface CreateNestedQuestion {
   order: number;
   questionType: "NestedQuestion";
@@ -56,4 +84,8 @@ interface CreateNestedQuestion {
     };
   };
 }
-export type CreateQuestion = CreateMCQ | CreateOpenEnded | CreateNestedQuestion;
+export type CreateQuestion =
+  | CreateMCQ
+  | CreateOpenEnded
+  | CreateEssay
+  | CreateNestedQuestion;

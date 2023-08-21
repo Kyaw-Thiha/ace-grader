@@ -51,7 +51,7 @@ interface MarksAndFeedback {
 }
 
 interface EssayQuestionCriteria {
-  mark: number;
+  marks: number;
   evaluation: string;
   suggestion: string;
 }
@@ -211,15 +211,19 @@ const handleMarking = async (
       if (question && parentQuestionText) {
         question.text = parentQuestionText + question.text;
       }
-
+      console.log("here");
       // Fetching the marks and feedback
       const res = await backOff(() =>
         openaiAPI.essayQuestion.generateMarksAndFeedback(question, essayAnswer)
       );
+      console.log("res - ", res);
       const data = res.data.choices[0]?.message?.content ?? "";
+      console.log("data - ", data);
+      console.log("JSON - ", JSON.parse(data));
       const answerResponse = JSON.parse(data) as EssayResponse;
+      console.log("answerRes - ", answerResponse);
 
-      await updateEssayAnswer(essayAnswer?.id ?? "", answerResponse);
+      await updateEssayAnswer(essayAnswer, answerResponse);
 
       console.timeEnd("Checking Essay");
     } else if (answer.answerType == "NestedQuestionAnswer") {
@@ -282,53 +286,37 @@ const checkMCQ = async (
   }
 };
 
-const updateEssayAnswer = async (answerId: string, response: EssayResponse) => {
+const updateEssayAnswer = async (
+  essayAnswer: EssayAnswer,
+  response: EssayResponse
+) => {
   const editCriteria = async (id: string, criteria: EssayQuestionCriteria) => {
-    await prisma.essayAnswer.update({
+    await prisma.essayAnswerCriteria.update({
       where: {
         id: id,
       },
       data: {
-        criteria: {
-          update: {
-            where: {
-              essayAnswerId: id,
-            },
-            data: criteria,
-          },
-        },
+        marks: criteria.marks,
+        evaluation: criteria.evaluation,
+        suggestion: criteria.suggestion,
       },
     });
   };
 
-  if (response.Grammar) {
-    await editCriteria(answerId, response.Grammar);
+  console.log("yep");
+
+  const criteria = essayAnswer?.criteria ?? [];
+  for (const criterion of criteria) {
+    await editCriteria(
+      criterion.id,
+      response[criterion.name as keyof EssayResponse] as EssayQuestionCriteria
+    );
   }
-  if (response.Focus) {
-    await editCriteria(answerId, response.Focus);
-  }
-  if (response.Exposition) {
-    await editCriteria(answerId, response.Exposition);
-  }
-  if (response.Organization) {
-    await editCriteria(answerId, response.Organization);
-  }
-  if (response.Plot) {
-    await editCriteria(answerId, response.Plot);
-  }
-  if (response["Narrative Techniques"]) {
-    await editCriteria(answerId, response["Narrative Techniques"]);
-  }
-  if (response["Language and Vocabulary"]) {
-    await editCriteria(answerId, response["Language and Vocabulary"]);
-  }
-  if (response.Content) {
-    await editCriteria(answerId, response.Content);
-  }
+  console.log("criteria");
 
   await prisma.essayAnswer.update({
     where: {
-      id: answerId,
+      id: essayAnswer?.id,
     },
     data: {
       overallImpression: response["Overall Impression"],
@@ -356,6 +344,12 @@ const fetchWorksheet = (worksheetId: string) => {
                 include: {
                   multipleChoiceQuestion: true,
                   openEndedQuestion: true,
+                  essayQuestion: {
+                    include: {
+                      criteria: true,
+                      images: true,
+                    },
+                  },
                   nestedQuestion: {
                     include: {
                       // 2nd level
@@ -363,6 +357,12 @@ const fetchWorksheet = (worksheetId: string) => {
                         include: {
                           multipleChoiceQuestion: true,
                           openEndedQuestion: true,
+                          essayQuestion: {
+                            include: {
+                              criteria: true,
+                              images: true,
+                            },
+                          },
                           nestedQuestion: {
                             include: {
                               // 3rd level
@@ -389,6 +389,12 @@ const fetchWorksheet = (worksheetId: string) => {
           },
           shortAnswerQuestion: true,
           openEndedQuestion: true,
+          essayQuestion: {
+            include: {
+              criteria: true,
+              images: true,
+            },
+          },
         },
       },
     },
@@ -415,6 +421,11 @@ const fetchAnswerSheet = (answerSheetId: string) => {
         include: {
           multipleChoiceQuestionAnswer: true,
           openEndedQuestionAnswer: true,
+          essayAnswer: {
+            include: {
+              criteria: true,
+            },
+          },
           nestedQuestionAnswer: {
             // 2nd level
             include: {
@@ -422,7 +433,11 @@ const fetchAnswerSheet = (answerSheetId: string) => {
                 include: {
                   multipleChoiceQuestionAnswer: true,
                   openEndedQuestionAnswer: true,
-
+                  essayAnswer: {
+                    include: {
+                      criteria: true,
+                    },
+                  },
                   nestedQuestionAnswer: {
                     //3rd level
                     include: {
@@ -430,6 +445,11 @@ const fetchAnswerSheet = (answerSheetId: string) => {
                         include: {
                           multipleChoiceQuestionAnswer: true,
                           openEndedQuestionAnswer: true,
+                          essayAnswer: {
+                            include: {
+                              criteria: true,
+                            },
+                          },
                         },
                       },
                     },

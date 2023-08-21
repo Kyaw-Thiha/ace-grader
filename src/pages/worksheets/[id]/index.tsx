@@ -26,6 +26,7 @@ import { Card } from "@/components/ui/card";
 import ToggleTheme from "@/components/ToggleTheme";
 import { ChangeOwnerDialog } from "@/components/worksheet/CollaboratorsDialog";
 import ReorderButtons from "@/components/worksheet/ReorderButtons";
+import EssayQuestion from "@/components/worksheet/EssayQuestion";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
@@ -215,6 +216,12 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
                   {question.questionType == "OpenEndedQuestion" && (
                     <OpenEndedQuestion
                       question={question.openEndedQuestion}
+                      refetch={refetchWorksheet}
+                    />
+                  )}
+                  {question.questionType == "EssayQuestion" && (
+                    <EssayQuestion
+                      question={question.essayQuestion}
                       refetch={refetchWorksheet}
                     />
                   )}

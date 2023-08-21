@@ -22,6 +22,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { formatDateWithSuffix } from "@/utils/helper";
 import AnswerSheetNavLayout from "@/components/AnswerSheetNavLayout";
+import { EssayCriteriaName } from "@/server/api/schema";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
@@ -104,7 +105,7 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
   //Fetching list of returned answersheets of student
   const { data: prevAnswerSheets, refetch: fetchPreviousAnswerSheets } =
     api.answerSheet.getReturnedAnswerSheetByEmail.useQuery(
-      { email: email },
+      { publishedWorksheetId: publishedWorksheet?.id ?? "", email: email },
       { enabled: false }
     );
 
@@ -164,11 +165,63 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
     const answers = [];
     const questions = publishedWorksheet?.questions ?? [];
 
+    const essayAnswerProperties = {
+      create: {
+        studentAnswer: "",
+        overallImpression: "",
+        criteria: {
+          create: [
+            {
+              name: "Grammar" as EssayCriteriaName,
+              evaluation: "",
+              suggestion: "",
+            },
+            {
+              name: "Focus" as EssayCriteriaName,
+              evaluation: "",
+              suggestion: "",
+            },
+            {
+              name: "Exposition" as EssayCriteriaName,
+              evaluation: "",
+              suggestion: "",
+            },
+            {
+              name: "Organization" as EssayCriteriaName,
+              evaluation: "",
+              suggestion: "",
+            },
+            {
+              name: "Plot" as EssayCriteriaName,
+              evaluation: "",
+              suggestion: "",
+            },
+            {
+              name: "Narrative Techniques" as EssayCriteriaName,
+              evaluation: "",
+              suggestion: "",
+            },
+            {
+              name: "Language and Vocabulary" as EssayCriteriaName,
+              evaluation: "",
+              suggestion: "",
+            },
+            {
+              name: "Content" as EssayCriteriaName,
+              evaluation: "",
+              suggestion: "",
+            },
+          ],
+        },
+      },
+    };
+
     type AnswerType =
       | "NestedQuestionAnswer"
       | "MultipleChoiceQuestionAnswer"
       | "ShortAnswerQuestionAnswer"
-      | "OpenEndedQuestionAnswer";
+      | "OpenEndedQuestionAnswer"
+      | "EssayAnswer";
 
     for (const question of questions) {
       if (question.questionType == "MultipleChoiceQuestion") {
@@ -195,6 +248,12 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
             create: { studentAnswer: "", feedback: "" },
           },
         });
+      } else if (question.questionType == "EssayQuestion") {
+        answers.push({
+          order: question.order,
+          answerType: "EssayAnswer" as AnswerType,
+          essayAnswer: essayAnswerProperties,
+        });
       } else if (question.questionType == "NestedQuestion") {
         // 2nd Nested Level
         const nestedQuestions =
@@ -217,6 +276,12 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
               openEndedQuestionAnswer: {
                 create: { studentAnswer: "", feedback: "" },
               },
+            });
+          } else if (nestedQuestion.questionType == "EssayQuestion") {
+            answers.push({
+              order: nestedQuestion.order,
+              answerType: "EssayAnswer" as AnswerType,
+              essayAnswer: essayAnswerProperties,
             });
           } else if (nestedQuestion.questionType == "NestedQuestion") {
             // 3rd Level
@@ -244,6 +309,12 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
                   openEndedQuestionAnswer: {
                     create: { studentAnswer: "", feedback: "" },
                   },
+                });
+              } else if (secondNestedQuestion.questionType == "EssayQuestion") {
+                answers.push({
+                  order: secondNestedQuestion.order,
+                  answerType: "EssayAnswer" as AnswerType,
+                  essayAnswer: essayAnswerProperties,
                 });
               }
             }
@@ -275,6 +346,8 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
         });
       }
     }
+
+    console.log(answers);
 
     return answers;
   };

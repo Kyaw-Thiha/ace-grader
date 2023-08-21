@@ -56,6 +56,12 @@ export const worksheetRouter = createTRPCRouter({
                           images: true,
                         },
                       },
+                      essayQuestion: {
+                        include: {
+                          criteria: true,
+                          images: true,
+                        },
+                      },
                       nestedQuestion: {
                         include: {
                           // 2nd level (a)
@@ -73,25 +79,10 @@ export const worksheetRouter = createTRPCRouter({
                                   images: true,
                                 },
                               },
-                              nestedQuestion: {
+                              essayQuestion: {
                                 include: {
-                                  // 3rd level (i)
+                                  criteria: true,
                                   images: true,
-                                  childrenQuestions: {
-                                    include: {
-                                      multipleChoiceQuestion: {
-                                        include: {
-                                          images: true,
-                                          choices: true,
-                                        },
-                                      },
-                                      openEndedQuestion: {
-                                        include: {
-                                          images: true,
-                                        },
-                                      },
-                                    },
-                                  },
                                 },
                               },
                             },
@@ -115,6 +106,12 @@ export const worksheetRouter = createTRPCRouter({
               },
               openEndedQuestion: {
                 include: {
+                  images: true,
+                },
+              },
+              essayQuestion: {
+                include: {
+                  criteria: true,
                   images: true,
                 },
               },
