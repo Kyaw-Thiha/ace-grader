@@ -73,7 +73,7 @@ const EssayQuestion: React.FC<Props> = (props) => {
                     : "bg-red-100"
                 }`}
               >
-                Marks: {props.answer?.marks} / marks
+                Marks: {props.answer?.marks} / {marks}
               </span>
             ) : (
               <span className="rounded-md border-2 px-2 py-1">
@@ -120,13 +120,21 @@ const EssayQuestion: React.FC<Props> = (props) => {
               <Criteria
                 key={criterion.id}
                 name={criterion.name}
-                marks={props.answer?.marks ?? 0}
+                marks={criterion.marks}
                 totalMarks={getMarks(criterion.name)}
                 evaluation={criterion.evaluation}
                 suggestion={criterion.suggestion}
               />
             );
           })}
+          <div className="mt-8 flex w-full flex-col rounded-md border p-4">
+            <div className="flex-1 space-y-1">
+              <p className="font-medium leading-none">Overall Impression</p>
+              <p className="mt-4 text-sm text-muted-foreground">
+                {props.answer?.overallImpression}
+              </p>
+            </div>
+          </div>
         </CardFooter>
       )}
     </div>
@@ -190,7 +198,11 @@ const Criteria: React.FC<CriteriaProps> = (props) => {
       <div className="mt-4">
         <span
           className={` rounded-md border-2 px-2 py-1 text-sm ${
-            props.marks > props.totalMarks * 0.7 ? "bg-green-100" : "bg-red-100"
+            props.marks >= props.totalMarks * 0.7
+              ? "bg-green-100"
+              : props.marks >= props.totalMarks * 0.5
+              ? "bg-yellow-100"
+              : "bg-red-100"
           }`}
         >
           Marks: {props.marks} / {props.totalMarks}

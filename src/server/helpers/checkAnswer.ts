@@ -101,12 +101,9 @@ export const checkAnswer = async (
   openEndedQuestions = [...returnedQuestions];
   openEndedQuestionAnswers = [...returnedAnswers];
 
-  console.log("Open Ended Ques - ", openEndedQuestions);
-  console.log("Open Ended Ans - ", openEndedQuestionAnswers);
-
   console.timeEnd("Setting Up Questions");
 
-  console.time("ChatGPT");
+  console.time("Checking OpenEndedQuestions");
   // Fetching the marks and feedback
   const res = await backOff(() =>
     openaiAPI.openEndedQuestion.batchGenerateMarksAndFeedback(
@@ -114,7 +111,7 @@ export const checkAnswer = async (
       openEndedQuestionAnswers
     )
   );
-  console.timeEnd("ChatGPT");
+  console.timeEnd("Checking OpenEndedQuestions");
 
   const data = res.data.choices[0]?.message?.content ?? "";
   const answerResponses = JSON.parse(data) as MarksAndFeedback[];
@@ -211,19 +208,26 @@ const handleMarking = async (
       if (question && parentQuestionText) {
         question.text = parentQuestionText + question.text;
       }
-      console.log("here");
       // Fetching the marks and feedback
       const res = await backOff(() =>
         openaiAPI.essayQuestion.generateMarksAndFeedback(question, essayAnswer)
       );
-      console.log("res - ", res);
       const data = res.data.choices[0]?.message?.content ?? "";
-      console.log("data - ", data);
-      console.log("JSON - ", JSON.parse(data));
       const answerResponse = JSON.parse(data) as EssayResponse;
-      console.log("answerRes - ", answerResponse);
 
-      await updateEssayAnswer(essayAnswer, answerResponse);
+      const marks =
+        (answerResponse.Grammar?.marks ?? 0) +
+        (answerResponse.Focus?.marks ?? 0) +
+        (answerResponse.Exposition?.marks ?? 0) +
+        (answerResponse.Organization?.marks ?? 0) +
+        (answerResponse.Plot?.marks ?? 0) +
+        (answerResponse["Narrative Techniques"]?.marks ?? 0) +
+        (answerResponse["Language and Vocabulary"]?.marks ?? 0) +
+        (answerResponse.Content?.marks ?? 0);
+      await updateEssayAnswer(essayAnswer, answerResponse, marks);
+
+      // Adding up to the total marks
+      totalMarks = totalMarks + marks;
 
       console.timeEnd("Checking Essay");
     } else if (answer.answerType == "NestedQuestionAnswer") {
@@ -288,7 +292,8 @@ const checkMCQ = async (
 
 const updateEssayAnswer = async (
   essayAnswer: EssayAnswer,
-  response: EssayResponse
+  response: EssayResponse,
+  marks: number
 ) => {
   const editCriteria = async (id: string, criteria: EssayQuestionCriteria) => {
     await prisma.essayAnswerCriteria.update({
@@ -303,8 +308,6 @@ const updateEssayAnswer = async (
     });
   };
 
-  console.log("yep");
-
   const criteria = essayAnswer?.criteria ?? [];
   for (const criterion of criteria) {
     await editCriteria(
@@ -312,13 +315,13 @@ const updateEssayAnswer = async (
       response[criterion.name as keyof EssayResponse] as EssayQuestionCriteria
     );
   }
-  console.log("criteria");
 
   await prisma.essayAnswer.update({
     where: {
       id: essayAnswer?.id,
     },
     data: {
+      marks: marks,
       overallImpression: response["Overall Impression"],
     },
   });
