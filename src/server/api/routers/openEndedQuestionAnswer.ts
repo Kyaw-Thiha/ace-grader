@@ -66,10 +66,11 @@ export const openEndedQuestionAnswerRouter = createTRPCRouter({
       });
     }),
 
-  editFeedback: protectedProcedure
+  editMarksAndFeedback: protectedProcedure
     .input(
       z.object({
         id: z.string(),
+        marks: z.number(),
         feedback: z.string(),
       })
     )
@@ -79,7 +80,36 @@ export const openEndedQuestionAnswerRouter = createTRPCRouter({
           id: input.id,
         },
         data: {
+          marks: input.marks,
           feedback: input.feedback,
+        },
+      });
+    }),
+
+  editTotalMarks: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        marksDifference: z.number(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.openEndedQuestionAnswer.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          answer: {
+            update: {
+              answerSheet: {
+                update: {
+                  totalMarks: {
+                    increment: input.marksDifference,
+                  },
+                },
+              },
+            },
+          },
         },
       });
     }),

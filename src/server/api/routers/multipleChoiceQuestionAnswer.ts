@@ -60,11 +60,11 @@ export const multipleChoiceQuestionAnswerRouter = createTRPCRouter({
       });
     }),
 
-  editFeedback: protectedProcedure
+  editMarks: protectedProcedure
     .input(
       z.object({
         id: z.string(),
-        feedback: z.string(),
+        marks: z.number(),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -73,7 +73,35 @@ export const multipleChoiceQuestionAnswerRouter = createTRPCRouter({
           id: input.id,
         },
         data: {
-          feedback: input.feedback,
+          marks: input.marks,
+        },
+      });
+    }),
+
+  editTotalMarks: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        marksDifference: z.number(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.multipleChoiceQuestionAnswer.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          answer: {
+            update: {
+              answerSheet: {
+                update: {
+                  totalMarks: {
+                    increment: input.marksDifference,
+                  },
+                },
+              },
+            },
+          },
         },
       });
     }),

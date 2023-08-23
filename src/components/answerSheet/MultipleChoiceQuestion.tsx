@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { FormEventHandler, useState } from "react";
 import { api, type RouterOutputs } from "@/utils/api";
 import { convertIntegerToASCII } from "@/utils/helper";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 // import MarkdownText from "@/components/MarkdownText";
 import { type AnswerSheetStatus } from "@/utils/interface";
 import Explanation from "@/components/answerSheet/Explanation";
@@ -9,6 +11,8 @@ import "katex/dist/katex.min.css";
 import Latex from "react-latex-next";
 
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Card,
@@ -18,7 +22,28 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
 import Image from "next/image";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 type MultipleChoiceQuestionAnswer =
@@ -104,12 +129,12 @@ const MultipleChoiceQuestion: React.FC<Props> = (props) => {
         </form>
       </CardContent>
 
-      {hasAnswered ? (
-        <CardFooter className="mt-8">
+      {hasAnswered && (
+        <CardFooter className="mt-8 flex flex-col items-end gap-2">
           <Explanation question={props.question} status={props.status} />
+          {(props.status == "returned-teacherview" ||
+            props.status == "checking-teacherview") && <EditForm {...props} />}
         </CardFooter>
-      ) : (
-        <></>
       )}
     </div>
   );
@@ -220,5 +245,99 @@ const ChoiceGroup: React.FC<Props> = (props) => {
         ))}
       </RadioGroup>
     </>
+  );
+};
+
+const EditForm: React.FC<Props> = (props) => {
+  const [open, setOpen] = useState(false);
+
+  const editMarks = api.multipleChoiceQuestionAnswer.editMarks.useMutation({
+    onSuccess: () => {
+      void props.refetch();
+    },
+  });
+
+  const editTotalMarks =
+    api.multipleChoiceQuestionAnswer.editTotalMarks.useMutation({});
+
+  const formSchema = z.object({
+    marks: z.coerce
+      .number()
+      .min(0, {
+        message: "Marks must be positive",
+      })
+      .max(props.question?.marks ?? 0, {
+        message: "Marks must not be more than marks of question",
+      }),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      marks: props.answer?.marks,
+    },
+  });
+
+  const updateMarks = async (oldMarks: number, newMarks: number) => {
+    await editTotalMarks.mutateAsync({
+      id: props.answer?.id ?? "",
+      marksDifference: newMarks - oldMarks,
+    });
+
+    await editMarks.mutateAsync({
+      id: props.answer?.id ?? "",
+      marks: newMarks,
+    });
+  };
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    setOpen(false);
+    void toast.promise(updateMarks(props.answer?.marks ?? 0, values.marks), {
+      pending: "Editing Marks",
+      success: "Edited Marks 👌",
+      error: "Error in Editing Marks 🤯",
+    });
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="ghost">Edit</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit</DialogTitle>
+          <DialogDescription>
+            Edit marks. Click confirm in order to save it
+          </DialogDescription>
+        </DialogHeader>
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit) as unknown as undefined}
+            className="space-y-8"
+          >
+            <FormField
+              control={form.control}
+              name="marks"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="grid grid-cols-4 items-center">
+                    <FormLabel className="text-center">Marks</FormLabel>
+                    <FormControl className="col-span-3">
+                      <Input placeholder="shadcn" {...field} />
+                    </FormControl>
+                  </div>
+
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Submit</Button>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };
