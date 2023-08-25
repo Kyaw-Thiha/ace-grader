@@ -8,7 +8,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
-import checkAnswer from "@/defer/checkAnswer";
+import checkAnswerRenamed from "@/defer/checkAnswer";
 import { TRPCError } from "@trpc/server";
 import { answerSchemaProperties } from "@/server/api/schema";
 
@@ -309,7 +309,7 @@ export const answerSheetRouter = createTRPCRouter({
 
       if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
 
-      return checkAnswer(input.worksheetId, input.answerSheetId);
+      return checkAnswerRenamed(input.worksheetId, input.answerSheetId);
     }),
 
   delete: publicProcedure

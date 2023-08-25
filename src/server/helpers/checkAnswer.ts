@@ -67,19 +67,16 @@ interface EssayResponse {
   "Overall Impression"?: string;
 }
 
-export const checkAnswer = async (
+export const checkAnswerRenamed = async (
   worksheetId: string,
   answerSheetId: string
 ) => {
-  console.log("Beginning to check answer");
   console.time("Function Execution Time");
 
   await markAsChecking(prisma, answerSheetId);
-  console.log("marking begin");
 
   const worksheet = await fetchWorksheet(worksheetId);
   const answerSheet = await fetchAnswerSheet(answerSheetId);
-  console.log("fetched worksheet + answersheet");
 
   const questions = worksheet?.questions ?? [];
   const answers = answerSheet?.answers ?? [];
