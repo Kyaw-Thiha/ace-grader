@@ -71,12 +71,15 @@ export const checkAnswer = async (
   worksheetId: string,
   answerSheetId: string
 ) => {
+  console.log("Beginning to check answer");
   console.time("Function Execution Time");
 
   await markAsChecking(prisma, answerSheetId);
+  console.log("marking begin");
 
   const worksheet = await fetchWorksheet(worksheetId);
   const answerSheet = await fetchAnswerSheet(answerSheetId);
+  console.log("fetched worksheet + answersheet");
 
   const questions = worksheet?.questions ?? [];
   const answers = answerSheet?.answers ?? [];
@@ -100,6 +103,8 @@ export const checkAnswer = async (
   totalMarks = returnedMarks;
   openEndedQuestions = [...returnedQuestions];
   openEndedQuestionAnswers = [...returnedAnswers];
+
+  console.log("handled markings");
 
   console.timeEnd("Setting Up Questions");
 
