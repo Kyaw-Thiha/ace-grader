@@ -143,6 +143,7 @@ const batchGenerateMarksAndFeedback = (
 
     const question = questions[i];
     const answer = answers[i];
+    console.log(question);
 
     const markingScheme = question?.markingScheme as string[];
 
