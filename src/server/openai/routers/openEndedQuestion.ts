@@ -137,13 +137,14 @@ const batchGenerateMarksAndFeedback = (
   `;
   const questionsList = [] as QuestionPrompt[];
 
+  console.log(questions.length);
+  console.log(questions);
   for (let i = 0; i < questions.length - 1; i++) {
     console.time(`Question - ${i}`);
     console.timeEnd(`Question - ${i}`);
 
     const question = questions[i];
     const answer = answers[i];
-    console.log(question);
 
     const markingScheme = question?.markingScheme as string[];
 
