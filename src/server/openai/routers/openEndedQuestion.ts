@@ -138,10 +138,15 @@ const batchGenerateMarksAndFeedback = (
   const questionsList = [] as QuestionPrompt[];
 
   for (let i = 0; i < questions.length; i++) {
+    console.time(`Question - ${i}`);
+    console.timeEnd(`Question - ${i}`);
+
     const question = questions[i];
     const answer = answers[i];
 
     const markingScheme = question?.markingScheme as string[];
+
+    console.log(markingScheme);
     let studentAnswer = answer?.studentAnswer;
     if (studentAnswer == "" || !studentAnswer) {
       studentAnswer = "No Answer";
