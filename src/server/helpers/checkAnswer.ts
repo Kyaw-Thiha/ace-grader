@@ -101,8 +101,6 @@ export const checkAnswerRenamed = async (
   openEndedQuestions = [...returnedQuestions];
   openEndedQuestionAnswers = [...returnedAnswers];
 
-  console.log("handled markings");
-
   console.timeEnd("Setting Up Questions");
 
   console.time("Checking OpenEndedQuestions");
@@ -168,51 +166,47 @@ const handleMarking = async (
 ) => {
   let totalMarks = 0;
 
-  for (const answer of answers) {
-    if (answer.answerType == "MultipleChoiceQuestionAnswer") {
-      const question = questions.at(answer.order - 1)
-        ?.multipleChoiceQuestion as MultipleChoiceQuestion;
-      const multipleChoiceQuestionAnswer = answer.multipleChoiceQuestionAnswer;
+  for (const question of questions) {
+    if (question.questionType == "MultipleChoiceQuestion") {
+      const answer = answers.at(question.order - 1)
+        ?.multipleChoiceQuestionAnswer as MultipleChoiceQuestionAnswer;
+      const multipleChoiceQuestion =
+        question.multipleChoiceQuestion as MultipleChoiceQuestion;
 
       // Adding question text of parent question if it exists
-      if (question && parentQuestionText) {
-        question.text = parentQuestionText + question.text;
+      if (multipleChoiceQuestion && parentQuestionText) {
+        multipleChoiceQuestion.text =
+          parentQuestionText + multipleChoiceQuestion.text;
       }
 
-      const isCorrect = await checkMCQ(
-        question,
-        multipleChoiceQuestionAnswer as MultipleChoiceQuestionAnswer
-      );
+      const isCorrect = await checkMCQ(multipleChoiceQuestion, answer);
       if (isCorrect) {
         totalMarks = totalMarks + 1;
       }
-    } else if (answer.answerType == "OpenEndedQuestionAnswer") {
-      const question = questions.at(answer.order - 1)
-        ?.openEndedQuestion as OpenEndedQuestion;
-      const openEndedQuestionAnswer = answer.openEndedQuestionAnswer;
+    } else if (question.questionType == "OpenEndedQuestion") {
+      const answer = answers.at(question.order - 1)
+        ?.openEndedQuestionAnswer as OpenEndedQuestionAnswer;
+      const openEndedQuestion = question.openEndedQuestion as OpenEndedQuestion;
 
       // Adding question text of parent question if it exists
-      if (question && parentQuestionText) {
-        question.text = parentQuestionText + question.text;
+      if (openEndedQuestion && parentQuestionText) {
+        openEndedQuestion.text = parentQuestionText + openEndedQuestion.text;
       }
 
-      openEndedQuestions.push(question);
-      openEndedQuestionAnswers.push(
-        openEndedQuestionAnswer as OpenEndedQuestionAnswer
-      );
-    } else if (answer.answerType == "EssayAnswer") {
+      openEndedQuestions.push(openEndedQuestion);
+      openEndedQuestionAnswers.push(answer);
+    } else if (question.questionType == "EssayQuestion") {
       console.time("Checking Essay");
-      const question = questions.at(answer.order - 1)
-        ?.essayQuestion as EssayQuestion;
-      const essayAnswer = answer.essayAnswer as EssayAnswer;
+      const answer = answers.at(question.order - 1)?.essayAnswer as EssayAnswer;
+      const essayQuestion = question.essayQuestion as EssayQuestion;
 
       // Adding question text of parent question if it exists
-      if (question && parentQuestionText) {
-        question.text = parentQuestionText + question.text;
+      if (essayQuestion && parentQuestionText) {
+        essayQuestion.text = parentQuestionText + essayQuestion.text;
       }
       // Fetching the marks and feedback
       const res = await backOff(() =>
-        openaiAPI.essayQuestion.generateMarksAndFeedback(question, essayAnswer)
+        openaiAPI.essayQuestion.generateMarksAndFeedback(essayQuestion, answer)
       );
       const data = res.data.choices[0]?.message?.content ?? "";
       const answerResponse = JSON.parse(data) as EssayResponse;
@@ -226,17 +220,18 @@ const handleMarking = async (
         (answerResponse["Narrative Techniques"]?.marks ?? 0) +
         (answerResponse["Language and Vocabulary"]?.marks ?? 0) +
         (answerResponse.Content?.marks ?? 0);
-      await updateEssayAnswer(essayAnswer, answerResponse, marks);
+      await updateEssayAnswer(answer, answerResponse, marks);
 
       // Adding up to the total marks
       totalMarks = totalMarks + marks;
 
       console.timeEnd("Checking Essay");
-    } else if (answer.answerType == "NestedQuestionAnswer") {
+    } else if (question.questionType == "NestedQuestion") {
       const childrenQuestions =
-        questions.at(answer.order - 1)?.nestedQuestion?.childrenQuestions ?? [];
+        question.nestedQuestion?.childrenQuestions ?? [];
       const childrenAnswers =
-        answer.nestedQuestionAnswer?.childrenAnswers ?? [];
+        answers.at(question.order - 1)?.nestedQuestionAnswer?.childrenAnswers ??
+        [];
 
       const {
         totalMarks: returnedMarks,
@@ -247,7 +242,7 @@ const handleMarking = async (
         childrenAnswers as Answer[],
         openEndedQuestions,
         openEndedQuestionAnswers,
-        questions.at(answer.order - 1)?.nestedQuestion?.text
+        questions.at(question.order - 1)?.nestedQuestion?.text
       );
 
       totalMarks = totalMarks + returnedMarks;
