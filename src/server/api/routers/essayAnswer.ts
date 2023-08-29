@@ -105,7 +105,7 @@ export const essayAnswerRouter = createTRPCRouter({
                     suggestion: "",
                   },
                   {
-                    name: "Correct Register",
+                    name: "Register",
                     evaluation: "",
                     suggestion: "",
                   },
@@ -153,7 +153,7 @@ export const essayAnswerRouter = createTRPCRouter({
           z.literal("Content"),
           z.literal("Persuasion"),
           z.literal("Purpose"),
-          z.literal("Correct Register"),
+          z.literal("Register"),
         ]),
         marks: z.number(),
         evaluation: z.string(),

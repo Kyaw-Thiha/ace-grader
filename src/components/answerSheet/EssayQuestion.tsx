@@ -52,7 +52,7 @@ const EssayQuestion: React.FC<Props> = (props) => {
     getMarks("Content") +
     getMarks("Persuasion") +
     getMarks("Purpose") +
-    getMarks("Correct Register");
+    getMarks("Register");
 
   return (
     <div className="flex flex-col">

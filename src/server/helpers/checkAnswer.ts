@@ -60,10 +60,16 @@ interface EssayResponse {
   Focus?: EssayQuestionCriteria;
   Exposition?: EssayQuestionCriteria;
   Organization?: EssayQuestionCriteria;
+  "Sentence Structure"?: EssayQuestionCriteria;
   Plot?: EssayQuestionCriteria;
   "Narrative Techniques"?: EssayQuestionCriteria;
+  "Descriptive Techniques"?: EssayQuestionCriteria;
+  "Literary Devices"?: EssayQuestionCriteria;
   "Language and Vocabulary"?: EssayQuestionCriteria;
   Content?: EssayQuestionCriteria;
+  Persuasion?: EssayQuestionCriteria;
+  Purpose?: EssayQuestionCriteria;
+  Register?: EssayQuestionCriteria;
   "Overall Impression"?: string;
 }
 
@@ -216,10 +222,16 @@ const handleMarking = async (
         (answerResponse.Focus?.marks ?? 0) +
         (answerResponse.Exposition?.marks ?? 0) +
         (answerResponse.Organization?.marks ?? 0) +
+        (answerResponse["Sentence Structure"]?.marks ?? 0) +
         (answerResponse.Plot?.marks ?? 0) +
         (answerResponse["Narrative Techniques"]?.marks ?? 0) +
+        (answerResponse["Descriptive Techniques"]?.marks ?? 0) +
+        (answerResponse["Literary Devices"]?.marks ?? 0) +
         (answerResponse["Language and Vocabulary"]?.marks ?? 0) +
-        (answerResponse.Content?.marks ?? 0);
+        (answerResponse.Content?.marks ?? 0) +
+        (answerResponse.Persuasion?.marks ?? 0) +
+        (answerResponse.Purpose?.marks ?? 0) +
+        (answerResponse.Register?.marks ?? 0);
       await updateEssayAnswer(answer, answerResponse, marks);
 
       // Adding up to the total marks

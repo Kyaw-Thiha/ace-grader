@@ -237,7 +237,7 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
               suggestion: "",
             },
             {
-              name: "Correct Register" as EssayCriteriaName,
+              name: "Register" as EssayCriteriaName,
               evaluation: "",
               suggestion: "",
             },

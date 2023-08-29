@@ -112,15 +112,15 @@ const generateMarksAndFeedback = (
     getMarks("Purpose") == 0
       ? ""
       : `
-      Purpose (${getMarks("Purpose")} marks) (Audience Awareness):
+      Purpose (${getMarks("Purpose")} marks):
       Assess the awareness of the essay's form, intended audience, and purpose. Consider how well the writing aligns with the chosen form and effectively communicates with the target audience while fulfilling the intended purpose.
   `;
 
   const correctRegister =
-    getMarks("Correct Register") == 0
+    getMarks("Register") == 0
       ? ""
       : `
-      Correct Register (${getMarks("Correct Register")} marks):
+      Register (${getMarks("Register")} marks):
       Evaluate the use of appropriate language register in the essay. Assess whether the level of formality or informality is suitable for the intended audience and purpose, and whether it enhances the overall communication.
   `;
 
@@ -176,6 +176,11 @@ const generateMarksAndFeedback = (
           evaluation: (string),
           suggestion: (string)
       }, ...
+      "Register": {
+        marks: (number),
+        evaluation: (string),
+        suggestion: (string)
+      },
       "Overall Impression": (string)
   }
   `;

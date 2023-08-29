@@ -86,7 +86,7 @@ const Marks: React.FC<Props> = (props) => {
     getMarks("Content") +
     getMarks("Persuasion") +
     getMarks("Purpose") +
-    getMarks("Correct Register");
+    getMarks("Register");
 
   return (
     <div>
@@ -163,7 +163,7 @@ const CriteriaGroup: React.FC<Props> = (props) => {
         "Assess the awareness of the essay's form, intended audience, and purpose. Consider how well the writing aligns with the chosen form and effectively communicates with the target audience while fulfilling the intended purpose.",
     },
     {
-      name: "Correct Register",
+      name: "Register",
       description:
         "Evaluate the use of appropriate language register in the essay. Assess whether the level of formality or informality is suitable for the intended audience and purpose, and whether it enhances the overall communication.",
     },
@@ -186,7 +186,7 @@ const CriteriaGroup: React.FC<Props> = (props) => {
     getMarks("Content") +
     getMarks("Persuasion") +
     getMarks("Purpose") +
-    getMarks("Correct Register");
+    getMarks("Register");
 
   return (
     <div className="flex flex-col gap-4">
