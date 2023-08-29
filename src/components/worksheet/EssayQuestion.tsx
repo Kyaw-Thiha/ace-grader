@@ -155,6 +155,7 @@ const CriteriaGroup: React.FC<Props> = (props) => {
             key={index}
             name={criterion.name}
             description={criterion.description}
+            marks={getMarks(criterion.name).toString()}
             questionId={props.question?.id ?? ""}
             criteriaId={props.question?.criteria.at(index)?.id ?? ""}
             totalMarks={marks}
@@ -169,13 +170,14 @@ const CriteriaGroup: React.FC<Props> = (props) => {
 interface CriteriaProps {
   name: string;
   description: string;
+  marks: string;
   questionId: string;
   criteriaId: string;
   totalMarks: number;
   refetch: QueryObserverBaseResult["refetch"];
 }
 const Criteria: React.FC<CriteriaProps> = (props) => {
-  const [marks, setMarks] = useState("0");
+  const [marks, setMarks] = useState(props.marks);
 
   const editCriteria = api.essayQuestion.editCriteria.useMutation({
     onSuccess: () => {
