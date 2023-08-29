@@ -60,6 +60,11 @@ export const essayAnswerRouter = createTRPCRouter({
                     suggestion: "",
                   },
                   {
+                    name: "Sentence Structure",
+                    evaluation: "",
+                    suggestion: "",
+                  },
+                  {
                     name: "Plot",
                     evaluation: "",
                     suggestion: "",
@@ -70,12 +75,37 @@ export const essayAnswerRouter = createTRPCRouter({
                     suggestion: "",
                   },
                   {
+                    name: "Descriptive Techniques",
+                    evaluation: "",
+                    suggestion: "",
+                  },
+                  {
+                    name: "Literary Devices",
+                    evaluation: "",
+                    suggestion: "",
+                  },
+                  {
                     name: "Language and Vocabulary",
                     evaluation: "",
                     suggestion: "",
                   },
                   {
                     name: "Content",
+                    evaluation: "",
+                    suggestion: "",
+                  },
+                  {
+                    name: "Persuasion",
+                    evaluation: "",
+                    suggestion: "",
+                  },
+                  {
+                    name: "Purpose",
+                    evaluation: "",
+                    suggestion: "",
+                  },
+                  {
+                    name: "Correct Register",
                     evaluation: "",
                     suggestion: "",
                   },
@@ -109,7 +139,22 @@ export const essayAnswerRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-        name: z.string(),
+        name: z.union([
+          z.literal("Grammar"),
+          z.literal("Focus"),
+          z.literal("Exposition"),
+          z.literal("Organization"),
+          z.literal("Sentence Structure "),
+          z.literal("Plot"),
+          z.literal("Narrative Techniques"),
+          z.literal("Descriptive Techniques"),
+          z.literal("Literary Devices"),
+          z.literal("Language and Vocabulary"),
+          z.literal("Content"),
+          z.literal("Persuasion"),
+          z.literal("Purpose"),
+          z.literal("Correct Register"),
+        ]),
         marks: z.number(),
         evaluation: z.string(),
         suggestion: z.string(),

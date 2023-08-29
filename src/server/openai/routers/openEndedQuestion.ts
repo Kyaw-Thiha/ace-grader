@@ -147,7 +147,6 @@ const batchGenerateMarksAndFeedback = (
 
     const markingScheme = question?.markingScheme as string[];
 
-    console.log(markingScheme);
     let studentAnswer = answer?.studentAnswer;
     if (studentAnswer == "" || !studentAnswer) {
       studentAnswer = "No Answer";

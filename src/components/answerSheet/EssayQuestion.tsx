@@ -43,10 +43,16 @@ const EssayQuestion: React.FC<Props> = (props) => {
     getMarks("Focus") +
     getMarks("Exposition") +
     getMarks("Organization") +
+    getMarks("Sentence Structure") +
     getMarks("Plot") +
     getMarks("Narrative Techniques") +
+    getMarks("Descriptive Techniques") +
+    getMarks("Literary Devices") +
     getMarks("Language and Vocabulary") +
-    getMarks("Content");
+    getMarks("Content") +
+    getMarks("Persuasion") +
+    getMarks("Purpose") +
+    getMarks("Correct Register");
 
   return (
     <div className="flex flex-col">

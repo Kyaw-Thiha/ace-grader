@@ -61,6 +61,10 @@ export const essayQuestionRouter = createTRPCRouter({
                     marks: 0,
                   },
                   {
+                    name: "Sentence Structure",
+                    marks: 0,
+                  },
+                  {
                     name: "Plot",
                     marks: 0,
                   },
@@ -69,11 +73,31 @@ export const essayQuestionRouter = createTRPCRouter({
                     marks: 0,
                   },
                   {
+                    name: "Descriptive Techniques",
+                    marks: 0,
+                  },
+                  {
+                    name: "Literary Devices",
+                    marks: 0,
+                  },
+                  {
                     name: "Language and Vocabulary",
                     marks: 0,
                   },
                   {
                     name: "Content",
+                    marks: 0,
+                  },
+                  {
+                    name: "Persuasion",
+                    marks: 0,
+                  },
+                  {
+                    name: "Purpose",
+                    marks: 0,
+                  },
+                  {
+                    name: "Correct Register",
                     marks: 0,
                   },
                 ],
@@ -137,10 +161,16 @@ export const essayQuestionRouter = createTRPCRouter({
           z.literal("Focus"),
           z.literal("Exposition"),
           z.literal("Organization"),
+          z.literal("Sentence Structure "),
           z.literal("Plot"),
           z.literal("Narrative Techniques"),
+          z.literal("Descriptive Techniques"),
+          z.literal("Literary Devices"),
           z.literal("Language and Vocabulary"),
           z.literal("Content"),
+          z.literal("Persuasion"),
+          z.literal("Purpose"),
+          z.literal("Correct Register"),
         ]),
         marks: z.number(),
       })

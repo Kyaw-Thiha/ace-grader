@@ -44,6 +44,14 @@ const generateMarksAndFeedback = (
       Assess the logical flow and organization of ideas within the essay. Consider the coherence of paragraphs and transitions between different sections.
   `;
 
+  const sentenceStructure =
+    getMarks("Sentence Structure") == 0
+      ? ""
+      : `
+      Sentence Structure & Syntax (${getMarks("Sentence Structure")} marks):
+      Assess the variety and effectiveness of sentence structures and syntax used in the essay. Consider the balance between simple and complex sentences, and evaluate how well the syntax contributes to the essay's readability and engagement.
+  `;
+
   const plot =
     getMarks("Plot") == 0
       ? ""
@@ -57,7 +65,23 @@ const generateMarksAndFeedback = (
       ? ""
       : `
       Narrative Techniques (${getMarks("Narrative Techniques")} marks):
-      Analyze the essay's use of narrative techniques, such as imagery, dialogue, and descriptive language, to enhance the storytelling and reader's experience.
+      Evaluate the adeptness of the essay's employment of narrative techniques to craft a compelling and immersive storytelling experience. Analyze the use of imagery, dialogue, descriptive language, pacing, and narrative voice. Consider how these techniques contribute to the reader's engagement, emotional connection, and overall understanding of the narrative.
+  `;
+
+  const descriptiveTechniques =
+    getMarks("Descriptive Techniques") == 0
+      ? ""
+      : `
+      Descriptive Techniques (${getMarks("Descriptive Techniques")} marks):
+      Analyze the use of rich and evocative language, sensory details, and the ability to paint a clear mental picture for the reader. Consider how these techniques contribute to the depth, atmosphere, and immersive quality of the descriptive elements in the writing.
+  `;
+
+  const literaryDevices =
+    getMarks("Literary Devices") == 0
+      ? ""
+      : `
+      Use of Literary Devices (${getMarks("Literary Devices")} marks):
+      Evaluate the incorporation of literary devices like similes, metaphors, and other figurative language in the essay. Assess their relevance, impact, and contribution to the overall quality of the writing.
   `;
 
   const languageAndVocabulary =
@@ -76,6 +100,30 @@ const generateMarksAndFeedback = (
       Assess the depth and accuracy of the essay's content in relation to the chosen topic. Consider whether the essay demonstrates a comprehensive understanding of the subject matter.
   `;
 
+  const persuasion =
+    getMarks("Persuasion") == 0
+      ? ""
+      : `
+      Persuasion (${getMarks("Persuasion")} marks):
+      Evaluate the essay's ability to persuade and convince the reader in argumentative or persuasive writings. Analyze the strength of the arguments presented, the use of evidence, and the logical progression of ideas.
+  `;
+
+  const purpose =
+    getMarks("Purpose") == 0
+      ? ""
+      : `
+      Purpose (${getMarks("Purpose")} marks) (Audience Awareness):
+      Assess the awareness of the essay's form, intended audience, and purpose. Consider how well the writing aligns with the chosen form and effectively communicates with the target audience while fulfilling the intended purpose.
+  `;
+
+  const correctRegister =
+    getMarks("Correct Register") == 0
+      ? ""
+      : `
+      Correct Register (${getMarks("Correct Register")} marks):
+      Evaluate the use of appropriate language register in the essay. Assess whether the level of formality or informality is suitable for the intended audience and purpose, and whether it enhances the overall communication.
+  `;
+
   const systemPrompt = `
   You are AceGrader, an advanced AI-powered tool designed to automate the grading process for teachers.
 
@@ -92,13 +140,25 @@ const generateMarksAndFeedback = (
 
   ${organization}
 
+  ${sentenceStructure}
+
   ${plot}
 
   ${narrativeTechniques}
 
+  ${descriptiveTechniques}
+
+  ${literaryDevices}
+
   ${languageAndVocabulary}
 
   ${content}
+
+  ${persuasion}
+
+  ${purpose}
+
+  ${correctRegister}
 
   Total Score: [Total Score Here]
 

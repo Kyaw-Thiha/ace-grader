@@ -22,7 +22,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { formatDateWithSuffix } from "@/utils/helper";
 import AnswerSheetNavLayout from "@/components/AnswerSheetNavLayout";
-import { EssayCriteriaName } from "@/server/api/schema";
+import type { EssayCriteriaName } from "@/server/api/schema";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
@@ -192,6 +192,11 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
               suggestion: "",
             },
             {
+              name: "Sentence Structure" as EssayCriteriaName,
+              evaluation: "",
+              suggestion: "",
+            },
+            {
               name: "Plot" as EssayCriteriaName,
               evaluation: "",
               suggestion: "",
@@ -202,12 +207,37 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
               suggestion: "",
             },
             {
+              name: "Descriptive Techniques" as EssayCriteriaName,
+              evaluation: "",
+              suggestion: "",
+            },
+            {
+              name: "Literary Devices" as EssayCriteriaName,
+              evaluation: "",
+              suggestion: "",
+            },
+            {
               name: "Language and Vocabulary" as EssayCriteriaName,
               evaluation: "",
               suggestion: "",
             },
             {
               name: "Content" as EssayCriteriaName,
+              evaluation: "",
+              suggestion: "",
+            },
+            {
+              name: "Persuasion" as EssayCriteriaName,
+              evaluation: "",
+              suggestion: "",
+            },
+            {
+              name: "Purpose" as EssayCriteriaName,
+              evaluation: "",
+              suggestion: "",
+            },
+            {
+              name: "Correct Register" as EssayCriteriaName,
               evaluation: "",
               suggestion: "",
             },
