@@ -189,7 +189,7 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
                     <MultipleChoiceQuestion
                       question={question.multipleChoiceQuestion}
                       answer={answers.at(index)?.multipleChoiceQuestionAnswer}
-                      refetch={refetchWorksheet}
+                      refetch={refetchAnswerSheet}
                       status={status}
                     />
                   )}
@@ -198,7 +198,7 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
                     <OpenEndedQuestion
                       question={question.openEndedQuestion}
                       answer={answers.at(index)?.openEndedQuestionAnswer}
-                      refetch={refetchWorksheet}
+                      refetch={refetchAnswerSheet}
                       status={status}
                     />
                   )}
@@ -207,7 +207,7 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
                     <EssayQuestion
                       question={question.essayQuestion}
                       answer={answers.at(index)?.essayAnswer}
-                      refetch={refetchWorksheet}
+                      refetch={refetchAnswerSheet}
                       status={status}
                     />
                   )}
@@ -216,7 +216,7 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
                     <NestedQuestion
                       question={question.nestedQuestion}
                       answer={answers.at(index)?.nestedQuestionAnswer}
-                      refetch={refetchWorksheet}
+                      refetch={refetchAnswerSheet}
                       nestedLevel={2}
                       status={status}
                     />
