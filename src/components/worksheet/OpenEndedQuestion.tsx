@@ -46,6 +46,7 @@ const OpenEndedQuestion: React.FC<Props> = (props) => {
       <Marks question={props.question} refetch={props.refetch} />
       <MarkingScheme question={props.question} refetch={props.refetch} />
       <Explanation question={props.question} refetch={props.refetch} />
+      <AnswerTester question={props.question} refetch={props.refetch} />
       {/* <SampleAnswer question={props.question} refetch={props.refetch} /> */}
     </div>
   );
@@ -357,6 +358,86 @@ const Explanation: React.FC<Props> = (props) => {
           </Tooltip>
         </TooltipProvider>
       </div>
+    </div>
+  );
+};
+
+const AnswerTester: React.FC<Props> = (props) => {
+  const [loading, setLoading] = useState(false);
+  const [answers, setAnswers] = useState([
+    {
+      id: "",
+      studentAnswer: "",
+      feedback: "",
+      marks: 0,
+      answerId: "",
+    },
+  ]);
+  const [marks, setMarks] = useState(0);
+  const [feedback, setFeedback] = useState("");
+
+  const questions = [props.question];
+
+  interface MarksAndFeedback {
+    marks: number;
+    feedback: string;
+  }
+  const checkAnswer = async () => {
+    setLoading(true);
+
+    const res = await openaiAPI.openEndedQuestion.batchGenerateMarksAndFeedback(
+      questions,
+      answers
+    );
+
+    const data = res.data.choices[0]?.message?.content ?? "";
+    const answerResponses = JSON.parse(data) as MarksAndFeedback[];
+
+    setMarks(answerResponses[0]?.marks ?? 0);
+    setFeedback(answerResponses[0]?.feedback ?? "");
+    setLoading(false);
+  };
+
+  return (
+    <div className="rounded-md border-2 px-4 py-4">
+      <h2 className="font-medium text-muted-foreground">Testing</h2>
+      <p className="text-muted-foreground">
+        You can test out how different student answers would be graded by the
+        AI.
+      </p>
+      <div className="mt-4 flex items-center gap-4">
+        <AutosizeInput
+          placeholder="Type here"
+          className="transition-all"
+          value={answers.at(0)?.studentAnswer}
+          onChange={(e) => {
+            setAnswers([
+              {
+                id: "",
+                studentAnswer: e.target.value,
+                feedback: "",
+                marks: 0,
+                answerId: "",
+              },
+            ]);
+          }}
+          disabled={loading}
+        />
+        <Button
+          className="whitespace-nowrap"
+          onClick={() => void checkAnswer()}
+          disabled={loading}
+        >
+          Check Answer
+        </Button>
+      </div>
+
+      {feedback != "" && (
+        <div className="mt-4 flex flex-col">
+          <p className="text-muted-foreground">Marks: {marks}</p>
+          <p className="text-muted-foreground">{feedback}</p>
+        </div>
+      )}
     </div>
   );
 };

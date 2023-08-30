@@ -134,11 +134,17 @@ const batchGenerateMarksAndFeedback = (
   Represent mathematical equations, chemical and physics symbols in latex between \[ and \].
   Remember to consider similar meanings and various valid approaches while grading the answers. 
   Please provide your response in JSON format with a list of answers, each containing 'marks' and 'feedback' as keys.
+  [
+    {
+      marks: (number),
+      feedback: (string)
+    },
+    ...
+  ]
   `;
   const questionsList = [] as QuestionPrompt[];
 
-  console.log(questions.length);
-  for (let i = 0; i < questions.length - 1; i++) {
+  for (let i = 0; i < questions.length; i++) {
     console.time(`Question - ${i}`);
     console.timeEnd(`Question - ${i}`);
 
