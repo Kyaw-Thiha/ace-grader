@@ -191,7 +191,7 @@ interface CriteriaProps {
   evaluation: string;
   suggestion: string;
 }
-const Criteria: React.FC<CriteriaProps> = (props) => {
+export const Criteria: React.FC<CriteriaProps> = (props) => {
   return (
     <div className="flex w-full flex-col rounded-md border p-4">
       <div className="flex-1 space-y-1">

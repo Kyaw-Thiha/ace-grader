@@ -50,12 +50,12 @@ interface MarksAndFeedback {
   feedback: string;
 }
 
-interface EssayQuestionCriteria {
+export interface EssayQuestionCriteria {
   marks: number;
   evaluation: string;
   suggestion: string;
 }
-interface EssayResponse {
+export interface EssayResponse {
   Grammar?: EssayQuestionCriteria;
   Focus?: EssayQuestionCriteria;
   Exposition?: EssayQuestionCriteria;
