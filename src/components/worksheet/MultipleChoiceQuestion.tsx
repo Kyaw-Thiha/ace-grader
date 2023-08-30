@@ -53,15 +53,9 @@ const MultipleChoiceQuestion: React.FC<Props> = (props) => {
           </div>
         ))}
       </div>
-      <div>
-        <Answer question={props.question} refetch={props.refetch} />
-      </div>
-      <div>
-        <Marks question={props.question} refetch={props.refetch} />
-      </div>
-      <div>
-        <Explanation question={props.question} refetch={props.refetch} />
-      </div>
+      <Answer question={props.question} refetch={props.refetch} />
+      <Marks question={props.question} refetch={props.refetch} />
+      <Explanation question={props.question} refetch={props.refetch} />
     </div>
   );
 };
