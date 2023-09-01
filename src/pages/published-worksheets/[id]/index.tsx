@@ -377,8 +377,6 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
       }
     }
 
-    console.log(answers);
-
     return answers;
   };
 

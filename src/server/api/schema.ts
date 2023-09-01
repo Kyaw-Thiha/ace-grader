@@ -60,25 +60,38 @@ export type EssayCriteriaName =
   | "Focus"
   | "Exposition"
   | "Organization"
+  | "Sentence Structure"
   | "Plot"
   | "Narrative Techniques"
+  | "Descriptive Techniques"
+  | "Literary Devices"
   | "Language and Vocabulary"
-  | "Content";
+  | "Content"
+  | "Persuasion"
+  | "Purpose"
+  | "Register";
+const essayCriteriaName = z.union([
+  z.literal("Grammar"),
+  z.literal("Focus"),
+  z.literal("Exposition"),
+  z.literal("Organization"),
+  z.literal("Sentence Structure"),
+  z.literal("Plot"),
+  z.literal("Narrative Techniques"),
+  z.literal("Descriptive Techniques"),
+  z.literal("Literary Devices"),
+  z.literal("Language and Vocabulary"),
+  z.literal("Content"),
+  z.literal("Persuasion"),
+  z.literal("Purpose"),
+  z.literal("Register"),
+]);
 export const essayQuestionSchema = z.object({
   text: z.string(),
   criteria: z.object({
     create: z.array(
       z.object({
-        name: z.union([
-          z.literal("Grammar"),
-          z.literal("Focus"),
-          z.literal("Exposition"),
-          z.literal("Organization"),
-          z.literal("Plot"),
-          z.literal("Narrative Techniques"),
-          z.literal("Language and Vocabulary"),
-          z.literal("Content"),
-        ]),
+        name: essayCriteriaName,
         marks: z.number(),
       })
     ),
@@ -158,16 +171,7 @@ export const answerSchemaProperties = {
         criteria: z.object({
           create: z.array(
             z.object({
-              name: z.union([
-                z.literal("Grammar"),
-                z.literal("Focus"),
-                z.literal("Exposition"),
-                z.literal("Organization"),
-                z.literal("Plot"),
-                z.literal("Narrative Techniques"),
-                z.literal("Language and Vocabulary"),
-                z.literal("Content"),
-              ]),
+              name: essayCriteriaName,
               evaluation: z.string(),
               suggestion: z.string(),
             })

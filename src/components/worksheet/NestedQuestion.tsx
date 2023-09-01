@@ -7,6 +7,7 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { MathInputDialog } from "@/components/MathInputDialog";
 import MultipleChoiceQuestion from "@/components/worksheet/MultipleChoiceQuestion";
 import OpenEndedQuestion from "@/components/worksheet/OpenEndedQuestion";
+import EssayQuestion from "@/components/worksheet/EssayQuestion";
 import ReorderButtons from "@/components/worksheet/ReorderButtons";
 import { DeleteQuestionButton } from "@/components/worksheet/QuestionDialogs";
 import AddQuestionButton from "@/components/worksheet/AddQuestionButton";
@@ -85,6 +86,12 @@ const NestedQuestion: React.FC<Props> = (props) => {
                   {question.questionType == "OpenEndedQuestion" && (
                     <OpenEndedQuestion
                       question={question.openEndedQuestion}
+                      refetch={props.refetch}
+                    />
+                  )}
+                  {question.questionType == "EssayQuestion" && (
+                    <EssayQuestion
+                      question={question.essayQuestion}
                       refetch={props.refetch}
                     />
                   )}

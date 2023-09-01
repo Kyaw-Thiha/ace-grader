@@ -70,7 +70,7 @@ export const SubmitAnswerDialog: React.FC<SubmitAnswerDialogProps> = (
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Submit your answers</DialogTitle>
-          <DialogDescription>
+          <DialogDescription asChild>
             <p>Note: This process is irreversible</p>
             <p>Are you sure you want to submit your answers?</p>
           </DialogDescription>

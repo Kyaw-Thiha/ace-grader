@@ -30,6 +30,12 @@ export const nestedQuestionRouter = createTRPCRouter({
                   images: true,
                 },
               },
+              essayQuestion: {
+                include: {
+                  criteria: true,
+                  images: true,
+                },
+              },
               nestedQuestion: {
                 include: {
                   // 3rd level (i)
@@ -47,6 +53,12 @@ export const nestedQuestionRouter = createTRPCRouter({
                           images: true,
                         },
                       },
+                      essayQuestion: {
+                        include: {
+                          criteria: true,
+                          images: true,
+                        },
+                      },
                       nestedQuestion: {
                         include: {
                           // 4th level (1)
@@ -61,6 +73,12 @@ export const nestedQuestionRouter = createTRPCRouter({
                               },
                               openEndedQuestion: {
                                 include: {
+                                  images: true,
+                                },
+                              },
+                              essayQuestion: {
+                                include: {
+                                  criteria: true,
                                   images: true,
                                 },
                               },
