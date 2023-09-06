@@ -130,7 +130,6 @@ const batchGenerateMarksAndFeedback = (
   Your response should include the marks assigned to each answer and a feedback paragraph to guide the 
   student on how to enhance their response.
   For each point in the marking scheme that is satisfied or demonstrates similar meaning, award one whole mark.
-  Each marking point is separated by ';;;'
   Represent mathematical equations, chemical and physics symbols in latex between \[ and \].
   Remember to consider similar meanings and various valid approaches while grading the answers. 
   Please provide your response in JSON format with a list of answers, each containing 'marks' and 'feedback' as keys.
@@ -161,12 +160,15 @@ const batchGenerateMarksAndFeedback = (
     questionsList.push({
       question: question?.text ?? "",
       total_marks: question?.marks ?? 0,
-      marking_scheme:
-        markingScheme
-          .map((marking) => {
-            return marking;
-          })
-          .join(";;;") ?? "",
+      marking_scheme: `[
+        ${
+          markingScheme
+            .map((marking) => {
+              return marking;
+            })
+            .join(",") ?? ""
+        }
+        ]`,
       answer: studentAnswer,
     });
   }
