@@ -1,68 +1,60 @@
-// import { Button } from "@/components/ui/button";
-// import { api } from "@/utils/api";
-// import type { NextPage } from "next";
+import { Button } from "@/components/ui/button";
+import { api } from "@/utils/api";
+import type { NextPage } from "next";
 
-// const MigratePage: NextPage = () => {
-//   const { data: longAnswerQuestions, isLoading: questionLoading } =
-//     api.question.getAllLongAnswerQuestions.useQuery();
+const MigratePage: NextPage = () => {
+  const { data: worksheet, isLoading: worksheetLoading } =
+    api.worksheet.getAll.useQuery();
 
-//   const { data: longAnswerQuestionAnswers, isLoading: answerLoading } =
-//     api.answerSheet.getAllLongAnswerQuestionAnswers.useQuery();
+  const { data: publishedWorksheet, isLoading: publishedWorksheetLoading } =
+    api.publishedWorksheet.getAll.useQuery();
 
-//   const createQuestion = api.openEndedQuestion.create.useMutation({});
-//   const deleteQuestion = api.question.delete.useMutation({});
-//   const createAnswer = api.openEndedQuestionAnswer.create.useMutation({});
-//   const deleteAnswer = api.openEndedQuestionAnswer.deleteAnswer.useMutation({});
+  const editCourse = api.worksheet.editCourse.useMutation({});
+  const editPublishedCourse = api.publishedWorksheet.editCourse.useMutation({});
 
-//   const migrateLongAnswerQuestions = async () => {
-//     const questions = longAnswerQuestions ?? [];
+  const migrateLongAnswerQuestions = async () => {
+    const worksheets = worksheet ?? [];
 
-//     for (const question of questions) {
-//       console.log(question);
-//       await createQuestion.mutateAsync({
-//         order: question.order,
-//         worksheetId: question.worksheetId ?? "",
-//         publishedWorksheetId: question.publishedWorksheetId ?? "",
-//         parentId: question.parentId ?? "",
-//         text: question.longAnswerQuestion?.text ?? "",
-//         explanation: question.longAnswerQuestion?.explanation ?? "",
-//         marks: question.longAnswerQuestion?.marks,
-//         markingScheme: question.longAnswerQuestion?.markingScheme as string[],
-//       });
-//       await deleteQuestion.mutateAsync({ id: question.id });
-//     }
-//   };
+    for (const worksheet of worksheets) {
+      console.log(worksheet);
+      await editCourse.mutateAsync({
+        id: worksheet.id,
+        country: "default",
+        curriculum: "default",
+        subject: "default",
+      });
+    }
+  };
 
-//   const migrateLongAnswerQuestionAnswers = async () => {
-//     const answers = longAnswerQuestionAnswers ?? [];
-//     for (const answer of answers) {
-//       await createAnswer.mutateAsync({
-//         order: answer.order,
-//         answerSheetId: answer.answerSheetId,
-//         studentAnswer: answer.longAnswerQuestionAnswer?.studentAnswer ?? "",
-//         feedback: answer.longAnswerQuestionAnswer?.feedback,
-//       });
+  const migrateLongAnswerQuestionAnswers = async () => {
+    const publishedWorksheets = publishedWorksheet ?? [];
+    for (const publishedWorksheet of publishedWorksheets) {
+      console.log(publishedWorksheet.id);
+      await editPublishedCourse.mutateAsync({
+        id: publishedWorksheet.id,
+        country: "default",
+        curriculum: "default",
+        subject: "default",
+      });
+    }
+  };
 
-//       await deleteAnswer.mutateAsync({ id: answer.id });
-//     }
-//   };
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-4">
+      <Button
+        disabled={worksheetLoading}
+        onClick={() => void migrateLongAnswerQuestions()}
+      >
+        Migrate Worksheet
+      </Button>
+      <Button
+        disabled={publishedWorksheetLoading}
+        onClick={() => void migrateLongAnswerQuestionAnswers()}
+      >
+        Migrate Published Worksheet
+      </Button>
+    </div>
+  );
+};
 
-//   return (
-//     <div className="flex h-full flex-col items-center justify-center gap-4">
-//       <Button
-//         disabled={questionLoading}
-//         onClick={() => void migrateLongAnswerQuestions()}
-//       >
-//         Migrate Long Answer Questions
-//       </Button>
-//       <Button
-//         disabled={answerLoading}
-//         onClick={() => void migrateLongAnswerQuestionAnswers()}
-//       >
-//         Migrate Long Answer Question Answers
-//       </Button>
-//     </div>
-//   );
-// };
-
-// export default MigratePage;
+export default MigratePage;

@@ -3,6 +3,10 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 
 export const worksheetRouter = createTRPCRouter({
+  getAll: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.worksheet.findMany();
+  }),
+
   get: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
@@ -202,6 +206,28 @@ export const worksheetRouter = createTRPCRouter({
         },
         data: {
           title: input.title,
+        },
+      });
+    }),
+
+  editCourse: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        country: z.string(),
+        curriculum: z.string(),
+        subject: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.worksheet.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          country: input.country,
+          curriculum: input.curriculum,
+          subject: input.subject,
         },
       });
     }),

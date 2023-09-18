@@ -11,6 +11,10 @@ import {
 } from "@/server/api/schema";
 
 export const publishedWorksheetRouter = createTRPCRouter({
+  getAll: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.publishedWorksheet.findMany();
+  }),
+
   get: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
@@ -289,6 +293,28 @@ export const publishedWorksheetRouter = createTRPCRouter({
           questions: {
             create: input.questions,
           },
+        },
+      });
+    }),
+
+  editCourse: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        country: z.string(),
+        curriculum: z.string(),
+        subject: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.publishedWorksheet.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          country: input.country,
+          curriculum: input.curriculum,
+          subject: input.subject,
         },
       });
     }),
