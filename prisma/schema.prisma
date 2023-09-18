@@ -77,7 +77,10 @@ model Image {
 
 model Worksheet {
     id             String           @id @default(cuid())
-    title          String           @db.TinyText
+    title          String           @db.TinyText    
+    country        String?          @db.TinyText    
+    curriculum     String?          @db.TinyText    
+    subject        String?          @db.TinyText    
     lastEdited     DateTime         @updatedAt
     questions                       Question[]
     publishedWorksheets             PublishedWorksheet[]
@@ -90,6 +93,9 @@ model Worksheet {
 model PublishedWorksheet {
     id             String               @id @default(cuid())
     title          String               @db.TinyText
+    country        String?              @db.TinyText    
+    curriculum     String?              @db.TinyText   
+    subject        String?              @db.TinyText    
     status         WorksheetStatus      @default(PRIVATE)
     version        Int          
     createdTime    DateTime             @default(now())

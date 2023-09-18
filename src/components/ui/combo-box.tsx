@@ -18,32 +18,20 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
+interface Data {
+  value: string;
+  label: string;
+  [key: string]: any;
+}
+interface Props {
+  data: Data[];
+  name: string;
+  value: string;
+  setValue: (val: string) => void;
+}
 
-export function ComboboxDemo() {
+export const Combobox: React.FC<Props> = (props) => {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -54,32 +42,34 @@ export function ComboboxDemo() {
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {value
-            ? frameworks.find((framework) => framework.value === value)?.label
-            : "Select framework..."}
+          {props.value
+            ? props.data.find((datum) => datum.value === props.value)?.label
+            : `Select ${props.name}...`}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." />
-          <CommandEmpty>No framework found.</CommandEmpty>
+          <CommandInput placeholder={`Search ${props.name}...`} />
+          <CommandEmpty>No {props.name} found.</CommandEmpty>
           <CommandGroup>
-            {frameworks.map((framework) => (
+            {props.data.map((datum) => (
               <CommandItem
-                key={framework.value}
+                key={datum.value}
                 onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue);
+                  props.setValue(
+                    currentValue === props.value ? "" : currentValue
+                  );
                   setOpen(false);
                 }}
               >
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    value === framework.value ? "opacity-100" : "opacity-0"
+                    props.value === datum.value ? "opacity-100" : "opacity-0"
                   )}
                 />
-                {framework.label}
+                {datum.label}
               </CommandItem>
             ))}
           </CommandGroup>
@@ -87,4 +77,4 @@ export function ComboboxDemo() {
       </PopoverContent>
     </Popover>
   );
-}
+};

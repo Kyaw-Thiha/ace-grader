@@ -167,11 +167,22 @@ export const worksheetRouter = createTRPCRouter({
     }),
 
   create: protectedProcedure
-    .input(z.object({ title: z.string(), profileId: z.string() }))
+    .input(
+      z.object({
+        title: z.string(),
+        country: z.string(),
+        curriculum: z.string(),
+        subject: z.string(),
+        profileId: z.string(),
+      })
+    )
     .mutation(({ ctx, input }) => {
       return ctx.prisma.worksheet.create({
         data: {
           title: input.title,
+          country: input.country,
+          curriculum: input.curriculum,
+          subject: input.subject,
           profileId: input.profileId,
         },
       });

@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Combobox } from "@/components/ui/combo-box";
 
 import { type RouterOutputs, api } from "@/utils/api";
 import type { QueryObserverBaseResult } from "@tanstack/react-query";
@@ -17,6 +18,7 @@ import { Trash2 } from "lucide-react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { countries } from "@/questions/derived/countries";
 
 type Profile = RouterOutputs["teacherProfile"]["getWorksheets"];
 
@@ -29,8 +31,27 @@ export const AddWorksheetButton: React.FC<AddWorksheetButtonProps> = ({
   refetch,
 }) => {
   const router = useRouter();
-  const [title, setTitle] = useState("");
   const [open, setOpen] = useState(false);
+
+  const [title, setTitle] = useState("");
+  const [country, setCountry] = useState("default");
+  const [curriculum, setCurriculum] = useState("default");
+  const [subject, setSubject] = useState("default");
+
+  const editCountry = (country: string) => {
+    setCountry(country);
+    setCurriculum("default");
+    setSubject("default");
+  };
+
+  const editCurriculum = (curriculum: string) => {
+    setCurriculum(curriculum);
+    setSubject("default");
+  };
+
+  const editSubject = (subject: string) => {
+    setSubject(subject);
+  };
 
   //Function for creating worksheet
   const createWorksheet = api.worksheet.create.useMutation({
@@ -49,12 +70,24 @@ export const AddWorksheetButton: React.FC<AddWorksheetButtonProps> = ({
     } else if (title.length > 250) {
       // If title is above character limit
       toast.error("Your title cannot have more than 250 characters");
+    } else if (country == "") {
+      // If country is not chosen
+      toast.error("Ensure you have chosen the country.");
+    } else if (curriculum == "") {
+      // If curriculum is not chosen
+      toast.error("Ensure you have chosen the curriculum.");
+    } else if (subject == "") {
+      // If subject is not chosen
+      toast.error("Ensure you have chosen the subject.");
     } else {
       setOpen(false);
 
       const createdWorksheet = await toast.promise(
         createWorksheet.mutateAsync({
           title: title,
+          country: country,
+          curriculum: curriculum,
+          subject: subject,
           profileId: profile?.id ?? "",
         }),
         {
@@ -78,10 +111,12 @@ export const AddWorksheetButton: React.FC<AddWorksheetButtonProps> = ({
         <DialogHeader>
           <DialogTitle>Create Worksheet</DialogTitle>
           <DialogDescription>
-            Make changes to your worksheet here. Click save when youre done.
+            Enter the details of your worksheet here. Click save when you are
+            done.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+
+        <div className="grid gap-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="title" className="text-right">
               Title
@@ -94,6 +129,53 @@ export const AddWorksheetButton: React.FC<AddWorksheetButtonProps> = ({
             />
           </div>
         </div>
+        <div className="grid gap-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="title" className="text-right">
+              Country
+            </Label>
+            <Combobox
+              data={countries}
+              name="Country"
+              value={country}
+              setValue={editCountry}
+            />
+          </div>
+        </div>
+        <div className="grid gap-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="title" className="text-right">
+              Curriculum
+            </Label>
+            <Combobox
+              data={
+                countries.find((e) => e.value == country)?.curriculums ?? []
+              }
+              name="Curriculum"
+              value={curriculum}
+              setValue={editCurriculum}
+            />
+          </div>
+        </div>
+
+        <div className="grid gap-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="title" className="text-right">
+              Subject
+            </Label>
+            <Combobox
+              data={
+                (
+                  countries.find((e) => e.value == country)?.curriculums ?? []
+                ).find((e) => e.value == curriculum)?.subjects ?? []
+              }
+              name="Subject"
+              value={subject}
+              setValue={editSubject}
+            />
+          </div>
+        </div>
+
         <DialogFooter>
           <Button type="submit" onClick={() => void addWorksheet()}>
             Create Worksheet

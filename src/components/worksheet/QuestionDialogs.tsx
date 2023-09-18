@@ -374,6 +374,9 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
     await toast.promise(
       createWorksheet.mutateAsync({
         title: worksheet?.title ?? "",
+        country: worksheet?.country ?? "default",
+        curriculum: worksheet?.curriculum ?? "default",
+        subject: worksheet?.subject ?? "default",
         totalMarks: calculateTotalMarks(questions),
         version: version,
         profileId: worksheet?.profileId ?? "",

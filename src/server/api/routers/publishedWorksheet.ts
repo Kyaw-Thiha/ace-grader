@@ -229,6 +229,9 @@ export const publishedWorksheetRouter = createTRPCRouter({
     .input(
       z.object({
         title: z.string(),
+        country: z.string(),
+        curriculum: z.string(),
+        subject: z.string(),
         totalMarks: z.number(),
         version: z.number(),
         profileId: z.string(),
@@ -275,6 +278,9 @@ export const publishedWorksheetRouter = createTRPCRouter({
       return ctx.prisma.publishedWorksheet.create({
         data: {
           title: input.title,
+          country: input.country,
+          curriculum: input.curriculum,
+          subject: input.subject,
           status: "PRIVATE",
           totalMarks: input.totalMarks,
           version: input.version,
