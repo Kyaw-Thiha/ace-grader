@@ -8,7 +8,7 @@ export const countries = [
       {
         label: "Default",
         value: "default",
-        subjects: [{ label: "Default", value: "default" }],
+        subjects: [{ label: "Default", value: "default", questions: [] }],
       },
     ],
   },

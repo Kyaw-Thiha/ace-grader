@@ -1,44 +1,35 @@
+import { BaseQuestion } from "@/questions/base/baseQuestion";
+
+interface BaseEssayProperty {
+  name: string;
+  description: string;
+}
 interface BaseEssayCriteria {
   name: string;
+  description: string;
   marks: number;
+  metadata?: string[];
 }
 
-interface Question {
-  promptText: string;
-  criteria: BaseEssayCriteria[];
-  properties: string[];
-  checkAnswer: (data: string) => number;
-}
-
-export class BaseEssayQuestion {
-  public name: string;
-  public label: string;
-  public curriculum: string;
-  public question: Question;
+export class BaseEssayQuestion extends BaseQuestion {
+  public criteria: BaseEssayCriteria[];
+  public properties: BaseEssayProperty[];
+  public checkAnswer: (data: string) => number;
 
   constructor(
     name: string,
-    label: string,
-    curriculum: string,
-    question: Question
+    value: string,
+    criteria: BaseEssayCriteria[],
+    properties: BaseEssayProperty[],
+    checkAnswer: (data: string) => number
   ) {
-    this.name = name;
-    this.label = label;
-    this.curriculum = curriculum;
-    this.question = question;
-  }
-}
-
-export class BaseEssayQuestionManager {
-  public questions: BaseEssayQuestion[];
-
-  constructor(questions: BaseEssayQuestion[]) {
-    this.questions = questions;
+    super(name, value);
+    this.criteria = criteria;
+    this.properties = properties;
+    this.checkAnswer = checkAnswer;
   }
 
-  public getByCurriculum(curriculum: string) {
-    return this.questions.filter((obj) => {
-      return obj.curriculum === curriculum;
-    });
+  public getCriteriaNames() {
+    return this.criteria.map((criterion) => criterion.name);
   }
 }

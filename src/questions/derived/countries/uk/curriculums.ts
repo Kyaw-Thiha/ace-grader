@@ -1,13 +1,13 @@
-import { igcseSubjects } from "./curriculums/igcse/subjects";
+import { igcseCIESubjects } from "./curriculums/igcse-cie/subjects";
 export const ukCurriculums = [
   {
     label: "Default",
     value: "default",
-    subjects: [{ label: "Default", value: "default" }],
+    subjects: [{ label: "Default", value: "default", questions: [] }],
   },
   {
-    label: "IGCSE",
-    value: "igcse",
-    subjects: igcseSubjects,
+    label: "IGCSE CIE",
+    value: "igcse-cie",
+    subjects: igcseCIESubjects,
   },
 ];

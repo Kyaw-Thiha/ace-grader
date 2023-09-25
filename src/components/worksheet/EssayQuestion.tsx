@@ -241,6 +241,7 @@ const Criteria: React.FC<CriteriaProps> = (props) => {
       editCriteria.mutate({
         id: props.criteriaId,
         name: props.name as EssayCriteriaName,
+        description: props.description,
         marks: parseInt(newMarks),
       });
     }

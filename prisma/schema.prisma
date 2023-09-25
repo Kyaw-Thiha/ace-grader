@@ -270,9 +270,11 @@ model EssayQuestion {
     @@index([questionId])
 }
 model EssayQuestionCriteria {
-    id                    String    @id @default(cuid())
-    name                  String    @db.TinyText
-    marks                 Int       @default(0)
+    id                    String        @id @default(cuid())
+    name                  String        @db.TinyText
+    description           String?       @db.Text
+    marks                 Int           @default(0)
+    metadata              Json?                  
     essayQuestionId       String          
     essayQuestion         EssayQuestion    @relation(fields: [essayQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
