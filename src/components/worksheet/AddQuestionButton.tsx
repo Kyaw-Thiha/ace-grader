@@ -155,6 +155,7 @@ const AddQuestionButton: React.FC<Props> = (props) => {
         worksheetId: props.worksheetId,
         parentId: props.parentQuestionId,
         text: "",
+        essayType: "",
         criteria: [],
       }),
       {
