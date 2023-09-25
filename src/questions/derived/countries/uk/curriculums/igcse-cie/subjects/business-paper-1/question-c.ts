@@ -1,4 +1,7 @@
-import { BaseEssayQuestion } from "@/questions/base/essayQuestion";
+import {
+  BaseEssayQuestion,
+  type EssayAnswer,
+} from "@/questions/base/essayQuestion";
 
 export const questionC = new BaseEssayQuestion(
   "Question C",
@@ -11,7 +14,7 @@ export const questionC = new BaseEssayQuestion(
     },
   ],
   [],
-  (data: string) => {
-    return 10;
+  async (answer: EssayAnswer, data: string) => {
+    return Promise.resolve(Math.random());
   }
 );

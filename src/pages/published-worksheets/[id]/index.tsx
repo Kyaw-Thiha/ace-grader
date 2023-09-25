@@ -243,6 +243,9 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
             },
           ],
         },
+        properties: {
+          create: [],
+        },
       },
     };
 

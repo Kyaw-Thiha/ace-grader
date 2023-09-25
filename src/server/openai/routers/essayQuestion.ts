@@ -1,3 +1,4 @@
+import { getQuestionType } from "@/questions/derived/functions";
 import openai from "../openai";
 import type { RouterOutputs } from "@/utils/api";
 
@@ -5,6 +6,97 @@ type EssayQuestion = RouterOutputs["essayQuestion"]["get"];
 type EssayAnswer = RouterOutputs["essayAnswer"]["get"];
 
 const generateMarksAndFeedback = (
+  question: EssayQuestion,
+  answer: EssayAnswer
+) => {
+  const getMarks = (name: string) => {
+    return question?.criteria.find((x) => x.name == name)?.marks ?? 0;
+  };
+  const essayType = getQuestionType(question?.essayType ?? "");
+
+  const criteriaTexts = [];
+  const criteria = essayType?.getCriteria() ?? [];
+  for (const criterion of criteria) {
+    if (getMarks(criterion.name) != 0) {
+      criteriaTexts.push(`
+        ${criterion.name} (${getMarks(criterion.name)} marks):
+        ${criterion.description}
+      `);
+    }
+  }
+
+  const propertyTexts = [];
+  const properties = essayType?.properties ?? [];
+  for (const property of properties) {
+    propertyTexts.push(`
+      ${property.name}:
+      [${property.description}]
+    `);
+  }
+
+  const systemPrompt = `
+  You are AceGrader, an advanced AI-powered tool designed to automate the grading process for teachers.
+
+  Question:
+  ${question?.text ?? ""}
+
+  Essay Grading Rubric:
+
+  ${criteriaTexts.join(`
+  
+  `)}
+
+  Total Score: [Total Score Here]
+
+  Evaluation and Suggestion:
+  [Provide specific evaluation and improvement suggestion on each criterion, highlighting strengths and areas for improvement.]
+
+  ${propertyTexts.join(`
+  
+  `)}
+
+  Please complete the grading process by assigning scores to each criterion and providing constructive comments to help the student improve their writing skills.
+  The response should be in the following format - 
+  {
+      "${criteriaTexts[0] ?? ""}": {
+          marks: (number),
+          evaluation: (string),
+          suggestion: (string)
+      }, ...
+      "${criteriaTexts[criteriaTexts.length - 1] ?? ""}": {
+        marks: (number),
+        evaluation: (string),
+        suggestion: (string)
+      },
+      "${propertyTexts[0] ?? ""}": (string),
+      ${
+        propertyTexts.length <= 1
+          ? ""
+          : `
+        ...
+        "${propertyTexts[propertyTexts.length - 1] ?? ""}": (string),
+      `
+      }
+  }
+  `;
+
+  const userPrompt = answer?.studentAnswer;
+
+  return openai.createChatCompletion({
+    model: "gpt-3.5-turbo-16k",
+    messages: [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userPrompt },
+    ],
+    temperature: 0,
+    max_tokens: 2048,
+    top_p: 1,
+    frequency_penalty: 0,
+    presence_penalty: 0,
+  });
+};
+
+const generateMarksAndFeedbackLegacy = (
   question: EssayQuestion,
   answer: EssayAnswer
 ) => {
@@ -203,4 +295,5 @@ const generateMarksAndFeedback = (
 
 export const essayQuestion = {
   generateMarksAndFeedback,
+  generateMarksAndFeedbackLegacy,
 };

@@ -16,6 +16,7 @@ export const essayAnswerRouter = createTRPCRouter({
         },
         include: {
           criteria: true,
+          properties: true,
         },
       });
     }),
@@ -25,6 +26,19 @@ export const essayAnswerRouter = createTRPCRouter({
       z.object({
         order: z.number(),
         answerSheetId: z.string(),
+        criteria: z.array(
+          z.object({
+            name: z.string(),
+            evaluation: z.string(),
+            suggestion: z.string(),
+          })
+        ),
+        properties: z.array(
+          z.object({
+            name: z.string(),
+            text: z.string(),
+          })
+        ),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -38,78 +52,10 @@ export const essayAnswerRouter = createTRPCRouter({
               studentAnswer: "",
               overallImpression: "",
               criteria: {
-                create: [
-                  {
-                    name: "Grammar",
-                    evaluation: "",
-                    suggestion: "",
-                  },
-                  {
-                    name: "Focus",
-                    evaluation: "",
-                    suggestion: "",
-                  },
-                  {
-                    name: "Exposition",
-                    evaluation: "",
-                    suggestion: "",
-                  },
-                  {
-                    name: "Organization",
-                    evaluation: "",
-                    suggestion: "",
-                  },
-                  {
-                    name: "Sentence Structure",
-                    evaluation: "",
-                    suggestion: "",
-                  },
-                  {
-                    name: "Plot",
-                    evaluation: "",
-                    suggestion: "",
-                  },
-                  {
-                    name: "Narrative Techniques",
-                    evaluation: "",
-                    suggestion: "",
-                  },
-                  {
-                    name: "Descriptive Techniques",
-                    evaluation: "",
-                    suggestion: "",
-                  },
-                  {
-                    name: "Literary Devices",
-                    evaluation: "",
-                    suggestion: "",
-                  },
-                  {
-                    name: "Language and Vocabulary",
-                    evaluation: "",
-                    suggestion: "",
-                  },
-                  {
-                    name: "Content",
-                    evaluation: "",
-                    suggestion: "",
-                  },
-                  {
-                    name: "Persuasion",
-                    evaluation: "",
-                    suggestion: "",
-                  },
-                  {
-                    name: "Purpose",
-                    evaluation: "",
-                    suggestion: "",
-                  },
-                  {
-                    name: "Register",
-                    evaluation: "",
-                    suggestion: "",
-                  },
-                ],
+                create: input.criteria,
+              },
+              properties: {
+                create: input.properties,
               },
             },
           },

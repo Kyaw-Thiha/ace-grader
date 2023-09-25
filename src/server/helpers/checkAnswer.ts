@@ -6,6 +6,7 @@ import { Resend } from "resend";
 import { CheckingFinishedEmailTemplate } from "@/components/emails/CheckingFinished";
 import { backOff } from "exponential-backoff";
 import { prisma } from "@/server/db";
+import { getQuestionType } from "@/questions/derived/functions";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 type MultipleChoiceQuestionAnswer =
@@ -48,29 +49,6 @@ interface Answer {
 interface MarksAndFeedback {
   marks: number;
   feedback: string;
-}
-
-export interface EssayQuestionCriteria {
-  marks: number;
-  evaluation: string;
-  suggestion: string;
-}
-export interface EssayResponse {
-  Grammar?: EssayQuestionCriteria;
-  Focus?: EssayQuestionCriteria;
-  Exposition?: EssayQuestionCriteria;
-  Organization?: EssayQuestionCriteria;
-  "Sentence Structure"?: EssayQuestionCriteria;
-  Plot?: EssayQuestionCriteria;
-  "Narrative Techniques"?: EssayQuestionCriteria;
-  "Descriptive Techniques"?: EssayQuestionCriteria;
-  "Literary Devices"?: EssayQuestionCriteria;
-  "Language and Vocabulary"?: EssayQuestionCriteria;
-  Content?: EssayQuestionCriteria;
-  Persuasion?: EssayQuestionCriteria;
-  Purpose?: EssayQuestionCriteria;
-  Register?: EssayQuestionCriteria;
-  "Overall Impression"?: string;
 }
 
 export const checkAnswerRenamed = async (
@@ -215,27 +193,13 @@ const handleMarking = async (
         openaiAPI.essayQuestion.generateMarksAndFeedback(essayQuestion, answer)
       );
       const data = res.data.choices[0]?.message?.content ?? "";
-      const answerResponse = JSON.parse(data) as EssayResponse;
 
-      const marks =
-        (answerResponse.Grammar?.marks ?? 0) +
-        (answerResponse.Focus?.marks ?? 0) +
-        (answerResponse.Exposition?.marks ?? 0) +
-        (answerResponse.Organization?.marks ?? 0) +
-        (answerResponse["Sentence Structure"]?.marks ?? 0) +
-        (answerResponse.Plot?.marks ?? 0) +
-        (answerResponse["Narrative Techniques"]?.marks ?? 0) +
-        (answerResponse["Descriptive Techniques"]?.marks ?? 0) +
-        (answerResponse["Literary Devices"]?.marks ?? 0) +
-        (answerResponse["Language and Vocabulary"]?.marks ?? 0) +
-        (answerResponse.Content?.marks ?? 0) +
-        (answerResponse.Persuasion?.marks ?? 0) +
-        (answerResponse.Purpose?.marks ?? 0) +
-        (answerResponse.Register?.marks ?? 0);
-      await updateEssayAnswer(answer, answerResponse, marks);
+      const marks = await getQuestionType(
+        essayQuestion?.essayType ?? ""
+      )?.checkAnswer(answer, data);
 
       // Adding up to the total marks
-      totalMarks = totalMarks + marks;
+      totalMarks = totalMarks + (marks ?? 0);
 
       console.timeEnd("Checking Essay");
     } else if (question.questionType == "NestedQuestion") {
@@ -297,43 +261,6 @@ const checkMCQ = async (
 
     return false;
   }
-};
-
-const updateEssayAnswer = async (
-  essayAnswer: EssayAnswer,
-  response: EssayResponse,
-  marks: number
-) => {
-  const editCriteria = async (id: string, criteria: EssayQuestionCriteria) => {
-    await prisma.essayAnswerCriteria.update({
-      where: {
-        id: id,
-      },
-      data: {
-        marks: criteria.marks,
-        evaluation: criteria.evaluation,
-        suggestion: criteria.suggestion,
-      },
-    });
-  };
-
-  const criteria = essayAnswer?.criteria ?? [];
-  for (const criterion of criteria) {
-    await editCriteria(
-      criterion.id,
-      response[criterion.name as keyof EssayResponse] as EssayQuestionCriteria
-    );
-  }
-
-  await prisma.essayAnswer.update({
-    where: {
-      id: essayAnswer?.id,
-    },
-    data: {
-      marks: marks,
-      overallImpression: response["Overall Impression"],
-    },
-  });
 };
 
 // Fetching the worksheet from the server
@@ -436,6 +363,7 @@ const fetchAnswerSheet = (answerSheetId: string) => {
           essayAnswer: {
             include: {
               criteria: true,
+              properties: true,
             },
           },
           nestedQuestionAnswer: {
@@ -448,6 +376,7 @@ const fetchAnswerSheet = (answerSheetId: string) => {
                   essayAnswer: {
                     include: {
                       criteria: true,
+                      properties: true,
                     },
                   },
                   nestedQuestionAnswer: {
@@ -460,6 +389,7 @@ const fetchAnswerSheet = (answerSheetId: string) => {
                           essayAnswer: {
                             include: {
                               criteria: true,
+                              properties: true,
                             },
                           },
                         },

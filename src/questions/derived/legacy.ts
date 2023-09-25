@@ -1,4 +1,7 @@
+import type { RouterOutputs } from "@/utils/api";
 import { BaseEssayQuestion } from "../base/essayQuestion";
+
+type EssayAnswer = RouterOutputs["essayAnswer"]["get"];
 
 export const legacy = {
   label: "Legacy",
@@ -108,8 +111,8 @@ export const legacy = {
                     "[Share an overall impression of the essay, discussing its strengths and suggesting ways it could be further enhanced.]",
                 },
               ],
-              (data: string) => {
-                return 10;
+              async (answer: EssayAnswer, data: string) => {
+                return Promise.resolve(Math.random());
               }
             ),
           ],

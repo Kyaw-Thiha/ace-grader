@@ -3,7 +3,7 @@ import { countries } from "@/questions/derived/countries";
 /**
  * The parameter questionType will be in the format of country_curriculum_subject_question
  *
- * Eg: uk-igcse-business-paper1d
+ * Eg: uk_igcse-cie_business-paper-1_question-d
  *
  * @param questionType
  * @returns

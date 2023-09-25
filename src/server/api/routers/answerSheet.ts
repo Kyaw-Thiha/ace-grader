@@ -91,6 +91,7 @@ export const answerSheetRouter = createTRPCRouter({
               essayAnswer: {
                 include: {
                   criteria: true,
+                  properties: true,
                 },
               },
               // 2nd level
@@ -103,6 +104,7 @@ export const answerSheetRouter = createTRPCRouter({
                       essayAnswer: {
                         include: {
                           criteria: true,
+                          properties: true,
                         },
                       },
                       // 3rd level
@@ -115,6 +117,7 @@ export const answerSheetRouter = createTRPCRouter({
                               essayAnswer: {
                                 include: {
                                   criteria: true,
+                                  properties: true,
                                 },
                               },
                             },

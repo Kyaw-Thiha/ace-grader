@@ -1,4 +1,7 @@
 import { BaseQuestion } from "@/questions/base/baseQuestion";
+import type { RouterOutputs } from "@/utils/api";
+
+export type EssayAnswer = RouterOutputs["essayAnswer"]["get"];
 
 interface BaseEssayProperty {
   name: string;
@@ -14,14 +17,14 @@ interface BaseEssayCriteria {
 export class BaseEssayQuestion extends BaseQuestion {
   public criteria: BaseEssayCriteria[];
   public properties: BaseEssayProperty[];
-  public checkAnswer: (data: string) => number;
+  public checkAnswer: (answer: EssayAnswer, data: string) => Promise<number>;
 
   constructor(
     name: string,
     value: string,
     criteria: BaseEssayCriteria[],
     properties: BaseEssayProperty[],
-    checkAnswer: (data: string) => number
+    checkAnswer: (answer: EssayAnswer, data: string) => Promise<number>
   ) {
     super(name, value);
     this.criteria = criteria;
@@ -29,7 +32,21 @@ export class BaseEssayQuestion extends BaseQuestion {
     this.checkAnswer = checkAnswer;
   }
 
-  public getCriteriaNames() {
-    return this.criteria.map((criterion) => criterion.name);
+  public getCriteria() {
+    return this.criteria.map((criterion) => {
+      return { name: criterion.name, description: criterion.description };
+    });
+  }
+
+  public generateCriteriaAnswers() {
+    return this.criteria.map((criterion) => {
+      return { name: criterion.name, evaluation: "", suggestion: "" };
+    });
+  }
+
+  public generateAnswerProperties() {
+    return this.properties.map((property) => {
+      return { name: property.name, text: "" };
+    });
   }
 }

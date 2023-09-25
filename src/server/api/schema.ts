@@ -171,9 +171,17 @@ export const answerSchemaProperties = {
         criteria: z.object({
           create: z.array(
             z.object({
-              name: essayCriteriaName,
+              name: z.string(),
               evaluation: z.string(),
               suggestion: z.string(),
+            })
+          ),
+        }),
+        properties: z.object({
+          create: z.array(
+            z.object({
+              name: z.string(),
+              text: z.string(),
             })
           ),
         }),

@@ -3,10 +3,10 @@ import { useAutosave } from "react-autosave";
 import { api, type RouterOutputs } from "@/utils/api";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
 import { openaiAPI } from "@/server/openai/api";
-import type {
-  EssayQuestionCriteria,
-  EssayResponse,
-} from "@/server/helpers/checkAnswer";
+// import type {
+//   EssayQuestionCriteria,
+//   EssayResponse,
+// } from "@/server/helpers/checkAnswer";
 
 import { Input } from "@/components/ui/input";
 import { AutosizeInput } from "@/components/ui/resize-input";
@@ -34,7 +34,7 @@ const EssayQuestion: React.FC<Props> = (props) => {
       />
       <Marks question={props.question} refetch={props.refetch} />
       <CriteriaGroup question={props.question} refetch={props.refetch} />
-      <AnswerTester question={props.question} refetch={props.refetch} />
+      {/* <AnswerTester question={props.question} refetch={props.refetch} /> */}
     </div>
   );
 };
@@ -279,129 +279,130 @@ const Criteria: React.FC<CriteriaProps> = (props) => {
   );
 };
 
-interface EssayQuestionCriteriaExtended extends EssayQuestionCriteria {
-  name: string;
-}
-const AnswerTester: React.FC<Props> = (props) => {
-  const [loading, setLoading] = useState(false);
-  const [answer, setAnswer] = useState({
-    id: "",
-    answerId: "",
-    studentAnswer: "",
-    feedback: "",
-    marks: 0,
-    overallImpression: "",
-    criteria: [],
-  });
-  const [marks, setMarks] = useState(0);
-  const [overallImpression, setOverallImpression] = useState("");
-  const [criteria, setCriteria] = useState<EssayQuestionCriteriaExtended[]>([]);
+// interface EssayQuestionCriteriaExtended extends EssayQuestionCriteria {
+//   name: string;
+// }
+// const AnswerTester: React.FC<Props> = (props) => {
+//   const [loading, setLoading] = useState(false);
+//   const [answer, setAnswer] = useState({
+//     id: "",
+//     answerId: "",
+//     studentAnswer: "",
+//     feedback: "",
+//     marks: 0,
+//     overallImpression: "",
+//     criteria: [],
+//     properties: [],
+//   });
+//   const [marks, setMarks] = useState(0);
+//   const [overallImpression, setOverallImpression] = useState("");
+//   const [criteria, setCriteria] = useState<EssayQuestionCriteriaExtended[]>([]);
 
-  const checkAnswer = async () => {
-    setLoading(true);
+//   const checkAnswer = async () => {
+//     setLoading(true);
 
-    const res = await openaiAPI.essayQuestion.generateMarksAndFeedback(
-      props.question,
-      answer
-    );
+//     const res = await openaiAPI.essayQuestion.generateMarksAndFeedback(
+//       props.question,
+//       answer
+//     );
 
-    const data = res.data.choices[0]?.message?.content ?? "";
-    const answerResponse = JSON.parse(data) as EssayResponse;
+//     const data = res.data.choices[0]?.message?.content ?? "";
+//     const answerResponse = JSON.parse(data) as EssayResponse;
 
-    setCriteria([]); // Emptying back the criteria from pervious responses
+//     setCriteria([]); // Emptying back the criteria from pervious responses
 
-    const tempCriteria = [];
-    for (const key of Object.keys(answerResponse)) {
-      const criterion = answerResponse[key as keyof EssayResponse];
+//     const tempCriteria = [];
+//     for (const key of Object.keys(answerResponse)) {
+//       const criterion = answerResponse[key as keyof EssayResponse];
 
-      if (key != "Overall Impression" && typeof criterion != "string") {
-        tempCriteria.push({
-          name: key,
-          marks: criterion?.marks ?? 0,
-          evaluation: criterion?.evaluation ?? "",
-          suggestion: criterion?.suggestion ?? "",
-        });
-      }
-    }
-    setCriteria([...tempCriteria]);
+//       if (key != "Overall Impression" && typeof criterion != "string") {
+//         tempCriteria.push({
+//           name: key,
+//           marks: criterion?.marks ?? 0,
+//           evaluation: criterion?.evaluation ?? "",
+//           suggestion: criterion?.suggestion ?? "",
+//         });
+//       }
+//     }
+//     setCriteria([...tempCriteria]);
 
-    const marks =
-      (answerResponse.Grammar?.marks ?? 0) +
-      (answerResponse.Focus?.marks ?? 0) +
-      (answerResponse.Exposition?.marks ?? 0) +
-      (answerResponse.Organization?.marks ?? 0) +
-      (answerResponse["Sentence Structure"]?.marks ?? 0) +
-      (answerResponse.Plot?.marks ?? 0) +
-      (answerResponse["Narrative Techniques"]?.marks ?? 0) +
-      (answerResponse["Descriptive Techniques"]?.marks ?? 0) +
-      (answerResponse["Literary Devices"]?.marks ?? 0) +
-      (answerResponse["Language and Vocabulary"]?.marks ?? 0) +
-      (answerResponse.Content?.marks ?? 0) +
-      (answerResponse.Persuasion?.marks ?? 0) +
-      (answerResponse.Purpose?.marks ?? 0) +
-      (answerResponse.Register?.marks ?? 0);
+//     const marks =
+//       (answerResponse.Grammar?.marks ?? 0) +
+//       (answerResponse.Focus?.marks ?? 0) +
+//       (answerResponse.Exposition?.marks ?? 0) +
+//       (answerResponse.Organization?.marks ?? 0) +
+//       (answerResponse["Sentence Structure"]?.marks ?? 0) +
+//       (answerResponse.Plot?.marks ?? 0) +
+//       (answerResponse["Narrative Techniques"]?.marks ?? 0) +
+//       (answerResponse["Descriptive Techniques"]?.marks ?? 0) +
+//       (answerResponse["Literary Devices"]?.marks ?? 0) +
+//       (answerResponse["Language and Vocabulary"]?.marks ?? 0) +
+//       (answerResponse.Content?.marks ?? 0) +
+//       (answerResponse.Persuasion?.marks ?? 0) +
+//       (answerResponse.Purpose?.marks ?? 0) +
+//       (answerResponse.Register?.marks ?? 0);
 
-    setMarks(marks);
-    setOverallImpression(answerResponse["Overall Impression"] ?? "");
-    setLoading(false);
-  };
+//     setMarks(marks);
+//     setOverallImpression(answerResponse["Overall Impression"] ?? "");
+//     setLoading(false);
+//   };
 
-  return (
-    <div className="rounded-md border-2 px-4 py-4">
-      <h2 className="font-medium text-muted-foreground">Testing</h2>
-      <p className="text-muted-foreground">
-        You can test out how different student answers would be graded by the
-        AI.
-      </p>
-      <div className="mt-4 flex items-center gap-4">
-        <AutosizeInput
-          placeholder="Type here"
-          className="transition-all"
-          value={answer?.studentAnswer}
-          onChange={(e) => {
-            setAnswer({
-              id: "",
-              answerId: "",
-              studentAnswer: e.target.value,
-              feedback: "",
-              marks: 0,
-              overallImpression: "",
-              criteria: [],
-            });
-          }}
-          disabled={loading}
-        />
-        <Button
-          className="whitespace-nowrap"
-          onClick={() => void checkAnswer()}
-          disabled={loading}
-        >
-          Check Answer
-        </Button>
-      </div>
+//   return (
+//     <div className="rounded-md border-2 px-4 py-4">
+//       <h2 className="font-medium text-muted-foreground">Testing</h2>
+//       <p className="text-muted-foreground">
+//         You can test out how different student answers would be graded by the
+//         AI.
+//       </p>
+//       <div className="mt-4 flex items-center gap-4">
+//         <AutosizeInput
+//           placeholder="Type here"
+//           className="transition-all"
+//           value={answer?.studentAnswer}
+//           onChange={(e) => {
+//             setAnswer({
+//               id: "",
+//               answerId: "",
+//               studentAnswer: e.target.value,
+//               feedback: "",
+//               marks: 0,
+//               overallImpression: "",
+//               criteria: [],
+//             });
+//           }}
+//           disabled={loading}
+//         />
+//         <Button
+//           className="whitespace-nowrap"
+//           onClick={() => void checkAnswer()}
+//           disabled={loading}
+//         >
+//           Check Answer
+//         </Button>
+//       </div>
 
-      {overallImpression != "" && (
-        <div className="mt-4 flex flex-col gap-4">
-          <p className="text-muted-foreground">Marks: {marks}</p>
+//       {overallImpression != "" && (
+//         <div className="mt-4 flex flex-col gap-4">
+//           <p className="text-muted-foreground">Marks: {marks}</p>
 
-          {criteria.map((criterion, index) => {
-            return (
-              <AnswerCriteria
-                key={index}
-                name={criterion.name}
-                marks={criterion.marks}
-                totalMarks={
-                  props.question?.criteria.find((x) => x.name == criterion.name)
-                    ?.marks ?? 0
-                }
-                evaluation={criterion.evaluation}
-                suggestion={criterion.suggestion}
-              />
-            );
-          })}
-          <p className="text-muted-foreground">{overallImpression}</p>
-        </div>
-      )}
-    </div>
-  );
-};
+//           {criteria.map((criterion, index) => {
+//             return (
+//               <AnswerCriteria
+//                 key={index}
+//                 name={criterion.name}
+//                 marks={criterion.marks}
+//                 totalMarks={
+//                   props.question?.criteria.find((x) => x.name == criterion.name)
+//                     ?.marks ?? 0
+//                 }
+//                 evaluation={criterion.evaluation}
+//                 suggestion={criterion.suggestion}
+//               />
+//             );
+//           })}
+//           <p className="text-muted-foreground">{overallImpression}</p>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };

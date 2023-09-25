@@ -368,6 +368,7 @@ model EssayAnswer {
     // - Narrative Techniques 
     // - Language and Vocabulary 
     criteria              EssayAnswerCriteria[]
+    properties            EssayAnswerProperty[]
     overallImpression     String    @db.Text
     marks                 Int       @default(0)
 
@@ -382,6 +383,16 @@ model EssayAnswerCriteria {
     suggestion            String    @db.Text
     essayAnswerId         String    
     essayAnswer           EssayAnswer    @relation(fields: [essayAnswerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+    @@index([essayAnswerId])
+}
+
+model EssayAnswerProperty {
+    id                    String            @id @default(cuid())
+    name                  String            @db.TinyText
+    text                  String            @db.Text
+    essayAnswerId         String    
+    essayAnswer           EssayAnswer       @relation(fields: [essayAnswerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([essayAnswerId])
 }
