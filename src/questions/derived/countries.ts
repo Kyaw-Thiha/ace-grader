@@ -2,13 +2,13 @@ import { ukCurriculums } from "./countries/uk/curriculums";
 
 export const countries = [
   {
-    label: "Default",
-    value: "default",
+    label: "Custom",
+    value: "custom",
     curriculums: [
       {
-        label: "Default",
-        value: "default",
-        subjects: [{ label: "Default", value: "default", questions: [] }],
+        label: "Custom",
+        value: "custom",
+        subjects: [{ label: "Custom", value: "custom", questions: [] }],
       },
     ],
   },

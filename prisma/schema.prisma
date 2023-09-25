@@ -264,6 +264,7 @@ model EssayQuestion {
     text                String      @db.Text
     images              Image[]
     criteria            EssayQuestionCriteria[]
+    essayType           String?
     questionId          String?     @unique
     question            Question?   @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 

@@ -2,8 +2,8 @@ import { businessPaper1Questions } from "./subjects/business-paper-1/questions";
 
 export const igcseCIESubjects = [
   {
-    label: "Default",
-    value: "default",
+    label: "Custom",
+    value: "custom",
     questions: [],
   },
   {

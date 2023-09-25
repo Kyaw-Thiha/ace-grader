@@ -7,6 +7,15 @@ import {
 } from "@/server/api/trpc";
 
 export const essayQuestionRouter = createTRPCRouter({
+  getAll: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.essayQuestion.findMany({
+      include: {
+        criteria: true,
+        images: true,
+      },
+    });
+  }),
+
   get: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
@@ -33,6 +42,7 @@ export const essayQuestionRouter = createTRPCRouter({
         publishedWorksheetId: z.string().optional(),
         parentId: z.string().optional(),
         text: z.string().optional(),
+        essayType: z.string(),
         criteria: z.array(
           z.object({
             name: z.string(),
@@ -53,6 +63,7 @@ export const essayQuestionRouter = createTRPCRouter({
           essayQuestion: {
             create: {
               text: input.text ?? "",
+              essayType: input.essayType,
               criteria: {
                 // create: [
                 //   {
@@ -187,6 +198,24 @@ export const essayQuestionRouter = createTRPCRouter({
         },
         data: {
           text: input.text,
+        },
+      });
+    }),
+
+  editEssayType: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        essayType: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.essayQuestion.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          essayType: input.essayType,
         },
       });
     }),
