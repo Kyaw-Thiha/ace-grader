@@ -168,7 +168,6 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
     const essayAnswerProperties = {
       create: {
         studentAnswer: "",
-        overallImpression: "",
         criteria: {
           create: [
             {

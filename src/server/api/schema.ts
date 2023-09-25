@@ -167,7 +167,6 @@ export const answerSchemaProperties = {
     .object({
       create: z.object({
         studentAnswer: z.string(),
-        overallImpression: z.string(),
         criteria: z.object({
           create: z.array(
             z.object({

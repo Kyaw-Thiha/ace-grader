@@ -50,7 +50,6 @@ export const essayAnswerRouter = createTRPCRouter({
           essayAnswer: {
             create: {
               studentAnswer: "",
-              overallImpression: "",
               criteria: {
                 create: input.criteria,
               },
@@ -116,24 +115,6 @@ export const essayAnswerRouter = createTRPCRouter({
           marks: input.marks,
           evaluation: input.evaluation,
           suggestion: input.suggestion,
-        },
-      });
-    }),
-
-  editOverallImpression: publicProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        overallImpression: z.string(),
-      })
-    )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.essayAnswer.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          overallImpression: input.overallImpression,
         },
       });
     }),

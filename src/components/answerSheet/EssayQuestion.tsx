@@ -134,12 +134,16 @@ const EssayQuestion: React.FC<Props> = (props) => {
             );
           })}
           <div className="mt-8 flex w-full flex-col rounded-md border p-4">
-            <div className="flex-1 space-y-1">
-              <p className="font-medium leading-none">Overall Impression</p>
-              <p className="mt-4 text-sm text-muted-foreground">
-                {props.answer?.overallImpression}
-              </p>
-            </div>
+            {props.answer?.properties.map((property) => {
+              return (
+                <div className="flex-1 space-y-1" key={property.id}>
+                  <p className="font-medium leading-none">{property.name}</p>
+                  <p className="mt-4 text-sm text-muted-foreground">
+                    {property.text}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </CardFooter>
       )}
