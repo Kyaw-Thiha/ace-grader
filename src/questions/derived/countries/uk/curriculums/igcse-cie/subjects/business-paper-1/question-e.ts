@@ -16,12 +16,14 @@ interface Property {
 
 interface Response {
   Knowledge?: Criteria;
-  Applicaiton?: Criteria;
+  Analysis?: Criteria;
+  Evauation?: Criteria;
+  "Overall Impression"?: string;
 }
 
-export const questionC = new BaseEssayQuestion(
-  "Question-C",
-  "question-c",
+export const questionE = new BaseEssayQuestion(
+  "Question-E",
+  "question-e",
   [
     {
       name: "Knowledge",
@@ -29,20 +31,34 @@ export const questionC = new BaseEssayQuestion(
         "Evaluate the answer's depth of theoretical knowledge and understanding of the relevant business concepts or lessons. Consider the accuracy and completeness of the theoretical framework presented.",
       marks: 2,
     },
+
     {
-      name: "Application",
+      name: "Analysis",
       description:
-        "Assess the paper's ability to apply theoretical knowledge to real-world scenarios, particularly through reference to case studies or practical examples. Evaluate the effectiveness of these applications in illustrating the concepts discussed.",
+        "Evaluate the paper's capacity to analyze and explain the cause-and-effect relationships within the chosen business topic. Consider how well the paper delves into the underlying factors and consequences, providing a thorough analysis of the subject matter.",
+      marks: 2,
+    },
+    {
+      name: "Evaluation",
+      description:
+        "Evaluate the answer's critical assessment of the chosen business topic or issue, focusing on the quality of the chosen answer or solution and how well it is justified. Consider the depth of analysis, the strength of reasoning, and the clarity of the evaluation presented in the answer.",
       marks: 2,
     },
   ],
-  [],
+  [
+    {
+      name: "Overall Impression",
+      description:
+        "Share an overall impression of the answer, discussing its strengths and suggesting ways it could be further enhanced.",
+    },
+  ],
   async (prisma: PrismaClient, answer: EssayAnswer, data: string) => {
     const answerResponse = JSON.parse(data) as Response;
 
     const marks =
       (answerResponse.Knowledge?.marks ?? 0) +
-      (answerResponse.Applicaiton?.marks ?? 0);
+      (answerResponse.Analysis?.marks ?? 0) +
+      (answerResponse.Evauation?.marks ?? 0);
     await updateEssayAnswer(prisma, answer, answerResponse, marks);
 
     return marks;
@@ -86,6 +102,14 @@ const updateEssayAnswer = async (
       criterion.id,
       response[criterion.name as keyof Response] as Criteria
     );
+  }
+
+  const properties = essayAnswer?.properties ?? [];
+  for (const property of properties) {
+    await editProperty(property.id, {
+      name: property.name,
+      text: response[property.name as keyof Response] as string,
+    });
   }
 
   await prisma.essayAnswer.update({

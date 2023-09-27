@@ -17,11 +17,13 @@ interface Property {
 interface Response {
   Knowledge?: Criteria;
   Applicaiton?: Criteria;
+  Analysis?: Criteria;
+  "Overall Impression"?: string;
 }
 
-export const questionC = new BaseEssayQuestion(
-  "Question-C",
-  "question-c",
+export const questionD = new BaseEssayQuestion(
+  "Question-D",
+  "question-d",
   [
     {
       name: "Knowledge",
@@ -35,14 +37,27 @@ export const questionC = new BaseEssayQuestion(
         "Assess the paper's ability to apply theoretical knowledge to real-world scenarios, particularly through reference to case studies or practical examples. Evaluate the effectiveness of these applications in illustrating the concepts discussed.",
       marks: 2,
     },
+    {
+      name: "Analysis",
+      description:
+        "Evaluate the paper's capacity to analyze and explain the cause-and-effect relationships within the chosen business topic. Consider how well the paper delves into the underlying factors and consequences, providing a thorough analysis of the subject matter.",
+      marks: 2,
+    },
   ],
-  [],
+  [
+    {
+      name: "Overall Impression",
+      description:
+        "Share an overall impression of the answer, discussing its strengths and suggesting ways it could be further enhanced.",
+    },
+  ],
   async (prisma: PrismaClient, answer: EssayAnswer, data: string) => {
     const answerResponse = JSON.parse(data) as Response;
 
     const marks =
       (answerResponse.Knowledge?.marks ?? 0) +
-      (answerResponse.Applicaiton?.marks ?? 0);
+      (answerResponse.Applicaiton?.marks ?? 0) +
+      (answerResponse.Analysis?.marks ?? 0);
     await updateEssayAnswer(prisma, answer, answerResponse, marks);
 
     return marks;
@@ -86,6 +101,14 @@ const updateEssayAnswer = async (
       criterion.id,
       response[criterion.name as keyof Response] as Criteria
     );
+  }
+
+  const properties = essayAnswer?.properties ?? [];
+  for (const property of properties) {
+    await editProperty(property.id, {
+      name: property.name,
+      text: response[property.name as keyof Response] as string,
+    });
   }
 
   await prisma.essayAnswer.update({
