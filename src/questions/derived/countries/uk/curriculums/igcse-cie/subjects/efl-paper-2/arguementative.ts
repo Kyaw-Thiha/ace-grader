@@ -2,7 +2,7 @@ import {
   BaseEssayQuestion,
   type EssayAnswer,
 } from "@/questions/base/essayQuestion";
-import { prisma } from "@/server/db";
+import { PrismaClient } from "@prisma/client";
 
 interface Criteria {
   marks: number;
@@ -93,7 +93,7 @@ export const arguementativeEssay = new BaseEssayQuestion(
         "Share an overall impression of the essay, discussing its strengths and suggesting ways it could be further enhanced.",
     },
   ],
-  async (answer: EssayAnswer, data: string) => {
+  async (prisma: PrismaClient, answer: EssayAnswer, data: string) => {
     const answerResponse = JSON.parse(data) as Response;
 
     const marks =
@@ -106,13 +106,14 @@ export const arguementativeEssay = new BaseEssayQuestion(
       (answerResponse.Persuasion?.marks ?? 0) +
       (answerResponse.Purpose?.marks ?? 0) +
       (answerResponse.Register?.marks ?? 0);
-    await updateEssayAnswer(answer, answerResponse, marks);
+    await updateEssayAnswer(prisma, answer, answerResponse, marks);
 
     return marks;
   }
 );
 
 const updateEssayAnswer = async (
+  prisma: PrismaClient,
   essayAnswer: EssayAnswer,
   response: Response,
   marks: number

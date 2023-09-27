@@ -34,19 +34,19 @@ export const AddWorksheetButton: React.FC<AddWorksheetButtonProps> = ({
   const [open, setOpen] = useState(false);
 
   const [title, setTitle] = useState("");
-  const [country, setCountry] = useState("default");
-  const [curriculum, setCurriculum] = useState("default");
-  const [subject, setSubject] = useState("default");
+  const [country, setCountry] = useState("");
+  const [curriculum, setCurriculum] = useState("");
+  const [subject, setSubject] = useState("");
 
   const editCountry = (country: string) => {
     setCountry(country);
-    setCurriculum("default");
-    setSubject("default");
+    setCurriculum("");
+    setSubject("");
   };
 
   const editCurriculum = (curriculum: string) => {
     setCurriculum(curriculum);
-    setSubject("default");
+    setSubject("");
   };
 
   const editSubject = (subject: string) => {
@@ -70,13 +70,13 @@ export const AddWorksheetButton: React.FC<AddWorksheetButtonProps> = ({
     } else if (title.length > 250) {
       // If title is above character limit
       toast.error("Your title cannot have more than 250 characters");
-    } else if (country == "") {
+    } else if (country.trim() == "") {
       // If country is not chosen
       toast.error("Ensure you have chosen the country.");
-    } else if (curriculum == "") {
+    } else if (curriculum.trim() == "") {
       // If curriculum is not chosen
       toast.error("Ensure you have chosen the curriculum.");
-    } else if (subject == "") {
+    } else if (subject.trim() == "") {
       // If subject is not chosen
       toast.error("Ensure you have chosen the subject.");
     } else {

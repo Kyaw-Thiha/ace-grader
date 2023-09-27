@@ -27,3 +27,23 @@ export const getQuestionType = (questionType: string) => {
 
   return question;
 };
+
+/**
+ *
+ * @param country
+ * @param curriculum
+ * @param subject
+ * @returns Question[ ]
+ */
+export const getQuestionTypes = (
+  country: string,
+  curriculum: string,
+  subject: string
+) => {
+  const questions = countries
+    .find((e) => e.value == country)
+    ?.curriculums.find((e) => e.value == curriculum)
+    ?.subjects.find((e) => e.value == subject)?.questions;
+
+  return questions;
+};

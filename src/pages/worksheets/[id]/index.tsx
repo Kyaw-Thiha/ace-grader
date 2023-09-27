@@ -170,6 +170,11 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
           <AddQuestionButton
             worksheetId={worksheetId}
             order={1}
+            worksheetContext={{
+              country: worksheet?.country ?? "",
+              curriculum: worksheet?.curriculum ?? "",
+              subject: worksheet?.subject ?? "",
+            }}
             refetch={refetchWorksheet}
           />
         </div>
@@ -229,6 +234,11 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
                     <NestedQuestion
                       question={question.nestedQuestion}
                       refetch={refetchWorksheet}
+                      worksheetContext={{
+                        country: worksheet?.country ?? "",
+                        curriculum: worksheet?.curriculum ?? "",
+                        subject: worksheet?.subject ?? "",
+                      }}
                       nestedLevel={2}
                     />
                   )}
@@ -241,6 +251,11 @@ const QuestionList: React.FC<QuestionListProps> = ({ worksheetId }) => {
           <AddQuestionButton
             worksheetId={worksheetId}
             order={(questions?.length ?? 0) + 1}
+            worksheetContext={{
+              country: worksheet?.country ?? "",
+              curriculum: worksheet?.curriculum ?? "",
+              subject: worksheet?.subject ?? "",
+            }}
             refetch={refetchWorksheet}
           />
         </div>

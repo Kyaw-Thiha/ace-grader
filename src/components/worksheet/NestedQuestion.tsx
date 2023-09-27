@@ -19,10 +19,17 @@ import { intToAlphabet, intToRoman } from "@/utils/helper";
 
 type NestedQuestion = RouterOutputs["nestedQuestion"]["get"];
 
+interface WorksheetContext {
+  country: string;
+  curriculum: string;
+  subject: string;
+}
+
 interface Props {
   question: NestedQuestion;
-  refetch: QueryObserverBaseResult["refetch"];
   nestedLevel: number;
+  worksheetContext: WorksheetContext;
+  refetch: QueryObserverBaseResult["refetch"];
 }
 
 const NestedQuestion: React.FC<Props> = (props) => {
@@ -99,6 +106,11 @@ const NestedQuestion: React.FC<Props> = (props) => {
                     <NestedQuestion
                       question={question.nestedQuestion}
                       refetch={props.refetch}
+                      worksheetContext={{
+                        country: props.worksheetContext.country ?? "",
+                        curriculum: props.worksheetContext.curriculum ?? "",
+                        subject: props.worksheetContext.subject ?? "",
+                      }}
                       nestedLevel={props.nestedLevel + 1}
                     />
                   )}
@@ -110,8 +122,13 @@ const NestedQuestion: React.FC<Props> = (props) => {
         <div className="flex justify-center">
           <AddQuestionButton
             parentQuestionId={props.question?.id}
-            order={(questions?.length ?? 0) + 1}
             refetch={props.refetch}
+            order={(questions?.length ?? 0) + 1}
+            worksheetContext={{
+              country: props.worksheetContext.country ?? "",
+              curriculum: props.worksheetContext.curriculum ?? "",
+              subject: props.worksheetContext.subject ?? "",
+            }}
             nestedLevel={props.nestedLevel}
           />
         </div>

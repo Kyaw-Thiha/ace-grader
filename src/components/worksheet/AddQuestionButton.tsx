@@ -11,19 +11,27 @@ import { api } from "@/utils/api";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
+import { getQuestionTypes } from "@/questions/derived/functions";
+
+interface WorksheetContext {
+  country: string;
+  curriculum: string;
+  subject: string;
+}
 
 interface Props {
   worksheetId?: string;
   parentQuestionId?: string;
   order: number;
   nestedLevel?: number;
+  worksheetContext: WorksheetContext;
   refetch: QueryObserverBaseResult["refetch"];
 }
 
 const AddQuestionButton: React.FC<Props> = (props) => {
   const MAXNESTEDLEVEL = 3;
 
-  //Function for creating parent question
+  // Function for creating parent question
   const createNestedQuestion = api.nestedQuestion.create.useMutation({
     onSuccess: () => {
       void props.refetch();
@@ -166,7 +174,10 @@ const AddQuestionButton: React.FC<Props> = (props) => {
     );
   };
 
-  const questionTypes = [
+  /**
+   * A function that generates the worksheet list to be used in dropdown
+   * 
+   * const questionTypes = [
     {
       label: "Multiple Choice",
       create: addMultipleChoiceQuestion,
@@ -184,8 +195,31 @@ const AddQuestionButton: React.FC<Props> = (props) => {
       create: addNestedQuestion,
     },
   ];
+   * 
+   * 
+   */
+  const questionTypes = getQuestionTypes(
+    props.worksheetContext.country,
+    props.worksheetContext.curriculum,
+    props.worksheetContext.subject
+  )?.map((questionType) => {
+    let addFunction = () => {
+      return;
+    };
+
+    if (questionType.baseType == "mcq") {
+      addFunction = addMultipleChoiceQuestion;
+    } else if (questionType.baseType == "open-ended") {
+      addFunction = addOpenAddedQuestion;
+    } else if (questionType.baseType == "essay") {
+      addFunction = addEssayQuestion;
+    }
+
+    return { label: questionType.name, create: addFunction };
+  });
+
   if (props.nestedLevel && props.nestedLevel >= MAXNESTEDLEVEL) {
-    questionTypes.pop();
+    questionTypes?.pop();
   }
 
   const getButtonVariant = () => {
@@ -209,7 +243,7 @@ const AddQuestionButton: React.FC<Props> = (props) => {
         <DropdownMenuContent className="w-[180px]">
           <DropdownMenuLabel>Types</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {questionTypes.map((questionType) => {
+          {questionTypes?.map((questionType) => {
             return (
               <DropdownMenuItem
                 key={questionType.label}

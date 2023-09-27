@@ -58,7 +58,9 @@ export const Combobox: React.FC<Props> = (props) => {
                 key={datum.value}
                 onSelect={(currentValue) => {
                   props.setValue(
-                    currentValue === props.value ? "" : currentValue
+                    currentValue.replaceAll(" ", "-") === props.value
+                      ? ""
+                      : currentValue.replaceAll(" ", "-")
                   );
                   setOpen(false);
                 }}

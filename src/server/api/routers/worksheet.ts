@@ -38,6 +38,9 @@ export const worksheetRouter = createTRPCRouter({
           id: input.id,
         },
         select: {
+          country: true,
+          curriculum: true,
+          subject: true,
           questions: {
             orderBy: {
               order: "asc",

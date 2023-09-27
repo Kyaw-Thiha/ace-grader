@@ -1,5 +1,6 @@
 import { BaseQuestion } from "@/questions/base/baseQuestion";
 import type { RouterOutputs } from "@/utils/api";
+import type { PrismaClient } from "@prisma/client";
 
 export type EssayAnswer = RouterOutputs["essayAnswer"]["get"];
 
@@ -17,16 +18,24 @@ interface BaseEssayCriteria {
 export class BaseEssayQuestion extends BaseQuestion {
   public criteria: BaseEssayCriteria[];
   public properties: BaseEssayProperty[];
-  public checkAnswer: (answer: EssayAnswer, data: string) => Promise<number>;
+  public checkAnswer: (
+    prisma: PrismaClient,
+    answer: EssayAnswer,
+    data: string
+  ) => Promise<number>;
 
   constructor(
     name: string,
     value: string,
     criteria: BaseEssayCriteria[],
     properties: BaseEssayProperty[],
-    checkAnswer: (answer: EssayAnswer, data: string) => Promise<number>
+    checkAnswer: (
+      prisma: PrismaClient,
+      answer: EssayAnswer,
+      data: string
+    ) => Promise<number>
   ) {
-    super(name, value);
+    super(name, value, "essay");
     this.criteria = criteria;
     this.properties = properties;
     this.checkAnswer = checkAnswer;

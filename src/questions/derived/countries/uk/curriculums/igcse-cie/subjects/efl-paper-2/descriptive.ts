@@ -2,7 +2,7 @@ import {
   BaseEssayQuestion,
   type EssayAnswer,
 } from "@/questions/base/essayQuestion";
-import { prisma } from "@/server/db";
+import type { PrismaClient } from "@prisma/client";
 
 interface Criteria {
   marks: number;
@@ -16,30 +16,22 @@ interface Property {
 
 interface Response {
   Grammar?: Criteria;
-  Focus?: Criteria;
   Organization?: Criteria;
   "Sentence Structure"?: Criteria;
-  Plot?: Criteria;
-  "Narrative Techniques"?: Criteria;
+  "Descriptive Techniques"?: Criteria;
   "Literary Devices"?: Criteria;
   "Language and Vocabulary"?: Criteria;
   "Overall Impression"?: string;
 }
 
-export const narrativeEssay = new BaseEssayQuestion(
-  "Narrative",
-  "narrative",
+export const descriptiveEssay = new BaseEssayQuestion(
+  "Descriptive",
+  "descriptive",
   [
     {
       name: "Grammar",
       description:
         "Evaluate the essay's grammatical accuracy, sentence structure, and proper use of punctuation and spelling.",
-      marks: 0,
-    },
-    {
-      name: "Focus",
-      description:
-        "Assess whether the essay maintains a clear and consistent focus on the chosen topic or subject matter. Consider whether the essay stays on point throughout.",
       marks: 0,
     },
     {
@@ -55,15 +47,9 @@ export const narrativeEssay = new BaseEssayQuestion(
       marks: 0,
     },
     {
-      name: "Plot",
+      name: "Descriptive Techniques",
       description:
-        "If applicable, evaluate the development and coherence of the essay's plot or storyline. Consider its relevance to the overall theme and how well it engages the reader.",
-      marks: 0,
-    },
-    {
-      name: "Narrative Techniques",
-      description:
-        "Analyze the essay's use of narrative techniques, such as imagery, dialogue, and descriptive language, to enhance the storytelling and reader's experience.",
+        "Analyze the use of rich and evocative language, sensory details, and the ability to paint a clear mental picture for the reader. Consider how these techniques contribute to the depth, atmosphere, and immersive quality of the descriptive elements in the writing.",
       marks: 0,
     },
     {
@@ -86,26 +72,25 @@ export const narrativeEssay = new BaseEssayQuestion(
         "Share an overall impression of the essay, discussing its strengths and suggesting ways it could be further enhanced.",
     },
   ],
-  async (answer: EssayAnswer, data: string) => {
+  async (prisma: PrismaClient, answer: EssayAnswer, data: string) => {
     const answerResponse = JSON.parse(data) as Response;
 
     const marks =
       (answerResponse.Grammar?.marks ?? 0) +
-      (answerResponse.Focus?.marks ?? 0) +
       (answerResponse.Organization?.marks ?? 0) +
       (answerResponse["Sentence Structure"]?.marks ?? 0) +
-      (answerResponse.Plot?.marks ?? 0) +
-      (answerResponse["Narrative Techniques"]?.marks ?? 0) +
+      (answerResponse["Descriptive Techniques"]?.marks ?? 0) +
       (answerResponse["Literary Devices"]?.marks ?? 0) +
       (answerResponse["Language and Vocabulary"]?.marks ?? 0);
 
-    await updateEssayAnswer(answer, answerResponse, marks);
+    await updateEssayAnswer(prisma, answer, answerResponse, marks);
 
     return marks;
   }
 );
 
 const updateEssayAnswer = async (
+  prisma: PrismaClient,
   essayAnswer: EssayAnswer,
   response: Response,
   marks: number
