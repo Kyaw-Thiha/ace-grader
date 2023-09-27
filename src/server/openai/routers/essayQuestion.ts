@@ -1,6 +1,7 @@
 import { getQuestionType } from "@/questions/derived/functions";
 import openai from "../openai";
 import type { RouterOutputs } from "@/utils/api";
+import type { BaseEssayQuestion } from "@/questions/base/essayQuestion";
 
 type EssayQuestion = RouterOutputs["essayQuestion"]["get"];
 type EssayAnswer = RouterOutputs["essayAnswer"]["get"];
@@ -12,7 +13,9 @@ const generateMarksAndFeedback = (
   const getMarks = (name: string) => {
     return question?.criteria.find((x) => x.name == name)?.marks ?? 0;
   };
-  const essayType = getQuestionType(question?.essayType ?? "");
+  const essayType = getQuestionType(
+    question?.essayType ?? ""
+  ) as BaseEssayQuestion;
 
   const criteriaTexts = [];
   const criteria = essayType?.getCriteria() ?? [];

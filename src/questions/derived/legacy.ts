@@ -1,3 +1,4 @@
+import type { PrismaClient } from "@prisma/client";
 import type { RouterOutputs } from "@/utils/api";
 import { BaseEssayQuestion } from "../base/essayQuestion";
 
@@ -111,7 +112,11 @@ export const legacy = {
                     "[Share an overall impression of the essay, discussing its strengths and suggesting ways it could be further enhanced.]",
                 },
               ],
-              async (answer: EssayAnswer, data: string) => {
+              async (
+                prisma: PrismaClient,
+                answer: EssayAnswer,
+                data: string
+              ) => {
                 return Promise.resolve(Math.random());
               }
             ),

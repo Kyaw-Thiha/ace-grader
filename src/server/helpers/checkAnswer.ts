@@ -7,6 +7,7 @@ import { CheckingFinishedEmailTemplate } from "@/components/emails/CheckingFinis
 import { backOff } from "exponential-backoff";
 import { prisma } from "@/server/db";
 import { getQuestionType } from "@/questions/derived/functions";
+import type { BaseEssayQuestion } from "@/questions/base/essayQuestion";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 type MultipleChoiceQuestionAnswer =
@@ -194,9 +195,10 @@ const handleMarking = async (
       );
       const data = res.data.choices[0]?.message?.content ?? "";
 
-      const marks = await getQuestionType(
+      const essayQuestionObj = getQuestionType(
         essayQuestion?.essayType ?? ""
-      )?.checkAnswer(answer, data);
+      ) as BaseEssayQuestion;
+      const marks = await essayQuestionObj.checkAnswer(prisma, answer, data);
 
       // Adding up to the total marks
       totalMarks = totalMarks + (marks ?? 0);
