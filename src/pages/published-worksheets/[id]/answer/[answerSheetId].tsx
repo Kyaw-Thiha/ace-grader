@@ -110,6 +110,7 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
       if (document.visibilityState === "hidden") {
         // setSwitchCount((prevCount) => prevCount + 1);
         incrementWindowCount.mutate({ id: props.answerSheedId });
+        console.log("Incrementing Window Count");
       }
     };
 
@@ -212,6 +213,11 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
             key={question.id}
             className="my-4 md:mx-20 md:rounded-md lg:mx-32"
           >
+            <p className="mb-8">
+              This is an exam. Thus, <b>DO NOT SWITCH YOUR WINDOW</b> until you
+              have submited your exam paper. It will be recorded and reported to
+              your teacher.
+            </p>
             <Card>
               <div className="flex gap-4 px-2 py-4 md:gap-8 md:px-8">
                 <p className="my-2 text-3xl text-slate-400">

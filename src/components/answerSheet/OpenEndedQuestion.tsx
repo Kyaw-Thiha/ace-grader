@@ -68,7 +68,7 @@ const OpenEndedQuestion: React.FC<Props> = (props) => {
   return (
     <div className="flex flex-col">
       <CardHeader>
-        <CardTitle className="whitespace-pre-line text-lg font-normal leading-relaxed">
+        <CardTitle className="select-none whitespace-pre-line text-lg font-normal leading-relaxed">
           <Latex
             delimiters={[
               { left: "$$", right: "$$", display: true },

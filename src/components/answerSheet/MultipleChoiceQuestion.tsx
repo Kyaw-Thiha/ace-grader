@@ -66,7 +66,7 @@ const MultipleChoiceQuestion: React.FC<Props> = (props) => {
   return (
     <div className="flex w-full flex-col">
       <CardHeader>
-        <CardTitle className="whitespace-pre-line text-lg font-normal leading-relaxed">
+        <CardTitle className="select-none whitespace-pre-line text-lg font-normal leading-relaxed">
           <Latex
             delimiters={[
               { left: "$$", right: "$$", display: true },
@@ -187,7 +187,7 @@ const ChoiceGroup: React.FC<Props> = (props) => {
    */
 
   const getRadioClass = (index: number) => {
-    let className = "disabled:opacity-100";
+    let className = "disabled:opacity-100 select-none";
     if (props.status == "sample-teacherview") {
       // For the sample answer, automatically select the corrent choice
       if (index == props.question?.answer) {
