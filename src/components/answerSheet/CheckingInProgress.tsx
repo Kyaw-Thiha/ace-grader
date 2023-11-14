@@ -1,4 +1,4 @@
-import Lottie from "lottie-react";
+// import Lottie from "lottie-react";
 import writingOnNotebook from "public/lotties/writing-on-notebook.json";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
@@ -19,7 +19,7 @@ const CheckingInProgress: React.FC = () => {
       ref={parent}
     >
       <h2 className="text-3xl font-medium"> Checking in Progress </h2>
-      <Lottie animationData={writingOnNotebook as unknown} style={style} />
+      {/* <Lottie animationData={writingOnNotebook as unknown} style={style} /> */}
       <h3 className="text-xl">
         You will be contacted via email once your answers have been checked.
       </h3>

@@ -16,7 +16,7 @@ import {
   SubmitAnswerDialog,
 } from "@/components/answerSheet/SubmitAnswer";
 import CheckingInProgress from "@/components/answerSheet/CheckingInProgress";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import AnswerSheetNavLayout from "@/components/AnswerSheetNavLayout";
 import NestedQuestion from "@/components/answerSheet/NestedQuestion";
@@ -95,6 +95,37 @@ interface QuestionListProps {
 }
 
 const QuestionList: React.FC<QuestionListProps> = (props) => {
+  const [switchCount, setSwitchCount] = useState(0);
+  const [closeCount, setCloseCount] = useState(0)
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      // Check if document is defined before accessing it
+      if (document.visibilityState === 'hidden') {
+        setSwitchCount((prevCount) => prevCount + 1);
+      }
+    };
+
+    const handleBeforeUnload = () => {
+      // Check if document is defined before accessing it
+      if (document) {
+        setCloseCount((prevCount) => prevCount + 1);
+      }
+    };
+
+    // Attach the event listener if document is defined and we're on the client side
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      window.addEventListener('beforeunload', handleBeforeUnload);
+
+      // Clean up the event listener when the component is unmounted
+      return () => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+    }
+  }, [switchCount, closeCount]); // Empty dependency array to ensure the effect runs only once
+
   const [isChecking, setIsChecking] = useState(false);
 
   //Fetching the worksheet
