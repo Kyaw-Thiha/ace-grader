@@ -68,6 +68,9 @@ const AnswerSheetList: React.FC<Props> = ({ id }) => {
               <TableHead className="w-[200px] text-center">Name</TableHead>
               <TableHead className="text-center">Email</TableHead>
               <TableHead className="text-center">Marks</TableHead>
+              <TableHead className="text-center">
+                Window Changed Count
+              </TableHead>
               <TableHead className="text-center">Date Answered</TableHead>
               <TableHead className="text-center">Action</TableHead>
             </TableRow>
@@ -87,6 +90,7 @@ const AnswerSheetList: React.FC<Props> = ({ id }) => {
                           {answerSheet.totalMarks} /{" "}
                           {publishedWorksheet.totalMarks}
                         </TableCell>
+                        <TableCell>{answerSheet.switchWindowCount}</TableCell>
                         <TableCell>
                           {formatDateWithSuffix(answerSheet.endTime)}
                         </TableCell>

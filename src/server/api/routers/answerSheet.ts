@@ -77,6 +77,7 @@ export const answerSheetRouter = createTRPCRouter({
           studentEmail: true,
           status: true,
           totalMarks: true,
+          switchWindowCount: true,
           startTime: true,
           endTime: true,
           answers: {
@@ -296,6 +297,23 @@ export const answerSheetRouter = createTRPCRouter({
         },
         data: {
           totalMarks: input.totalMarks,
+        },
+      });
+    }),
+
+  incrementSwitchWindowCount: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.answerSheet.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          switchWindowCount: {increment: 1},
         },
       });
     }),

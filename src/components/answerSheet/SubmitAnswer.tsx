@@ -67,13 +67,13 @@ export const SubmitAnswerDialog: React.FC<SubmitAnswerDialogProps> = (
       <DialogTrigger asChild className="px-40">
         <Button>Submit</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Submit your answers</DialogTitle>
-          <DialogDescription asChild>
-            <p>Note: This process is irreversible</p>
-            <p>Are you sure you want to submit your answers?</p>
-          </DialogDescription>
+      <DialogContent className="text-left sm:max-w-[425px]">
+        <DialogHeader className="my-4 text-left">
+          <DialogTitle className="mb-4 text-left">
+            Submit your answers
+          </DialogTitle>
+          <p>Note: This process is irreversible</p>
+          <p>Are you sure you want to submit your answers?</p>
         </DialogHeader>
 
         <DialogFooter>

@@ -95,36 +95,38 @@ interface QuestionListProps {
 }
 
 const QuestionList: React.FC<QuestionListProps> = (props) => {
-  const [switchCount, setSwitchCount] = useState(0);
-  const [closeCount, setCloseCount] = useState(0)
+  // ***
+  //Function for incrementing window change count
+  const incrementWindowCount =
+    api.answerSheet.incrementSwitchWindowCount.useMutation({
+      onSuccess: () => {
+        void refetchAnswerSheet();
+      },
+    });
 
   useEffect(() => {
     const handleVisibilityChange = () => {
       // Check if document is defined before accessing it
-      if (document.visibilityState === 'hidden') {
-        setSwitchCount((prevCount) => prevCount + 1);
-      }
-    };
-
-    const handleBeforeUnload = () => {
-      // Check if document is defined before accessing it
-      if (document) {
-        setCloseCount((prevCount) => prevCount + 1);
+      if (document.visibilityState === "hidden") {
+        // setSwitchCount((prevCount) => prevCount + 1);
+        incrementWindowCount.mutate({ id: props.answerSheedId });
       }
     };
 
     // Attach the event listener if document is defined and we're on the client side
-    if (typeof document !== 'undefined') {
-      document.addEventListener('visibilitychange', handleVisibilityChange);
-      window.addEventListener('beforeunload', handleBeforeUnload);
+    if (typeof document !== "undefined") {
+      document.addEventListener("visibilitychange", handleVisibilityChange);
 
       // Clean up the event listener when the component is unmounted
       return () => {
-        document.removeEventListener('visibilitychange', handleVisibilityChange);
-        window.removeEventListener('beforeunload', handleBeforeUnload);
+        document.removeEventListener(
+          "visibilitychange",
+          handleVisibilityChange
+        );
       };
     }
-  }, [switchCount, closeCount]); // Empty dependency array to ensure the effect runs only once
+  }, [incrementWindowCount, props.answerSheedId]); // Empty dependency array to ensure the effect runs only once
+  // ***
 
   const [isChecking, setIsChecking] = useState(false);
 

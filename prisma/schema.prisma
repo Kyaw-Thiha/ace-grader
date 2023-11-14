@@ -125,7 +125,7 @@ model AnswerSheet {
     startTime           DateTime        @default(now())
     endTime             DateTime?
     totalMarks          Int?  
-    
+    switchWindowCount   Int             @default(0)
     answers             Answer[]   
     publishedWorksheetId         String @map("worksheetId")
     publishedWorksheet           PublishedWorksheet @relation(fields: [publishedWorksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
