@@ -48,6 +48,8 @@
     "next-sitemap": "^4.1.8",
     "next-themes": "^0.2.1",
     "openai": "^3.3.0",
+    "pusher": "^5.2.0",
+    "pusher-js": "^8.3.0",
     "react": "18.2.0",
     "react-autosave": "^0.4.2",
     "react-dom": "18.2.0",

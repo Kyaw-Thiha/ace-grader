@@ -12,6 +12,8 @@ export const env = createEnv({
     UPSTASH_REDIS_REST_URL: z.string(),
     UPSTASH_REDIS_REST_TOKEN: z.string(),
     UPLOADTHING_SECRET: z.string(),
+    PUSHER_APP_ID: z.string(),
+    PUSHER_APP_SECRET: z.string(),
     NODE_ENV: z.enum(["development", "test", "production"]),
   },
 
@@ -28,6 +30,7 @@ export const env = createEnv({
     NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: z.string(),
     NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL: z.string(),
     NEXT_PUBLIC_OPENAI_API_KEY: z.string(),
+    NEXT_PUBLIC_PUSHER_APP_KEY: z.string(),
   },
 
   /**
@@ -50,6 +53,9 @@ export const env = createEnv({
     UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
     UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
     UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,
+    NEXT_PUBLIC_PUSHER_APP_KEY: process.env.NEXT_PUBLIC_PUSHER_APP_KEY,
+    PUSHER_APP_ID: process.env.PUSHER_APP_ID,
+    PUSHER_APP_SECRET: process.env.PUSHER_APP_SECRET,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
