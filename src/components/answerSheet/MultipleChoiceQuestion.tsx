@@ -1,4 +1,4 @@
-import { FormEventHandler, useState } from "react";
+import { FormEventHandler, useEffect, useState } from "react";
 import { api, type RouterOutputs } from "@/utils/api";
 import { convertIntegerToASCII } from "@/utils/helper";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
@@ -148,6 +148,36 @@ const ChoiceGroup: React.FC<Props> = (props) => {
       ? props.question?.answer
       : props.answer?.studentAnswer
   );
+  const [isOnline, setIsOnline] = useState(true);
+
+  useEffect(() => {
+    // Retrieve data from local storage when the component mounts
+    updateWithLocalStorage();
+
+    // Add event listeners for online and offline events
+    window.addEventListener("online", updateWithLocalStorage);
+    window.addEventListener("offline", () => setIsOnline(false));
+
+    return () => {
+      // Remove event listeners when the component unmounts
+      window.removeEventListener("online", updateWithLocalStorage);
+      window.removeEventListener("offline", () => setIsOnline(false));
+    };
+  }, []);
+
+  const updateWithLocalStorage = () => {
+    const localData = localStorage.getItem(`mcq-${props.answer?.id ?? ""}`);
+    if (localData) {
+      const parsedLocalData = JSON.parse(localData) as number;
+      setChosenChoice(parsedLocalData);
+
+      editAnswer.mutate({
+        id: props.answer?.id ?? "",
+        studentAnswer: parsedLocalData,
+      });
+      localStorage.removeItem(`mcq-${props.answer?.id ?? ""}`);
+    }
+  };
 
   const editAnswer = api.multipleChoiceQuestionAnswer.editAnswer.useMutation({
     onSuccess: () => {
@@ -157,10 +187,18 @@ const ChoiceGroup: React.FC<Props> = (props) => {
 
   const updateChoice = (index: number) => {
     if (props.status == "answering-studentview") {
-      editAnswer.mutate({
-        id: props.answer?.id ?? "",
-        studentAnswer: index,
-      });
+      if (isOnline) {
+        editAnswer.mutate({
+          id: props.answer?.id ?? "",
+          studentAnswer: index,
+        });
+      } else {
+        localStorage.setItem(
+          `mcq-${props.answer?.id ?? ""}`,
+          JSON.stringify(index)
+        );
+      }
+
       setChosenChoice(index);
     }
   };

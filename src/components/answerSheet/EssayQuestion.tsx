@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAutosave } from "react-autosave";
 import { api, type RouterOutputs } from "@/utils/api";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
@@ -155,6 +155,35 @@ export default EssayQuestion;
 
 const StudentAnswer: React.FC<Props> = (props) => {
   const [answer, setAnswer] = useState(props.answer?.studentAnswer ?? "");
+  const [isOnline, setIsOnline] = useState(true);
+
+  useEffect(() => {
+    // Retrieve data from local storage when the component mounts
+    updateWithLocalStorage();
+
+    // Add event listeners for online and offline events
+    window.addEventListener("online", updateWithLocalStorage);
+    window.addEventListener("offline", () => setIsOnline(false));
+
+    return () => {
+      // Remove event listeners when the component unmounts
+      window.removeEventListener("online", updateWithLocalStorage);
+      window.removeEventListener("offline", () => setIsOnline(false));
+    };
+  }, []);
+
+  const updateWithLocalStorage = () => {
+    const localData = localStorage.getItem(`essay-${props.answer?.id ?? ""}`);
+    if (localData) {
+      setAnswer(localData);
+
+      editAnswer.mutate({
+        id: props.answer?.id ?? "",
+        studentAnswer: localData,
+      });
+      localStorage.removeItem(`essay-${props.answer?.id ?? ""}`);
+    }
+  };
 
   const editAnswer = api.essayAnswer.editAnswer.useMutation({
     onSuccess: () => {
@@ -163,10 +192,15 @@ const StudentAnswer: React.FC<Props> = (props) => {
   });
   const updateAnswer = () => {
     if (answer != "" && props.status == "answering-studentview") {
-      editAnswer.mutate({
-        id: props.answer?.id ?? "",
-        studentAnswer: answer,
-      });
+      if (isOnline) {
+        editAnswer.mutate({
+          id: props.answer?.id ?? "",
+          studentAnswer: answer,
+        });
+      } else {
+        console.log("Offline - ", answer);
+        localStorage.setItem(`essay-${props.answer?.id ?? ""}`, answer);
+      }
     }
   };
   useAutosave({ data: answer, onSave: updateAnswer });
