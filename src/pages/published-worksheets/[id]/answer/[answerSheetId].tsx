@@ -107,19 +107,21 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
   // Function for creating notification
   const createNotification = api.teacherNotification.create.useMutation();
 
+  const [hasRun, setHasRun] = useState(false);
   // Checking when student changes the window
   useEffect(() => {
     const handleVisibilityChange = () => {
       // Check if document is defined before accessing it
       if (
-        document.visibilityState === "hidden" &&
-        status == "answering-studentview"
+        !hasRun &&
+        status == "answering-studentview" &&
+        document.visibilityState === "hidden"
       ) {
         // setSwitchCount((prevCount) => prevCount + 1);
         incrementWindowCount.mutate({ id: props.answerSheedId });
         createNotification.mutate({
           profileId: publishedWorksheet?.profileId ?? "",
-          text: `${answerSheet?.studentName ?? ""}(${
+          text: `${answerSheet?.studentName ?? ""} (${
             answerSheet?.studentEmail ?? ""
           }) changed window when answering the ${
             publishedWorksheet?.title ?? ""
@@ -127,7 +129,11 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
           resource: "",
         });
 
+        setHasRun(true);
+
         console.log("Incrementing Window Count");
+      } else if (hasRun && document.visibilityState === "visible") {
+        setHasRun(false);
       }
     };
 

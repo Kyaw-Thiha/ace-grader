@@ -39,14 +39,14 @@ const MyWorksheets: NextPage = () => {
       <div className="flex items-center justify-between">
         <h1 className="text-4xl">My Worksheets</h1>
         <div className="flex gap-4">
-          <Notification profile={profile as Profile} />
-          {!isLoading ? (
-            <AddWorksheetButton
-              profile={profile as Profile}
-              refetch={refetch}
-            />
-          ) : (
-            <></>
+          {!isLoading && (
+            <>
+              <Notification profile={profile as Profile} />
+              <AddWorksheetButton
+                profile={profile as Profile}
+                refetch={refetch}
+              />
+            </>
           )}
         </div>
       </div>

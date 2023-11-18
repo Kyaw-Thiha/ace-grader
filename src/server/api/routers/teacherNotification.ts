@@ -71,7 +71,6 @@ export const teacherNotificationRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      console.log(input.profileId);
       void pusherServer.trigger(
         `teacher-${input.profileId}`,
         "notification",
