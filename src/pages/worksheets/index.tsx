@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
@@ -18,6 +18,7 @@ import TopNavLayout from "@/components/TopNavLayout";
 import { ShareLinkGuideDialog } from "@/components/worksheet/ShareLinkGuideDialog";
 import { ShareDialog } from "@/components/worksheet/ShareDialog";
 import { formatDateWithSuffix } from "@/utils/helper";
+import { Notification } from "@/components/Notification";
 
 // https://github.com/jherr/notetaker
 type Profile = RouterOutputs["teacherProfile"]["getWorksheets"];
@@ -38,6 +39,7 @@ const MyWorksheets: NextPage = () => {
       <div className="flex items-center justify-between">
         <h1 className="text-4xl">My Worksheets</h1>
         <div className="flex gap-4">
+          <Notification profile={profile as Profile} />
           {!isLoading ? (
             <AddWorksheetButton
               profile={profile as Profile}
@@ -67,6 +69,7 @@ interface Props {
   isLoading: boolean;
   isError: boolean;
 }
+
 const WorksheetList: React.FC<Props> = (props) => {
   // Automatically animate the list add and delete
   const [parent, enableAnimations] = useAutoAnimate(/* optional config */);

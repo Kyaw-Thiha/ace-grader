@@ -307,13 +307,13 @@ export const answerSheetRouter = createTRPCRouter({
         id: z.string(),
       })
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       return ctx.prisma.answerSheet.update({
         where: {
           id: input.id,
         },
         data: {
-          switchWindowCount: {increment: 1},
+          switchWindowCount: { increment: 1 },
         },
       });
     }),
