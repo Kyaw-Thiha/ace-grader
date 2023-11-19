@@ -70,29 +70,38 @@ export type EssayCriteriaName =
   | "Persuasion"
   | "Purpose"
   | "Register";
-const essayCriteriaName = z.union([
-  z.literal("Grammar"),
-  z.literal("Focus"),
-  z.literal("Exposition"),
-  z.literal("Organization"),
-  z.literal("Sentence Structure"),
-  z.literal("Plot"),
-  z.literal("Narrative Techniques"),
-  z.literal("Descriptive Techniques"),
-  z.literal("Literary Devices"),
-  z.literal("Language and Vocabulary"),
-  z.literal("Content"),
-  z.literal("Persuasion"),
-  z.literal("Purpose"),
-  z.literal("Register"),
-]);
+// const essayCriteriaName = z.union([
+//   z.literal("Grammar"),
+//   z.literal("Focus"),
+//   z.literal("Exposition"),
+//   z.literal("Organization"),
+//   z.literal("Sentence Structure"),
+//   z.literal("Plot"),
+//   z.literal("Narrative Techniques"),
+//   z.literal("Descriptive Techniques"),
+//   z.literal("Literary Devices"),
+//   z.literal("Language and Vocabulary"),
+//   z.literal("Content"),
+//   z.literal("Persuasion"),
+//   z.literal("Purpose"),
+//   z.literal("Register"),
+// ]);
+const essayCriteriaName = z.string();
 export const essayQuestionSchema = z.object({
   text: z.string(),
+  essayType: z.string(),
   criteria: z.object({
     create: z.array(
       z.object({
         name: essayCriteriaName,
+        description: z.string(),
         marks: z.number(),
+        levels: z.array(
+          z.object({
+            level: z.string(),
+            text: z.string(),
+          })
+        ),
       })
     ),
   }),
@@ -173,6 +182,8 @@ export const answerSchemaProperties = {
               name: z.string(),
               evaluation: z.string(),
               suggestion: z.string(),
+              level: z.string(),
+              marks: z.number(),
             })
           ),
         }),

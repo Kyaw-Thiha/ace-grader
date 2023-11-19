@@ -169,78 +169,7 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
       create: {
         studentAnswer: "",
         criteria: {
-          create: [
-            {
-              name: "Grammar" as EssayCriteriaName,
-              evaluation: "",
-              suggestion: "",
-            },
-            {
-              name: "Focus" as EssayCriteriaName,
-              evaluation: "",
-              suggestion: "",
-            },
-            {
-              name: "Exposition" as EssayCriteriaName,
-              evaluation: "",
-              suggestion: "",
-            },
-            {
-              name: "Organization" as EssayCriteriaName,
-              evaluation: "",
-              suggestion: "",
-            },
-            {
-              name: "Sentence Structure" as EssayCriteriaName,
-              evaluation: "",
-              suggestion: "",
-            },
-            {
-              name: "Plot" as EssayCriteriaName,
-              evaluation: "",
-              suggestion: "",
-            },
-            {
-              name: "Narrative Techniques" as EssayCriteriaName,
-              evaluation: "",
-              suggestion: "",
-            },
-            {
-              name: "Descriptive Techniques" as EssayCriteriaName,
-              evaluation: "",
-              suggestion: "",
-            },
-            {
-              name: "Literary Devices" as EssayCriteriaName,
-              evaluation: "",
-              suggestion: "",
-            },
-            {
-              name: "Language and Vocabulary" as EssayCriteriaName,
-              evaluation: "",
-              suggestion: "",
-            },
-            {
-              name: "Content" as EssayCriteriaName,
-              evaluation: "",
-              suggestion: "",
-            },
-            {
-              name: "Persuasion" as EssayCriteriaName,
-              evaluation: "",
-              suggestion: "",
-            },
-            {
-              name: "Purpose" as EssayCriteriaName,
-              evaluation: "",
-              suggestion: "",
-            },
-            {
-              name: "Register" as EssayCriteriaName,
-              evaluation: "",
-              suggestion: "",
-            },
-          ],
+          create: [],
         },
         properties: {
           create: [],
@@ -281,10 +210,31 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
           },
         });
       } else if (question.questionType == "EssayQuestion") {
+        const criteria =
+          question.essayQuestion?.criteria.map((criterion) => {
+            return {
+              name: criterion.name,
+              marks: 0,
+              evaluation: "",
+              suggestion: "",
+              level: "",
+            };
+          }) ?? [];
+
         answers.push({
           order: question.order,
           answerType: "EssayAnswer" as AnswerType,
-          essayAnswer: essayAnswerProperties,
+          essayAnswer: {
+            create: {
+              studentAnswer: "",
+              criteria: {
+                create: criteria,
+              },
+              properties: {
+                create: [],
+              },
+            },
+          },
         });
       } else if (question.questionType == "NestedQuestion") {
         // 2nd Nested Level

@@ -31,6 +31,7 @@ export const essayAnswerRouter = createTRPCRouter({
             name: z.string(),
             evaluation: z.string(),
             suggestion: z.string(),
+            level: z.string(),
           })
         ),
         properties: z.array(
@@ -84,24 +85,26 @@ export const essayAnswerRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-        name: z.union([
-          z.literal("Grammar"),
-          z.literal("Focus"),
-          z.literal("Exposition"),
-          z.literal("Organization"),
-          z.literal("Sentence Structure "),
-          z.literal("Plot"),
-          z.literal("Narrative Techniques"),
-          z.literal("Descriptive Techniques"),
-          z.literal("Literary Devices"),
-          z.literal("Language and Vocabulary"),
-          z.literal("Content"),
-          z.literal("Persuasion"),
-          z.literal("Purpose"),
-          z.literal("Register"),
-        ]),
+        // name: z.union([
+        //   z.literal("Grammar"),
+        //   z.literal("Focus"),
+        //   z.literal("Exposition"),
+        //   z.literal("Organization"),
+        //   z.literal("Sentence Structure "),
+        //   z.literal("Plot"),
+        //   z.literal("Narrative Techniques"),
+        //   z.literal("Descriptive Techniques"),
+        //   z.literal("Literary Devices"),
+        //   z.literal("Language and Vocabulary"),
+        //   z.literal("Content"),
+        //   z.literal("Persuasion"),
+        //   z.literal("Purpose"),
+        //   z.literal("Register"),
+        // ]),
+        name: z.string(),
         marks: z.number(),
         evaluation: z.string(),
+        level: z.string(),
         suggestion: z.string(),
       })
     )
@@ -114,7 +117,26 @@ export const essayAnswerRouter = createTRPCRouter({
           name: input.name,
           marks: input.marks,
           evaluation: input.evaluation,
+          level: input.level,
           suggestion: input.suggestion,
+        },
+      });
+    }),
+
+  editLevel: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        level: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.essayAnswerCriteria.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          level: input.level,
         },
       });
     }),

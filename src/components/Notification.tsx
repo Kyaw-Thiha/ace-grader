@@ -34,8 +34,11 @@ export const Notification: React.FC<Props> = (props) => {
       pusherClient.bind("notification", (text: string) => {
         setNotifications((prev) => [...prev, text]);
 
-        void refetch();
+        console.log("changed");
         toast.info(text, { autoClose: false });
+        console.log("noti");
+
+        void refetch();
       });
     }
 

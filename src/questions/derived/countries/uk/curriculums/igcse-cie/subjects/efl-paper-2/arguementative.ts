@@ -2,28 +2,24 @@ import {
   BaseEssayQuestion,
   type EssayAnswer,
 } from "@/questions/base/essayQuestion";
-import { PrismaClient } from "@prisma/client";
+import type { PrismaClient } from "@prisma/client";
 
 interface Criteria {
-  marks: number;
   evaluation: string;
-  suggestion: string;
+  level: string;
 }
+
 interface Property {
   name: string;
   text: string;
 }
 
 interface Response {
-  Grammar?: Criteria;
-  Focus?: Criteria;
+  Expression?: Criteria;
   Organization?: Criteria;
-  "Sentence Structure"?: Criteria;
-  "Language and Vocabulary"?: Criteria;
-  Content?: Criteria;
-  Persuasion?: Criteria;
-  Purpose?: Criteria;
+  Vocabulary?: Criteria;
   Register?: Criteria;
+  Grammar?: Criteria;
   "Overall Impression"?: string;
 }
 
@@ -32,58 +28,182 @@ export const arguementativeEssay = new BaseEssayQuestion(
   "arguementative",
   [
     {
-      name: "Grammar",
+      name: "Expression",
       description:
-        "Evaluate the essay's grammatical accuracy, sentence structure, and proper use of punctuation and spelling.",
-      marks: 0,
-    },
-    {
-      name: "Focus",
-      description:
-        "Assess whether the essay maintains a clear and consistent focus on the chosen topic or subject matter. Consider whether the essay stays on point throughout.",
-      marks: 0,
+        "Articulate experience and express what is thought, felt and imagined",
+      marks: 5,
+      levels: [
+        {
+          level: "6",
+          text: "Highly effective style capable of conveying subtle meaning",
+        },
+        {
+          level: "5",
+          text: "Effective style",
+        },
+        {
+          level: "4",
+          text: "Sometimes effective style",
+        },
+        {
+          level: "3",
+          text: "Inconsistent style, expression sometimes awkward but meaning clear",
+        },
+        {
+          level: "2",
+          text: "Limited style",
+        },
+        {
+          level: "1",
+          text: "Expression unclear",
+        },
+        {
+          level: "0",
+          text: "No creditable content",
+        },
+      ],
     },
     {
       name: "Organization",
       description:
-        "Assess the logical flow and organization of ideas within the essay. Consider the coherence of paragraphs and transitions between different sections.",
-      marks: 0,
+        "Organize and structure ideas and opinions for deliberate effect",
+      marks: 5,
+      levels: [
+        {
+          level: "6",
+          text: "Carefully structured for benefit of the reader",
+        },
+        {
+          level: "5",
+          text: "Secure overall structure, organized to help the reader",
+        },
+        {
+          level: "4",
+          text: "Ideas generally well sequenced",
+        },
+        {
+          level: "3",
+          text: "Relies on the sequence of the original text",
+        },
+        {
+          level: "2",
+          text: "Response is not well sequenced",
+        },
+        {
+          level: "1",
+          text: "Poor sequencing of ideas",
+        },
+        {
+          level: "0",
+          text: "No creditable content",
+        },
+      ],
     },
     {
-      name: "Sentence Structure",
+      name: "Vocabulary",
       description:
-        "Assess the variety and effectiveness of sentence structures and syntax used in the essay. Consider the balance between simple and complex sentences, and evaluate how well the syntax contributes to the essay's readability and engagement.",
-      marks: 0,
-    },
-    {
-      name: "Language and Vocabulary",
-      description:
-        "Evaluate the richness and appropriateness of the language used. Consider the diversity of vocabulary and its contribution to the overall quality of the essay.",
-      marks: 0,
-    },
-    {
-      name: "Content",
-      description:
-        "Assess the depth and accuracy of the essay's content in relation to the chosen topic. Consider whether the essay demonstrates a comprehensive understanding of the subject matter.",
-      marks: 0,
-    },
-    {
-      name: "Persuasion",
-      description:
-        "Evaluate the essay's ability to persuade and convince the reader in argumentative or persuasive writings. Analyze the strength of the arguments presented, the use of evidence, and the logical progression of ideas.",
-      marks: 0,
-    },
-    {
-      name: "Purpose",
-      description:
-        "Assess the awareness of the essay's form, intended audience, and purpose. Consider how well the writing aligns with the chosen form and effectively communicates with the target audience while fulfilling the intended purpose.",
-      marks: 0,
+        "Use a range of vocabulary and sentence structures appropriate to context",
+      marks: 5,
+      levels: [
+        {
+          level: "6",
+          text: "Wide range of sophisticated vocabulary, precisely used",
+        },
+        {
+          level: "5",
+          text: "Wide range of vocabulary, used with some precision",
+        },
+        {
+          level: "4",
+          text: "Range of vocabulary is adequate and sometimes effective",
+        },
+        {
+          level: "3",
+          text: "Vocabulary is simple, limited in range or reliant on the original text",
+        },
+        {
+          level: "2",
+          text: "Limited vocabulary or words/phrases copied from the original text",
+        },
+        {
+          level: "1",
+          text: "Very limited vocabulary or copying from the original text",
+        },
+        {
+          level: "0",
+          text: "No creditable content",
+        },
+      ],
     },
     {
       name: "Register",
-      description:
-        "Evaluate the use of appropriate language register in the essay. Assess whether the level of formality or informality is suitable for the intended audience and purpose, and whether it enhances the overall communication.",
-      marks: 0,
+      description: "Use register appropriate to context",
+      marks: 5,
+      levels: [
+        {
+          level: "6",
+          text: "Highly effective register for audience and purpose",
+        },
+        {
+          level: "5",
+          text: "Effective register for audience and purpose",
+        },
+        {
+          level: "4",
+          text: "Sometimes effective register for audience and purpose",
+        },
+        {
+          level: "3",
+          text: "Some awareness of an appropriate register for audience and purpose",
+        },
+        {
+          level: "2",
+          text: "Limited awareness of appropriate register for audience and purpose",
+        },
+        {
+          level: "1",
+          text: "Very limited awareness of appropriate register for audience and purpose",
+        },
+        {
+          level: "0",
+          text: "No creditable content",
+        },
+      ],
+    },
+    {
+      name: "Grammar",
+      description: "Make accurate use of spelling, punctuation and grammar",
+      marks: 5,
+      levels: [
+        {
+          level: "6",
+          text: "Spelling, punctuation and grammar almost always accurate.",
+        },
+        {
+          level: "5",
+          text: "Spelling, punctuation and grammar mostly accurate, with occasional minor errors",
+        },
+        {
+          level: "4",
+          text: "Spelling, punctuation and grammar generally accurate though with some errors",
+        },
+        {
+          level: "3",
+          text: "Frequent errors of spelling, punctuation and grammar, sometimes serious",
+        },
+        {
+          level: "2",
+          text: "Persistent errors of spelling, punctuation and grammar",
+        },
+        {
+          level: "1",
+          text: "Persistent errors in spelling, punctuation and grammar impede communication",
+        },
+        {
+          level: "0",
+          text: "No creditable content",
+        },
+      ],
     },
   ],
   [
@@ -93,40 +213,92 @@ export const arguementativeEssay = new BaseEssayQuestion(
         "Share an overall impression of the essay, discussing its strengths and suggesting ways it could be further enhanced.",
     },
   ],
-  async (prisma: PrismaClient, answer: EssayAnswer, data: string) => {
+
+  async (prisma: PrismaClient, criteria, answer: EssayAnswer, data: string) => {
     const answerResponse = JSON.parse(data) as Response;
 
+    const expressionLevel = Number(answerResponse.Expression?.level ?? "0");
+    const expressionMarks =
+      (expressionLevel / 6) *
+      (criteria.find((criterion) => criterion.name == "Expression")?.marks ??
+        5);
+
+    const organizationLevel = Number(answerResponse.Organization?.level ?? "0");
+    const organizationMarks =
+      (organizationLevel / 6) *
+      (criteria.find((criterion) => criterion.name == "Organization")?.marks ??
+        5);
+
+    const vocabularyLevel = Number(answerResponse.Vocabulary?.level ?? "0");
+    const vocabularyMarks =
+      (vocabularyLevel / 6) *
+      (criteria.find((criterion) => criterion.name == "Vocabulary")?.marks ??
+        5);
+
+    const registerLevel = Number(answerResponse.Register?.level ?? "0");
+    const registerMarks =
+      (registerLevel / 6) *
+      (criteria.find((criterion) => criterion.name == "Register")?.marks ?? 5);
+
+    const grammarLevel = Number(answerResponse.Grammar?.level ?? "0");
+    const grammarMarks =
+      (grammarLevel / 6) *
+      (criteria.find((criterion) => criterion.name == "Grammar")?.marks ?? 5);
+
+    const criteriaMarks = {
+      Expression: expressionMarks,
+      Organization: organizationMarks,
+      Vocabulary: vocabularyMarks,
+      Register: registerMarks,
+      Grammar: grammarMarks,
+    };
+
     const marks =
-      (answerResponse.Grammar?.marks ?? 0) +
-      (answerResponse.Focus?.marks ?? 0) +
-      (answerResponse.Organization?.marks ?? 0) +
-      (answerResponse["Sentence Structure"]?.marks ?? 0) +
-      (answerResponse["Language and Vocabulary"]?.marks ?? 0) +
-      (answerResponse.Content?.marks ?? 0) +
-      (answerResponse.Persuasion?.marks ?? 0) +
-      (answerResponse.Purpose?.marks ?? 0) +
-      (answerResponse.Register?.marks ?? 0);
-    await updateEssayAnswer(prisma, answer, answerResponse, marks);
+      expressionMarks +
+      organizationMarks +
+      vocabularyMarks +
+      registerMarks +
+      grammarMarks;
+
+    await updateEssayAnswer(
+      prisma,
+      criteriaMarks,
+      answer,
+      answerResponse,
+      marks
+    );
 
     return marks;
   }
 );
 
+interface CriteriaMarks {
+  Expression: number;
+  Organization: number;
+  Vocabulary: number;
+  Register: number;
+  Grammar: number;
+}
 const updateEssayAnswer = async (
   prisma: PrismaClient,
+  criteriaMarks: CriteriaMarks,
   essayAnswer: EssayAnswer,
   response: Response,
   marks: number
 ) => {
-  const editCriteria = async (id: string, criteria: Criteria) => {
+  const editCriteria = async (
+    id: string,
+    criteria: Criteria,
+    marks: number
+  ) => {
     await prisma.essayAnswerCriteria.update({
       where: {
         id: id,
       },
       data: {
-        marks: criteria.marks,
+        marks: marks,
         evaluation: criteria.evaluation,
-        suggestion: criteria.suggestion,
+        level: criteria.level,
       },
     });
   };
@@ -147,7 +319,8 @@ const updateEssayAnswer = async (
   for (const criterion of criteria) {
     await editCriteria(
       criterion.id,
-      response[criterion.name as keyof Response] as Criteria
+      response[criterion.name as keyof Response] as Criteria,
+      criteriaMarks[criterion.name as keyof CriteriaMarks]
     );
   }
 

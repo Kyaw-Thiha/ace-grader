@@ -12,7 +12,12 @@ interface BaseEssayCriteria {
   name: string;
   description: string;
   marks: number;
+  levels: BaseEssayCriteriaLevel[];
   metadata?: string[];
+}
+interface BaseEssayCriteriaLevel {
+  level: string;
+  text: string;
 }
 
 export class BaseEssayQuestion extends BaseQuestion {
@@ -20,6 +25,7 @@ export class BaseEssayQuestion extends BaseQuestion {
   public properties: BaseEssayProperty[];
   public checkAnswer: (
     prisma: PrismaClient,
+    criteria: BaseEssayCriteria[],
     answer: EssayAnswer,
     data: string
   ) => Promise<number>;
@@ -31,6 +37,7 @@ export class BaseEssayQuestion extends BaseQuestion {
     properties: BaseEssayProperty[],
     checkAnswer: (
       prisma: PrismaClient,
+      criteria: BaseEssayCriteria[],
       answer: EssayAnswer,
       data: string
     ) => Promise<number>
@@ -43,13 +50,22 @@ export class BaseEssayQuestion extends BaseQuestion {
 
   public getCriteria() {
     return this.criteria.map((criterion) => {
-      return { name: criterion.name, description: criterion.description };
+      return {
+        name: criterion.name,
+        description: criterion.description,
+        levels: criterion.levels,
+      };
     });
   }
 
   public generateCriteriaAnswers() {
     return this.criteria.map((criterion) => {
-      return { name: criterion.name, evaluation: "", suggestion: "" };
+      return {
+        name: criterion.name,
+        evaluation: "",
+        level: "0",
+        suggestion: "",
+      };
     });
   }
 

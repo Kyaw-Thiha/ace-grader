@@ -1,3 +1,5 @@
+import { JSONArray } from "superjson/dist/types";
+
 interface Choice {
   index: number;
   text: string;
@@ -47,6 +49,7 @@ interface CreateEssay {
   essayQuestion: {
     create: {
       text: string;
+      essayType: string;
       criteria: {
         create: EssayCriteria[];
       };
@@ -65,8 +68,15 @@ export type EssayCriteriaName =
   | "Narrative Techniques"
   | "Language and Vocabulary"
   | "Content";
+
+interface EssayCriteriaLevel {
+  level: string;
+  text: string;
+}
 export interface EssayCriteria {
-  name: EssayCriteriaName;
+  name: string;
+  description: string;
+  levels: EssayCriteriaLevel;
   marks: number;
 }
 interface CreateNestedQuestion {

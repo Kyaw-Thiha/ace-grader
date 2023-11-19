@@ -19,6 +19,8 @@ import type {
   CreateQuestion,
   EssayCriteria,
 } from "@/components/worksheet/types";
+import { getQuestionType } from "@/questions/derived/functions";
+import { BaseEssayQuestion } from "@/questions/base/essayQuestion";
 
 type Questions = RouterOutputs["question"]["getAll"];
 interface DeleteQuestionButtonProps {
@@ -196,21 +198,17 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
         totalMarks = totalMarks + marks;
       }
       if (question?.questionType == "EssayQuestion") {
-        const getMarks = (name: string) => {
-          return (
-            question.essayQuestion?.criteria.find((x) => x.name == name)
-              ?.marks ?? 0
-          );
-        };
-        const marks =
-          getMarks("Grammar") +
-          getMarks("Focus") +
-          getMarks("Exposition") +
-          getMarks("Organization") +
-          getMarks("Plot") +
-          getMarks("Narrative Techniques") +
-          getMarks("Language and Vocabulary") +
-          getMarks("Content");
+        const essayQuestionObj = getQuestionType(
+          question.essayQuestion?.essayType ?? ""
+        ) as BaseEssayQuestion;
+
+        const criteria = essayQuestionObj.criteria;
+
+        const marks = criteria.reduce(
+          (accumulator, criterion) => accumulator + criterion.marks,
+          0
+        );
+
         totalMarks = totalMarks + marks;
       }
       if (question?.questionType == "NestedQuestion") {
@@ -312,8 +310,10 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
         for (const criterion of originalCriteria) {
           criteria.push({
             name: criterion.name,
+            description: criterion.description,
             marks: criterion.marks,
-          } as EssayCriteria);
+            levels: criterion.levels,
+          } as unknown as EssayCriteria);
         }
 
         questionsPayload.push({
@@ -322,6 +322,7 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
           essayQuestion: {
             create: {
               text: question.essayQuestion?.text ?? "",
+              essayType: question.essayQuestion?.essayType ?? "",
               criteria: {
                 create: criteria,
               },
@@ -381,6 +382,7 @@ export const PublishWorksheetButton: React.FC<PublishWorksheetButtonProps> = (
         version: version,
         profileId: worksheet?.profileId ?? "",
         worksheetId: worksheet?.id ?? "",
+        // @ts-expect-error: Let's ignore a compile error like this unreachable code
         questions: createQuestionsPayload(questions),
       }),
       {

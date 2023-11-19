@@ -17,6 +17,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
+import { getQuestionType } from "@/questions/derived/functions";
+import type { BaseEssayQuestion } from "@/questions/base/essayQuestion";
 
 type EssayQuestion = RouterOutputs["essayQuestion"]["get"];
 type EssayAnswer = RouterOutputs["essayAnswer"]["get"];
@@ -35,24 +37,15 @@ const EssayQuestion: React.FC<Props> = (props) => {
     props.status == "returned-teacherview" ||
     props.status == "returned-studentview";
 
-  const getMarks = (name: string) => {
-    return props.question?.criteria.find((x) => x.name == name)?.marks ?? 0;
-  };
-  const marks =
-    getMarks("Grammar") +
-    getMarks("Focus") +
-    getMarks("Exposition") +
-    getMarks("Organization") +
-    getMarks("Sentence Structure") +
-    getMarks("Plot") +
-    getMarks("Narrative Techniques") +
-    getMarks("Descriptive Techniques") +
-    getMarks("Literary Devices") +
-    getMarks("Language and Vocabulary") +
-    getMarks("Content") +
-    getMarks("Persuasion") +
-    getMarks("Purpose") +
-    getMarks("Register");
+  const essayQuestionObj = getQuestionType(
+    props.question?.essayType ?? ""
+  ) as BaseEssayQuestion;
+  const criteria = essayQuestionObj.criteria;
+
+  const totalMarks = criteria.reduce(
+    (accumulator, criterion) => accumulator + criterion.marks,
+    0
+  );
 
   return (
     <div className="flex flex-col">
@@ -74,16 +67,16 @@ const EssayQuestion: React.FC<Props> = (props) => {
             {props.status.startsWith("returned-") ? (
               <span
                 className={`rounded-md border-2 px-2 py-1 ${
-                  props.answer?.marks ?? 0 >= marks * 0.7
+                  props.answer?.marks ?? 0 >= totalMarks * 0.7
                     ? "bg-green-100"
                     : "bg-red-100"
                 }`}
               >
-                Marks: {props.answer?.marks} / {marks}
+                Marks: {props.answer?.marks} / {totalMarks}
               </span>
             ) : (
               <span className="rounded-md border-2 px-2 py-1">
-                Marks: {marks}
+                Marks: {totalMarks}
               </span>
             )}
           </div>
@@ -127,9 +120,13 @@ const EssayQuestion: React.FC<Props> = (props) => {
                 key={criterion.id}
                 name={criterion.name}
                 marks={criterion.marks}
-                totalMarks={getMarks(criterion.name)}
+                totalMarks={
+                  essayQuestionObj.criteria.find(
+                    (quesCriterion) => quesCriterion.name == criterion.name
+                  )?.marks ?? 5
+                }
                 evaluation={criterion.evaluation}
-                suggestion={criterion.suggestion}
+                level={criterion.level ?? ""}
               />
             );
           })}
@@ -227,17 +224,20 @@ interface CriteriaProps {
   marks: number;
   totalMarks: number;
   evaluation: string;
-  suggestion: string;
+  level: string;
 }
 export const Criteria: React.FC<CriteriaProps> = (props) => {
   return (
     <div className="flex w-full flex-col rounded-md border p-4">
       <div className="flex-1 space-y-1">
         <p className="text-sm font-medium leading-none">{props.name}</p>
-        <p className="text-sm text-muted-foreground">{props.evaluation}</p>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Suggestion: {props.suggestion}
+        <p className="text-sm font-medium text-muted-foreground">
+          Level-{props.level}
         </p>
+        <p className="text-sm text-muted-foreground">{props.evaluation}</p>
+        {/* <p className="mt-2 text-sm text-muted-foreground">
+          Suggestion: {props.suggestion}
+        </p> */}
       </div>
       <div className="mt-4">
         <span

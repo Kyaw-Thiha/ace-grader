@@ -21,6 +21,107 @@ const generateMarksAndFeedback = (
   const criteria = essayType?.getCriteria() ?? [];
   for (const criterion of criteria) {
     if (getMarks(criterion.name) != 0) {
+      // Getting the levels
+      let levels = "";
+      for (const level of criterion.levels) {
+        levels = `
+          ${levels}
+          ${level.level} - ${level.text}
+        `;
+      }
+
+      // Forming the criteria text
+      criteriaTexts.push(`
+        ${criterion.name}
+        ${criterion.description}
+        ${levels}
+      `);
+    }
+  }
+
+  // Properties like 'Overall Impression'
+  const propertyTexts = [];
+  const properties = essayType?.properties ?? [];
+  for (const property of properties) {
+    propertyTexts.push(`
+      ${property.name}:
+      [${property.description}]
+    `);
+  }
+
+  const systemPrompt = `
+  Question:
+  ${question?.text ?? ""}
+
+  Use the rubrics to check the answer.
+
+  ${criteriaTexts.join(`
+  
+  `)}
+
+  For each rubrics given above, determine which level the student's answer is by performing the following steps.
+
+  1 - Restate the point.
+  2 - Provide citations from the answer 
+  3 - Choose which level [0 to 6] the answer is on based on given criteria
+
+  The response should be in the following format - 
+  {
+    '${criteriaTexts[0] ?? ""}': {
+        level: (number of 0 to 6),
+        evaluation: (text)
+    }
+    ...
+    '${propertyTexts[0] ?? ""}': (string),
+    ${
+      propertyTexts.length <= 1
+        ? ""
+        : `
+      ...
+      '${propertyTexts[propertyTexts.length - 1] ?? ""}': (string),
+    `
+    }
+  }
+
+  Evaluation:
+  [Provide specific evaluation and constructive feedback on each criterion, highlighting strengths and areas for improvement. Give citations from the answer.]
+
+  ${propertyTexts.join(`
+  
+  `)}
+  `;
+
+  const userPrompt = answer?.studentAnswer;
+
+  return openai.createChatCompletion({
+    model: "gpt-3.5-turbo-16k",
+    messages: [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userPrompt },
+    ],
+    temperature: 0,
+    max_tokens: 2048,
+    top_p: 1,
+    frequency_penalty: 0,
+    presence_penalty: 0,
+  });
+};
+
+const generateMarksAndFeedbackOld = (
+  question: EssayQuestion,
+  answer: EssayAnswer
+) => {
+  const getMarks = (name: string) => {
+    return question?.criteria.find((x) => x.name == name)?.marks ?? 0;
+  };
+  const essayType = getQuestionType(
+    question?.essayType ?? ""
+  ) as BaseEssayQuestion;
+
+  const criteriaTexts = [];
+  const criteria = essayType?.getCriteria() ?? [];
+  for (const criterion of criteria) {
+    if (getMarks(criterion.name) != 0) {
       criteriaTexts.push(`
         ${criterion.name} (${getMarks(criterion.name)} marks):
         ${criterion.description}

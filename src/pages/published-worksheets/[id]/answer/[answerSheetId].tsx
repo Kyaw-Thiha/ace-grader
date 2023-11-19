@@ -115,6 +115,7 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
       if (
         !hasRun &&
         status == "answering-studentview" &&
+        !isChecking &&
         document.visibilityState === "hidden"
       ) {
         // setSwitchCount((prevCount) => prevCount + 1);

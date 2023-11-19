@@ -132,12 +132,13 @@ export const checkAnswerRenamed = async (
       ? process.env.VERCEL_URL ?? "localhost:3000"
       : "https://acegrader.com";
 
-  await sendEmail(
-    answerSheet?.studentEmail ?? "",
-    answerSheet?.studentName ?? "",
-    worksheet?.title ?? "",
-    `${baseUrl}/published-worksheets/${worksheetId}/answer/${answerSheetId}`
-  );
+  // Disabling the email sending process
+  // await sendEmail(
+  //   answerSheet?.studentEmail ?? "",
+  //   answerSheet?.studentName ?? "",
+  //   worksheet?.title ?? "",
+  //   `${baseUrl}/published-worksheets/${worksheetId}/answer/${answerSheetId}`
+  // );
 
   console.timeEnd("Function Execution Time");
 };
@@ -198,7 +199,12 @@ const handleMarking = async (
       const essayQuestionObj = getQuestionType(
         essayQuestion?.essayType ?? ""
       ) as BaseEssayQuestion;
-      const marks = await essayQuestionObj.checkAnswer(prisma, answer, data);
+      const marks = await essayQuestionObj.checkAnswer(
+        prisma,
+        essayQuestionObj.criteria,
+        answer,
+        data
+      );
 
       // Adding up to the total marks
       totalMarks = totalMarks + (marks ?? 0);

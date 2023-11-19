@@ -11,7 +11,11 @@ import { api } from "@/utils/api";
 import { type QueryObserverBaseResult } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
-import { getQuestionTypes } from "@/questions/derived/functions";
+import {
+  getQuestionType,
+  getQuestionTypes,
+} from "@/questions/derived/functions";
+import type { BaseEssayQuestion } from "@/questions/base/essayQuestion";
 
 interface WorksheetContext {
   country: string;
@@ -156,15 +160,17 @@ const AddQuestionButton: React.FC<Props> = (props) => {
     },
   });
 
-  const addEssayQuestion = () => {
+  const addEssayQuestion = (type: string) => {
+    const questionType = getQuestionType(type) as BaseEssayQuestion;
+
     void toast.promise(
       createEssayQuestion.mutateAsync({
         order: props.order,
         worksheetId: props.worksheetId,
         parentId: props.parentQuestionId,
         text: "",
-        essayType: "",
-        criteria: [],
+        essayType: type,
+        criteria: questionType.criteria,
       }),
       {
         pending: "Creating Question",
@@ -203,7 +209,7 @@ const AddQuestionButton: React.FC<Props> = (props) => {
     props.worksheetContext.curriculum,
     props.worksheetContext.subject
   )?.map((questionType) => {
-    let addFunction = () => {
+    let addFunction = (questionType: string) => {
       return;
     };
 
@@ -215,7 +221,11 @@ const AddQuestionButton: React.FC<Props> = (props) => {
       addFunction = addEssayQuestion;
     }
 
-    return { label: questionType.name, create: addFunction };
+    return {
+      label: questionType.name,
+      name: `${props.worksheetContext.country}_${props.worksheetContext.curriculum}_${props.worksheetContext.subject}_${questionType.value}`,
+      create: addFunction,
+    };
   });
 
   if (props.nestedLevel && props.nestedLevel >= MAXNESTEDLEVEL) {
@@ -247,7 +257,7 @@ const AddQuestionButton: React.FC<Props> = (props) => {
             return (
               <DropdownMenuItem
                 key={questionType.label}
-                onClick={() => questionType.create()}
+                onClick={() => questionType.create(questionType.name)}
               >
                 {questionType.label}
               </DropdownMenuItem>

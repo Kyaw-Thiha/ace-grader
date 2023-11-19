@@ -271,6 +271,7 @@ model EssayQuestion {
 
     @@index([questionId])
 }
+
 model EssayQuestionCriteria {
     id                    String        @id @default(cuid())
     name                  String        @db.TinyText
@@ -279,9 +280,24 @@ model EssayQuestionCriteria {
     metadata              Json?                  
     essayQuestionId       String          
     essayQuestion         EssayQuestion    @relation(fields: [essayQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    levels                Json?
+    //  [{
+    //      level: String
+    //      text: String
+    //  }]
 
     @@index([essayQuestionId])
 }
+
+// model EssayQuestionCriteriaLevel {
+//     id                    String        @id @default(cuid())
+//     level                 String        @db.TinyText
+//     text                  String        @db.Text
+//     essayQuestionCriteriaId       String          
+//     essayQuestionCriteria         EssayQuestionCriteria    @relation(fields: [essayQuestionCriteriaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+//     @@index([essayQuestionCriteriaId])
+// }
 
 // ***      Answers     ***
 
@@ -381,6 +397,7 @@ model EssayAnswerCriteria {
     marks                 Int       @default(0)
     evaluation            String    @db.Text
     suggestion            String    @db.Text
+    level                 String?   @db.Text
     essayAnswerId         String    
     essayAnswer           EssayAnswer    @relation(fields: [essayAnswerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
