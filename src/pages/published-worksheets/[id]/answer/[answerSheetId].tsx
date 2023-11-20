@@ -285,6 +285,8 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
                     <NestedQuestion
                       question={question.nestedQuestion}
                       answer={answers.at(index)?.nestedQuestionAnswer}
+                      answerSheetId={props.answerSheedId}
+                      totalMarks={answerSheet?.totalMarks ?? 0}
                       refetch={refetchAnswerSheet}
                       nestedLevel={2}
                       status={status}

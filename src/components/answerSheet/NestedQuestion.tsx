@@ -25,6 +25,8 @@ type NestedQuestionAnswer = RouterOutputs["nestedQuestionAnswer"]["get"];
 interface Props {
   question: NestedQuestion;
   answer?: NestedQuestionAnswer;
+  totalMarks?: number;
+  answerSheetId?: string;
   refetch: QueryObserverBaseResult["refetch"];
   status: AnswerSheetStatus;
   nestedLevel: number;
@@ -129,6 +131,8 @@ const NestedQuestion: React.FC<Props> = (props) => {
                         answer={
                           props.answer?.childrenAnswers.at(index)?.essayAnswer
                         }
+                        answerSheetId={props.answerSheetId}
+                        totalMarks={props.totalMarks}
                         refetch={props.refetch}
                         status={props.status}
                       />
@@ -140,6 +144,8 @@ const NestedQuestion: React.FC<Props> = (props) => {
                           props.answer?.childrenAnswers.at(index)
                             ?.nestedQuestionAnswer as NestedQuestionAnswer
                         }
+                        answerSheetId={props.answerSheetId}
+                        totalMarks={props.totalMarks}
                         refetch={props.refetch}
                         nestedLevel={props.nestedLevel + 1}
                         status={props.status}

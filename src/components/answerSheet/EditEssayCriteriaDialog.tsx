@@ -23,8 +23,8 @@ type EssayAnswerCriteria =
 
 interface Props {
   criteria: EssayAnswerCriteria;
-  answerSheetId: string;
-  totalMarks: number;
+  answerSheetId?: string;
+  totalMarks?: number;
   refetch: QueryObserverBaseResult["refetch"];
 }
 
@@ -53,9 +53,9 @@ export const EditEssayCriteriaDialog: React.FC<Props> = (props) => {
 
   const edit = async () => {
     await editMarks.mutateAsync({
-      id: props.answerSheetId,
+      id: props.answerSheetId ?? "",
       totalMarks:
-        props.totalMarks - (props.criteria?.marks ?? 0) + Number(marks),
+        (props.totalMarks ?? 0) - (props.criteria?.marks ?? 0) + Number(marks),
     });
 
     await editCriteria.mutateAsync({

@@ -28,8 +28,8 @@ interface Props {
   question: EssayQuestion;
   answer?: EssayAnswer;
   status: AnswerSheetStatus;
-  answerSheetId: string;
-  totalMarks: number;
+  answerSheetId?: string;
+  totalMarks?: number;
   refetch: QueryObserverBaseResult["refetch"];
 }
 
@@ -123,6 +123,7 @@ const EssayQuestion: React.FC<Props> = (props) => {
             return (
               <Criteria
                 key={criterion.id}
+                status={props.status}
                 marks={
                   essayQuestionObj.criteria.find(
                     (quesCriterion) => quesCriterion.name == criterion.name
@@ -227,14 +228,19 @@ const StudentAnswer: React.FC<Props> = (props) => {
 type EssayAnswerCriteria =
   RouterOutputs["essayAnswer"]["getEssayAnswerCriteria"];
 interface CriteriaProps {
+  status: string;
   criteria: EssayAnswerCriteria;
-  answerSheetId: string;
-  totalMarks: number;
+  answerSheetId?: string;
+  totalMarks?: number;
   marks: number;
   refetch: QueryObserverBaseResult["refetch"];
 }
 
 export const Criteria: React.FC<CriteriaProps> = (props) => {
+  const allowsEdit =
+    props.status == "checking-teacherview" ||
+    props.status == "returned-teacherview";
+
   return (
     <div className="flex w-full flex-col rounded-md border p-4">
       <div className="flex-1 space-y-1">
@@ -264,14 +270,17 @@ export const Criteria: React.FC<CriteriaProps> = (props) => {
           Marks: {props.criteria?.marks} / {props.marks}
         </span>
       </div>
-      <div className="flex justify-end">
-        <EditEssayCriteriaDialog
-          criteria={props.criteria}
-          answerSheetId={props.answerSheetId}
-          totalMarks={props.totalMarks}
-          refetch={props.refetch}
-        />
-      </div>
+
+      {allowsEdit && (
+        <div className="flex justify-end">
+          <EditEssayCriteriaDialog
+            criteria={props.criteria}
+            answerSheetId={props.answerSheetId}
+            totalMarks={props.totalMarks}
+            refetch={props.refetch}
+          />
+        </div>
+      )}
     </div>
   );
 };
