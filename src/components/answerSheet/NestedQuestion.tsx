@@ -17,6 +17,7 @@ import {
 import Image from "next/image";
 import MultipleChoiceQuestion from "@/components/answerSheet/MultipleChoiceQuestion";
 import OpenEndedQuestion from "@/components/answerSheet/OpenEndedQuestion";
+import EssayQuestion from "./EssayQuestion";
 
 type NestedQuestion = RouterOutputs["nestedQuestion"]["get"];
 type NestedQuestionAnswer = RouterOutputs["nestedQuestionAnswer"]["get"];
@@ -116,6 +117,16 @@ const NestedQuestion: React.FC<Props> = (props) => {
                         answer={
                           props.answer?.childrenAnswers.at(index)
                             ?.openEndedQuestionAnswer
+                        }
+                        refetch={props.refetch}
+                        status={props.status}
+                      />
+                    )}
+                    {question.questionType == "EssayQuestion" && (
+                      <EssayQuestion
+                        question={question.essayQuestion}
+                        answer={
+                          props.answer?.childrenAnswers.at(index)?.essayAnswer
                         }
                         refetch={props.refetch}
                         status={props.status}

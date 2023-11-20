@@ -21,6 +21,12 @@ export const nestedQuestionAnswerRouter = createTRPCRouter({
             include: {
               multipleChoiceQuestionAnswer: true,
               openEndedQuestionAnswer: true,
+              essayAnswer: {
+                include: {
+                  criteria: true,
+                  properties: true,
+                },
+              },
               nestedQuestionAnswer: {
                 include: {
                   // 3rd level (i)
@@ -29,6 +35,12 @@ export const nestedQuestionAnswerRouter = createTRPCRouter({
                     include: {
                       multipleChoiceQuestionAnswer: true,
                       openEndedQuestionAnswer: true,
+                      essayAnswer: {
+                        include: {
+                          criteria: true,
+                          properties: true,
+                        },
+                      },
                     },
                   },
                 },
