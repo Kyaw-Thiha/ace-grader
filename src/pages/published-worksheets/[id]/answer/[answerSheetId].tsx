@@ -172,6 +172,8 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
       id: props.answerSheedId,
     });
   const answers = answerSheet?.answers ?? [];
+  console.log("Answers - ", answers);
+  console.log("ans - ", answers.at(2)?.nestedQuestionAnswer);
 
   const status = props.isTeacher
     ? (`${answerSheet?.status ?? "answering"}-teacherview` as AnswerSheetStatus)

@@ -35,6 +35,7 @@ const NestedQuestion: React.FC<Props> = (props) => {
   const BASELEFTMARGIN = 8;
 
   console.log("Nested Question - ", props.question);
+  console.log("Nested Answer - ", props.answer);
 
   const margins = {
     1: `ml-${BASELEFTMARGIN * 1}`,

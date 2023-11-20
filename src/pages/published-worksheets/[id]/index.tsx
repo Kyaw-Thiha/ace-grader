@@ -22,7 +22,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { formatDateWithSuffix } from "@/utils/helper";
 import AnswerSheetNavLayout from "@/components/AnswerSheetNavLayout";
-import type { EssayCriteriaName } from "@/server/api/schema";
+import { answerTypeSchema, type EssayCriteriaName } from "@/server/api/schema";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"];
@@ -91,6 +91,7 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
   //Fetching the worksheet
   const {
     data: publishedWorksheet,
+    refetch: fetchpublishedWorksheet,
     isLoading,
     isError,
   } = api.publishedWorksheet.get.useQuery({ id: props.id });
@@ -143,12 +144,13 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
         ) {
           setShowPrevAnswerSheets(true);
         } else {
+          // console.log(await getAnswers());
           void toast.promise(
             createAnswerSheet.mutateAsync({
               studentName: name,
               studentEmail: email,
               publishedWorksheetId: props.id,
-              answers: getAnswers(),
+              answers: await getAnswers(),
             }),
             {
               pending: "Creating Answer Sheet",
@@ -161,9 +163,11 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
     }
   };
 
-  const getAnswers = () => {
+  const getAnswers = async () => {
     const answers = [];
-    const questions = publishedWorksheet?.questions ?? [];
+    const res = await fetchpublishedWorksheet();
+    const questions = res.data?.questions ?? [];
+    // const questions = publishedWorksheet?.questions ?? [];
 
     const essayAnswerProperties = {
       create: {
@@ -328,6 +332,8 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
         });
       }
     }
+
+    console.log("answers - ", answers);
 
     return answers;
   };
