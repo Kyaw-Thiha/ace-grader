@@ -215,7 +215,9 @@ export const arguementativeEssay = new BaseEssayQuestion(
   ],
 
   async (prisma: PrismaClient, criteria, answer: EssayAnswer, data: string) => {
+    console.log("argumentative data - ", data);
     const answerResponse = JSON.parse(data) as Response;
+    console.log("argumentative response - ", answerResponse);
 
     const expressionLevel = Number(answerResponse.Expression?.level ?? "0");
     const expressionMarks =
@@ -252,6 +254,7 @@ export const arguementativeEssay = new BaseEssayQuestion(
       Register: registerMarks,
       Grammar: grammarMarks,
     };
+    console.log("criteria marks - ", criteriaMarks);
 
     const marks =
       expressionMarks +
@@ -259,6 +262,8 @@ export const arguementativeEssay = new BaseEssayQuestion(
       vocabularyMarks +
       registerMarks +
       grammarMarks;
+
+    console.log("marks - ", marks);
 
     await updateEssayAnswer(
       prisma,
@@ -291,6 +296,7 @@ const updateEssayAnswer = async (
     criteria: Criteria,
     marks: number
   ) => {
+    console.log("updating...");
     await prisma.essayAnswerCriteria.update({
       where: {
         id: id,
@@ -298,7 +304,7 @@ const updateEssayAnswer = async (
       data: {
         marks: marks,
         evaluation: criteria.evaluation,
-        level: criteria.level,
+        level: criteria.level.toString(),
       },
     });
   };
@@ -317,6 +323,9 @@ const updateEssayAnswer = async (
 
   const criteria = essayAnswer?.criteria ?? [];
   for (const criterion of criteria) {
+    console.log("name - ", criterion.name);
+    console.log(response[criterion.name as keyof Response] as Criteria);
+
     await editCriteria(
       criterion.id,
       response[criterion.name as keyof Response] as Criteria,

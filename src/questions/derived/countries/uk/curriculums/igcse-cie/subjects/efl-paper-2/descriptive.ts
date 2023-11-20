@@ -298,7 +298,7 @@ const updateEssayAnswer = async (
       data: {
         marks: marks,
         evaluation: criteria.evaluation,
-        level: criteria.level,
+        level: criteria.level.toString(),
       },
     });
   };

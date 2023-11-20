@@ -10,12 +10,14 @@ const generateMarksAndFeedback = (
   question: EssayQuestion,
   answer: EssayAnswer
 ) => {
+  console.log("Generating...");
   const getMarks = (name: string) => {
     return question?.criteria.find((x) => x.name == name)?.marks ?? 0;
   };
   const essayType = getQuestionType(
     question?.essayType ?? ""
   ) as BaseEssayQuestion;
+  console.log("essayType - ", essayType);
 
   const criteriaTexts = [];
   const criteria = essayType?.getCriteria() ?? [];
@@ -38,6 +40,7 @@ const generateMarksAndFeedback = (
       `);
     }
   }
+  console.log("criteria - ", criteria);
 
   // Properties like 'Overall Impression'
   const propertyTexts = [];
@@ -65,42 +68,47 @@ const generateMarksAndFeedback = (
   2 - Provide citations from the answer 
   3 - Choose which level [0 to 6] the answer is on based on given criteria
 
-  The response should be in the following format - 
+  Evaluation:
+  [Provide specific evaluation and constructive feedback on each criterion, highlighting strengths and areas for improvement. Give citations from the answer.]
+
+  The response should be in the following json format - 
   {
-    '${criteriaTexts[0] ?? ""}': {
+    '${criteria[0]?.name ?? ""}': {
         level: (number of 0 to 6),
         evaluation: (text)
     }
     ...
-    '${propertyTexts[0] ?? ""}': (string),
-    ${
-      propertyTexts.length <= 1
-        ? ""
-        : `
-      ...
-      '${propertyTexts[propertyTexts.length - 1] ?? ""}': (string),
-    `
-    }
+    
   }
-
-  Evaluation:
-  [Provide specific evaluation and constructive feedback on each criterion, highlighting strengths and areas for improvement. Give citations from the answer.]
-
-  ${propertyTexts.join(`
-  
-  `)}
   `;
 
-  const userPrompt = answer?.studentAnswer;
+  // ${propertyTexts.join(`
 
-  return openai.createChatCompletion({
+  // `)}
+  // '${propertyTexts[0] ?? ""}': (string),
+  // ${
+  //   propertyTexts.length <= 1
+  //     ? ""
+  //     : `
+  //   ...
+  //   '${propertyTexts[propertyTexts.length - 1] ?? ""}': (string),
+  // `
+  // }
+
+  const userPrompt = answer?.studentAnswer ?? "";
+
+  console.log("systemPrompt - ", systemPrompt);
+  console.log("userPrompt - ", userPrompt);
+  console.log(openai);
+
+  return openai.chat.completions.create({
     model: "gpt-3.5-turbo-16k",
     messages: [
       { role: "system", content: systemPrompt },
       { role: "user", content: userPrompt },
     ],
     temperature: 0,
-    max_tokens: 2048,
+    max_tokens: 2500,
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0,
@@ -184,9 +192,9 @@ const generateMarksAndFeedbackOld = (
   }
   `;
 
-  const userPrompt = answer?.studentAnswer;
+  const userPrompt = answer?.studentAnswer ?? "";
 
-  return openai.createChatCompletion({
+  return openai.chat.completions.create({
     model: "gpt-3.5-turbo-16k",
     messages: [
       { role: "system", content: systemPrompt },
@@ -381,9 +389,9 @@ const generateMarksAndFeedbackLegacy = (
   }
   `;
 
-  const userPrompt = answer?.studentAnswer;
+  const userPrompt = answer?.studentAnswer ?? "";
 
-  return openai.createChatCompletion({
+  return openai.chat.completions.create({
     model: "gpt-3.5-turbo-16k",
     messages: [
       { role: "system", content: systemPrompt },

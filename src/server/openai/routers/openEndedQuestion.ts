@@ -25,7 +25,7 @@ const generateExplanation = (question: OpenEndedQuestion) => {
   Explanation:
   `;
 
-  return openai.createChatCompletion({
+  return openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: [
       { role: "system", content: systemPrompt },
@@ -54,15 +54,15 @@ const generateSampleAnswer = (question: OpenEndedQuestion) => {
   }
   \nSample Answer:
   `;
-  return openai.createCompletion({
-    model: "text-davinci-003",
-    prompt: prompt,
-    temperature: 1,
-    max_tokens: 256,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
-  });
+  // return openai.createCompletion({
+  //   model: "text-davinci-003",
+  //   prompt: prompt,
+  //   temperature: 1,
+  //   max_tokens: 256,
+  //   top_p: 1,
+  //   frequency_penalty: 0,
+  //   presence_penalty: 0,
+  // });
 };
 
 const generateMarksAndFeedback = (
@@ -98,7 +98,7 @@ const generateMarksAndFeedback = (
   Answer: ${studentAnswer}
   `;
 
-  return openai.createChatCompletion({
+  return openai.chat.completions.create({
     model: "gpt-3.5-turbo-16k",
     messages: [
       { role: "system", content: systemPrompt },
@@ -175,7 +175,7 @@ const batchGenerateMarksAndFeedback = (
 
   const userPrompt = JSON.stringify(questionsList);
 
-  return openai.createChatCompletion({
+  return openai.chat.completions.create({
     model: "gpt-3.5-turbo-16k",
     messages: [
       { role: "system", content: systemPrompt },
@@ -250,13 +250,13 @@ const generateMarksAndFeedbackLegacy = (
   Answer: ${studentAnswer}
   Mark:`;
 
-  return openai.createCompletion({
-    model: "text-davinci-003",
-    prompt: prompt,
-    temperature: 0,
-    max_tokens: 256,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
-  });
+  // return openai.createCompletion({
+  //   model: "text-davinci-003",
+  //   prompt: prompt,
+  //   temperature: 0,
+  //   max_tokens: 256,
+  //   top_p: 1,
+  //   frequency_penalty: 0,
+  //   presence_penalty: 0,
+  // });
 };

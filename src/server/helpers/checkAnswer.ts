@@ -98,7 +98,7 @@ export const checkAnswerRenamed = async (
   );
   console.timeEnd("Checking OpenEndedQuestions");
 
-  const data = res.data.choices[0]?.message?.content ?? "";
+  const data = res.choices[0]?.message?.content ?? "";
   const answerResponses = JSON.parse(data) as MarksAndFeedback[];
 
   console.time("Updating Questions");
@@ -153,6 +153,7 @@ const handleMarking = async (
   let totalMarks = 0;
 
   for (const question of questions) {
+    console.log("Check Question - ", question);
     if (question.questionType == "MultipleChoiceQuestion") {
       const answer = answers.at(question.order - 1)
         ?.multipleChoiceQuestionAnswer as MultipleChoiceQuestionAnswer;
@@ -190,21 +191,27 @@ const handleMarking = async (
       if (essayQuestion && parentQuestionText) {
         essayQuestion.text = parentQuestionText + essayQuestion.text;
       }
+
+      console.log("Fetching Essay");
       // Fetching the marks and feedback
       const res = await backOff(() =>
         openaiAPI.essayQuestion.generateMarksAndFeedback(essayQuestion, answer)
       );
-      const data = res.data.choices[0]?.message?.content ?? "";
+      console.log("res - ", res);
+      const data = res.choices[0]?.message?.content ?? "";
+      console.log("resData - ", data);
 
       const essayQuestionObj = getQuestionType(
         essayQuestion?.essayType ?? ""
       ) as BaseEssayQuestion;
+      console.log("obj - ", essayQuestionObj);
       const marks = await essayQuestionObj.checkAnswer(
         prisma,
         essayQuestionObj.criteria,
         answer,
         data
       );
+      console.log("marks - ", marks);
 
       // Adding up to the total marks
       totalMarks = totalMarks + (marks ?? 0);
