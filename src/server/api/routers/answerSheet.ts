@@ -8,7 +8,9 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
-import checkAnswerRenamed from "@/defer/checkAnswer";
+// import checkAnswerRenamed from "@/defer/checkAnswer";
+import { checkAnswerRenamed } from "@/server/helpers/checkAnswer";
+
 import { TRPCError } from "@trpc/server";
 import { answerSchemaProperties } from "@/server/api/schema";
 
