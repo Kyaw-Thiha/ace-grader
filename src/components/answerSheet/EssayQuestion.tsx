@@ -19,6 +19,7 @@ import {
 import Image from "next/image";
 import { getQuestionType } from "@/questions/derived/functions";
 import type { BaseEssayQuestion } from "@/questions/base/essayQuestion";
+import { EditEssayCriteriaDialog } from "./EditEssayCriteriaDialog";
 
 type EssayQuestion = RouterOutputs["essayQuestion"]["get"];
 type EssayAnswer = RouterOutputs["essayAnswer"]["get"];
@@ -26,8 +27,10 @@ type EssayAnswer = RouterOutputs["essayAnswer"]["get"];
 interface Props {
   question: EssayQuestion;
   answer?: EssayAnswer;
-  refetch: QueryObserverBaseResult["refetch"];
   status: AnswerSheetStatus;
+  answerSheetId: string;
+  totalMarks: number;
+  refetch: QueryObserverBaseResult["refetch"];
 }
 
 const EssayQuestion: React.FC<Props> = (props) => {
@@ -104,8 +107,10 @@ const EssayQuestion: React.FC<Props> = (props) => {
               <StudentAnswer
                 question={props.question}
                 answer={props.answer}
-                refetch={props.refetch}
+                answerSheetId={props.answerSheetId}
+                totalMarks={props.totalMarks}
                 status={props.status}
+                refetch={props.refetch}
               />
             </div>
           </div>
@@ -118,15 +123,15 @@ const EssayQuestion: React.FC<Props> = (props) => {
             return (
               <Criteria
                 key={criterion.id}
-                name={criterion.name}
-                marks={criterion.marks}
-                totalMarks={
+                marks={
                   essayQuestionObj.criteria.find(
                     (quesCriterion) => quesCriterion.name == criterion.name
                   )?.marks ?? 5
                 }
-                evaluation={criterion.evaluation}
-                level={criterion.level ?? ""}
+                answerSheetId={props.answerSheetId}
+                totalMarks={props.totalMarks}
+                criteria={criterion}
+                refetch={props.refetch}
               />
             );
           })}
@@ -219,22 +224,29 @@ const StudentAnswer: React.FC<Props> = (props) => {
   );
 };
 
+type EssayAnswerCriteria =
+  RouterOutputs["essayAnswer"]["getEssayAnswerCriteria"];
 interface CriteriaProps {
-  name: string;
-  marks: number;
+  criteria: EssayAnswerCriteria;
+  answerSheetId: string;
   totalMarks: number;
-  evaluation: string;
-  level: string;
+  marks: number;
+  refetch: QueryObserverBaseResult["refetch"];
 }
+
 export const Criteria: React.FC<CriteriaProps> = (props) => {
   return (
     <div className="flex w-full flex-col rounded-md border p-4">
       <div className="flex-1 space-y-1">
-        <p className="text-sm font-medium leading-none">{props.name}</p>
-        <p className="text-sm font-medium text-muted-foreground">
-          Level-{props.level}
+        <p className="text-sm font-medium leading-none">
+          {props.criteria?.name}
         </p>
-        <p className="text-sm text-muted-foreground">{props.evaluation}</p>
+        <p className="text-sm font-medium text-muted-foreground">
+          Level-{props.criteria?.level}
+        </p>
+        <p className="text-sm text-muted-foreground">
+          {props.criteria?.evaluation}
+        </p>
         {/* <p className="mt-2 text-sm text-muted-foreground">
           Suggestion: {props.suggestion}
         </p> */}
@@ -242,15 +254,23 @@ export const Criteria: React.FC<CriteriaProps> = (props) => {
       <div className="mt-4">
         <span
           className={` rounded-md border-2 px-2 py-1 text-sm ${
-            props.marks >= props.totalMarks * 0.7
+            (props.criteria?.marks ?? 0) >= props.marks * 0.7
               ? "bg-green-100"
-              : props.marks >= props.totalMarks * 0.5
+              : (props.criteria?.marks ?? 0) >= props.marks * 0.5
               ? "bg-yellow-100"
               : "bg-red-100"
           }`}
         >
-          Marks: {props.marks} / {props.totalMarks}
+          Marks: {props.criteria?.marks} / {props.marks}
         </span>
+      </div>
+      <div className="flex justify-end">
+        <EditEssayCriteriaDialog
+          criteria={props.criteria}
+          answerSheetId={props.answerSheetId}
+          totalMarks={props.totalMarks}
+          refetch={props.refetch}
+        />
       </div>
     </div>
   );

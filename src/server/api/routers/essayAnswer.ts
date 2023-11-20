@@ -21,6 +21,16 @@ export const essayAnswerRouter = createTRPCRouter({
       });
     }),
 
+  getEssayAnswerCriteria: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.essayAnswerCriteria.findFirst({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
+
   create: publicProcedure
     .input(
       z.object({
@@ -123,10 +133,12 @@ export const essayAnswerRouter = createTRPCRouter({
       });
     }),
 
-  editLevel: publicProcedure
+  editCriteriaAnswer: publicProcedure
     .input(
       z.object({
         id: z.string(),
+        marks: z.number(),
+        evaluation: z.string(),
         level: z.string(),
       })
     )
@@ -136,6 +148,8 @@ export const essayAnswerRouter = createTRPCRouter({
           id: input.id,
         },
         data: {
+          marks: input.marks,
+          evaluation: input.evaluation,
           level: input.level,
         },
       });

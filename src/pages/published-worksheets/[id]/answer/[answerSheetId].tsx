@@ -272,11 +272,15 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
                     <EssayQuestion
                       question={question.essayQuestion}
                       answer={answers.at(index)?.essayAnswer}
-                      refetch={refetchAnswerSheet}
+                      answerSheetId={props.answerSheedId}
+                      totalMarks={answerSheet?.totalMarks ?? 0}
                       status={status}
+                      refetch={refetchAnswerSheet}
                     />
                   )}
 
+                  {/* {index} */}
+                  {/* {answers.at(index)?.essayAnswer} */}
                   {question.questionType == "NestedQuestion" && (
                     <NestedQuestion
                       question={question.nestedQuestion}
