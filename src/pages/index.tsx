@@ -125,7 +125,7 @@ const FeatureSection = () => {
       <h1 className="mb-8 text-center text-2xl font-medium text-gray-900 dark:text-gray-100 sm:text-3xl">
         Features
       </h1>
-      <div className="flex grid-cols-3 flex-col-reverse gap-4 md:grid">
+      <div className="flex grid-cols-3 flex-row-reverse gap-4 md:grid">
         <div className="flex flex-col items-center justify-center gap-4">
           {features.map((feature, index) => {
             return (
