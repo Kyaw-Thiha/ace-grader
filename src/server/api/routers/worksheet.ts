@@ -161,7 +161,7 @@ export const worksheetRouter = createTRPCRouter({
             include: {
               answerSheets: {
                 orderBy: {
-                  startTime: "desc",
+                  endTime: "desc",
                 },
                 where: {
                   OR: [{ status: "checking" }, { status: "returned" }],
