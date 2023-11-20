@@ -13,7 +13,7 @@ export class BaseMultipleChoiceQuestion extends BaseQuestion {
     value: string,
     choices: BaseMultipleChoiceQuestionOption[]
   ) {
-    super(name, value, "MCQ");
+    super(name, value, "mcq");
     this.choices = choices;
   }
 }

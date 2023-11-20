@@ -7,6 +7,9 @@ import { env } from "@/env.mjs";
 
 const openai = new OpenAI({
   apiKey: env.NEXT_PUBLIC_OPENAI_API_KEY,
+
+  // disable this later
+  dangerouslyAllowBrowser: true,
 });
 
 export default openai;

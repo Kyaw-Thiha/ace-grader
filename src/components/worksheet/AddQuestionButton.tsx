@@ -67,6 +67,7 @@ const AddQuestionButton: React.FC<Props> = (props) => {
     });
 
   const addMultipleChoiceQuestion = () => {
+    console.log("adding MCQ");
     void toast.promise(
       createMultipleChoiceQuestion.mutateAsync({
         order: props.order,
@@ -209,6 +210,8 @@ const AddQuestionButton: React.FC<Props> = (props) => {
     props.worksheetContext.curriculum,
     props.worksheetContext.subject
   )?.map((questionType) => {
+    console.log(questionType);
+
     let addFunction = (questionType: string) => {
       return;
     };
@@ -217,6 +220,8 @@ const AddQuestionButton: React.FC<Props> = (props) => {
       addFunction = addMultipleChoiceQuestion;
     } else if (questionType.baseType == "open-ended") {
       addFunction = addOpenAddedQuestion;
+    } else if (questionType.baseType == "nested") {
+      addFunction = addNestedQuestion;
     } else if (questionType.baseType == "essay") {
       addFunction = addEssayQuestion;
     }
