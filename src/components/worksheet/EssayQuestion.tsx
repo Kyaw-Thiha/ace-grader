@@ -154,9 +154,10 @@ const Criteria: React.FC<CriteriaProps> = (props) => {
   });
 
   const updateMarks = (newMarks: string) => {
-    if (newMarks != "" && newMarks != marks) {
+    if (newMarks != "") {
       // Updating the individual marks of each criteria
       setMarks(newMarks);
+
       editCriteria.mutate({
         id: props.criteriaId,
         name: props.name as EssayCriteriaName,
@@ -192,7 +193,9 @@ const Criteria: React.FC<CriteriaProps> = (props) => {
         className="w-14"
         disabled={marks == "0"}
         value={marks}
-        onChange={(e) => setMarks(e.target.value)}
+        onChange={(e) => {
+          setMarks(e.target.value);
+        }}
       />
     </div>
   );
