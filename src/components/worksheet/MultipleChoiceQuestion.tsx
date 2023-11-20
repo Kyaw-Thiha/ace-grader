@@ -265,7 +265,7 @@ const Explanation: React.FC<Props> = (props) => {
       const res = await openaiAPI.multipleChoiceQuestion.generateExplanation(
         props.question
       );
-      const explanationResponse = res.data.choices[0]?.message?.content ?? "";
+      const explanationResponse = res.choices[0]?.message?.content ?? "";
       setExplanation(explanationResponse);
     } else {
       return Promise.reject();

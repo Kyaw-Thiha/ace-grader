@@ -292,7 +292,7 @@ const Explanation: React.FC<Props> = (props) => {
       const res = await openaiAPI.openEndedQuestion.generateExplanation(
         props.question
       );
-      const explanationResponse = res.data.choices[0]?.message?.content ?? "";
+      const explanationResponse = res.choices[0]?.message?.content ?? "";
       setExplanation(explanationResponse);
     } else {
       return Promise.reject();
@@ -390,7 +390,7 @@ const AnswerTester: React.FC<Props> = (props) => {
       answers
     );
 
-    const data = res.data.choices[0]?.message?.content ?? "";
+    const data = res.choices[0]?.message?.content ?? "";
     const answerResponses = JSON.parse(data) as MarksAndFeedback[];
 
     setMarks(answerResponses[0]?.marks ?? 0);
@@ -469,7 +469,7 @@ const SampleAnswer: React.FC<Props> = (props) => {
     const res = await openaiAPI.openEndedQuestion.generateSampleAnswer(
       props.question
     );
-    const data = res.data.choices[0]?.text ?? "";
+    const data = res.choices[0]?.message.content ?? "";
     // Remove the first character as it is either empty space or \n
     const sampleAnswerResponse = data.slice(1);
     setSampleAnswer(sampleAnswerResponse);

@@ -24,7 +24,7 @@ const generateExplanation = (question: MultipleChoiceQuestion) => {
   Explanation:
   `;
 
-  return openai.createChatCompletion({
+  return openai.chat.completions.create({
     model: "gpt-3.5-turbo-16k",
     messages: [
       { role: "system", content: systemPrompt },

@@ -41,9 +41,11 @@ const generateExplanation = (question: OpenEndedQuestion) => {
 
 const generateSampleAnswer = (question: OpenEndedQuestion) => {
   const markingScheme = question?.markingScheme as string[];
-  const prompt = `
+  const systemPrompt = `
   Act as a teacher writing down a short and concise sample answer in one paragraph.
   \nIt will be used as reference by students to learn from.
+  `;
+  const userPrompt = `
   \n\nQuestion: ${question?.text ?? ""}
   \nMarking Scheme: ${
     markingScheme
@@ -54,15 +56,19 @@ const generateSampleAnswer = (question: OpenEndedQuestion) => {
   }
   \nSample Answer:
   `;
-  // return openai.createCompletion({
-  //   model: "text-davinci-003",
-  //   prompt: prompt,
-  //   temperature: 1,
-  //   max_tokens: 256,
-  //   top_p: 1,
-  //   frequency_penalty: 0,
-  //   presence_penalty: 0,
-  // });
+
+  return openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: [
+      { role: "system", content: "Generate sample answer" },
+      { role: "user", content: userPrompt },
+    ],
+    temperature: 1,
+    max_tokens: 512,
+    top_p: 1,
+    frequency_penalty: 0,
+    presence_penalty: 0,
+  });
 };
 
 const generateMarksAndFeedback = (
