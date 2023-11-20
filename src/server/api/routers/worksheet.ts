@@ -255,6 +255,78 @@ export const worksheetRouter = createTRPCRouter({
       });
     }),
 
+  addCollaborator: protectedProcedure
+    .input(
+      z.object({
+        profileId: z.string(),
+        worksheetId: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.collaboratorsOnWorksheets.create({
+        data: {
+          profile: {
+            connect: { id: input.profileId },
+          },
+          worksheet: {
+            connect: { id: input.worksheetId },
+          },
+        },
+      });
+    }),
+
+  removeCollaborator: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.collaboratorsOnWorksheets.delete({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
+
+  getCollaborators: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.worksheet.findFirst({
+        where: {
+          id: input.id,
+        },
+        select: {
+          collaborators: {
+            include: {
+              profile: true,
+            },
+          },
+        },
+      });
+    }),
+
+  getCollaboratorsByPublishedWorksheet: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.publishedWorksheet.findFirst({
+        where: {
+          id: input.id,
+        },
+        select: {
+          worksheet: {
+            select: {
+              collaborators: {
+                include: {
+                  profile: true,
+                },
+              },
+            },
+          },
+        },
+      });
+    }),
+
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(({ ctx, input }) => {

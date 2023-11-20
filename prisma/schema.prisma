@@ -24,11 +24,24 @@ model TeacherProfile {
     email         String    @default("")
     userId        String
     notifications           TeacherNotification[]
-    worksheets              Worksheet[]
+    worksheets              Worksheet[]  
     publishedWorksheets     PublishedWorksheet[]
+    collaboratedWorksheets  CollaboratorsOnWorksheets[]
 
     @@index([userId])
     @@index([email])
+}
+
+model CollaboratorsOnWorksheets {
+    id                      String          @id @default(cuid())
+    profileId               String?  
+    profile                 TeacherProfile? @relation(fields: [profileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    worksheetId             String?  
+    worksheet               Worksheet?      @relation(fields: [worksheetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    assignedAt              DateTime        @default(now())
+
+    @@index([profileId])
+    @@index([worksheetId])
 }
 
 model TeacherNotification {
@@ -86,6 +99,7 @@ model Worksheet {
     publishedWorksheets             PublishedWorksheet[]
     profileId      String
     profile        TeacherProfile   @relation(fields: [profileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    collaborators  CollaboratorsOnWorksheets[]
    
     @@index([profileId])
 }

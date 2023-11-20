@@ -73,6 +73,11 @@ const CheckIfUserCreatedWorksheet: React.FC<Props> = (props) => {
     isError,
   } = api.teacherProfile.getCurrentUser.useQuery();
 
+  const { data: publishedWorksheetForCollaborators } =
+    api.worksheet.getCollaboratorsByPublishedWorksheet.useQuery({
+      id: props.publishedWorksheetId,
+    });
+
   const { data: publishedWorksheet } = api.publishedWorksheet.get.useQuery(
     { id: props.publishedWorksheetId } // no input
   );
@@ -83,7 +88,12 @@ const CheckIfUserCreatedWorksheet: React.FC<Props> = (props) => {
     <QuestionList
       publishedWorksheetId={props.publishedWorksheetId}
       answerSheedId={props.answerSheedId}
-      isTeacher={profileId == teacherProfile?.id}
+      isTeacher={
+        profileId == teacherProfile?.id ||
+        (publishedWorksheetForCollaborators?.worksheet?.collaborators.filter(
+          (collaborator) => collaborator.profileId == teacherProfile?.id
+        ).length ?? 0) > 0
+      }
     />
   );
 };

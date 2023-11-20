@@ -24,7 +24,7 @@ import Head from "next/head";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import ToggleTheme from "@/components/ToggleTheme";
-import { ChangeOwnerDialog } from "@/components/worksheet/CollaboratorsDialog";
+import { Collaborators } from "@/components/worksheet/Collaborators";
 import ReorderButtons from "@/components/worksheet/ReorderButtons";
 import EssayQuestion from "@/components/worksheet/EssayQuestion";
 
@@ -118,10 +118,11 @@ const WorksheetLayout: React.FC<WorksheetHeaderProps> = ({
 
             <div className="flex flex-row items-center gap-4">
               <ToggleTheme />
-              <ChangeOwnerDialog
+              <Collaborators
                 worksheetId={worksheetId}
                 refetch={refetchWorksheet}
               />
+
               <PublishWorksheetButton
                 worksheetId={worksheetId}
                 refetch={refetchWorksheet}
