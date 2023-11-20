@@ -17,7 +17,7 @@ interface Property {
 interface Response {
   Expression?: Criteria;
   Organization?: Criteria;
-  Vocabulary?: Criteria;
+  // Vocabulary?: Criteria;
   Register?: Criteria;
   Grammar?: Criteria;
   "Overall Impression"?: string;
@@ -99,70 +99,35 @@ export const narrativeEssay = new BaseEssayQuestion(
         },
       ],
     },
-    {
-      name: "Vocabulary",
-      description:
-        "Use a range of vocabulary and sentence structures appropriate to context",
-      marks: 5,
-      levels: [
-        {
-          level: "6",
-          text: "Precise, well-chosen vocabulary and varied sentence structures, chosen for effect",
-        },
-        {
-          level: "5",
-          text: "Mostly precise vocabulary and a range of sentence structures mostly used for effect",
-        },
-        {
-          level: "4",
-          text: "Some precise vocabulary and a range of sentence structures sometimes used for effect.",
-        },
-        {
-          level: "3",
-          text: "Simple vocabulary and a range of straightforward sentence structures.",
-        },
-        {
-          level: "2",
-          text: "Limited and/or imprecise vocabulary and sentence structures.",
-        },
-        {
-          level: "1",
-          text: "Frequently imprecise vocabulary and sentence structures.",
-        },
-        {
-          level: "0",
-          text: "No creditable content",
-        },
-      ],
-    },
     // {
-    //   name: "Register",
-    //   description: "Use register appropriate to context",
+    //   name: "Vocabulary",
+    //   description:
+    //     "Use a range of vocabulary and sentence structures appropriate to context",
     //   marks: 5,
     //   levels: [
     //     {
     //       level: "6",
-    //       text: "Highly effective register for audience and purpose",
+    //       text: "Precise, well-chosen vocabulary and varied sentence structures, chosen for effect",
     //     },
     //     {
     //       level: "5",
-    //       text: "Effective register for audience and purpose",
+    //       text: "Mostly precise vocabulary and a range of sentence structures mostly used for effect",
     //     },
     //     {
     //       level: "4",
-    //       text: "Sometimes effective register for audience and purpose",
+    //       text: "Some precise vocabulary and a range of sentence structures sometimes used for effect.",
     //     },
     //     {
     //       level: "3",
-    //       text: "Some awareness of an appropriate register for audience and purpose",
+    //       text: "Simple vocabulary and a range of straightforward sentence structures.",
     //     },
     //     {
     //       level: "2",
-    //       text: "Limited awareness of appropriate register for audience and purpose",
+    //       text: "Limited and/or imprecise vocabulary and sentence structures.",
     //     },
     //     {
     //       level: "1",
-    //       text: "Very limited awareness of appropriate register for audience and purpose",
+    //       text: "Frequently imprecise vocabulary and sentence structures.",
     //     },
     //     {
     //       level: "0",
@@ -170,6 +135,41 @@ export const narrativeEssay = new BaseEssayQuestion(
     //     },
     //   ],
     // },
+    {
+      name: "Register",
+      description: "Use register appropriate to context",
+      marks: 5,
+      levels: [
+        {
+          level: "6",
+          text: "Consistent well-chosen register suitable for the context",
+        },
+        {
+          level: "5",
+          text: "Mostly consistent appropriate register suitable for the context",
+        },
+        {
+          level: "4",
+          text: "Some appropriate register for the context",
+        },
+        {
+          level: "3",
+          text: "Simple register with a general awareness of the context.",
+        },
+        {
+          level: "2",
+          text: "Limited and/or imprecise register for the context.",
+        },
+        {
+          level: "1",
+          text: "Register demonstrates little or no sense of the context.",
+        },
+        {
+          level: "0",
+          text: "No creditable content",
+        },
+      ],
+    },
     {
       name: "Grammar",
       description: "Make accurate use of spelling, punctuation and grammar",
@@ -229,11 +229,11 @@ export const narrativeEssay = new BaseEssayQuestion(
       (criteria.find((criterion) => criterion.name == "Organization")?.marks ??
         5);
 
-    const vocabularyLevel = Number(answerResponse.Vocabulary?.level ?? "0");
-    const vocabularyMarks =
-      (vocabularyLevel / 6) *
-      (criteria.find((criterion) => criterion.name == "Vocabulary")?.marks ??
-        5);
+    // const vocabularyLevel = Number(answerResponse.Vocabulary?.level ?? "0");
+    // const vocabularyMarks =
+    //   (vocabularyLevel / 6) *
+    //   (criteria.find((criterion) => criterion.name == "Vocabulary")?.marks ??
+    //     5);
 
     const registerLevel = Number(answerResponse.Register?.level ?? "0");
     const registerMarks =
@@ -248,7 +248,7 @@ export const narrativeEssay = new BaseEssayQuestion(
     const criteriaMarks = {
       Expression: expressionMarks,
       Organization: organizationMarks,
-      Vocabulary: vocabularyMarks,
+      // Vocabulary: vocabularyMarks,
       Register: registerMarks,
       Grammar: grammarMarks,
     };
@@ -256,7 +256,7 @@ export const narrativeEssay = new BaseEssayQuestion(
     const marks =
       expressionMarks +
       organizationMarks +
-      vocabularyMarks +
+      // vocabularyMarks +
       registerMarks +
       grammarMarks;
 
@@ -275,7 +275,7 @@ export const narrativeEssay = new BaseEssayQuestion(
 interface CriteriaMarks {
   Expression: number;
   Organization: number;
-  Vocabulary: number;
+  // Vocabulary: number;
   Register: number;
   Grammar: number;
 }
