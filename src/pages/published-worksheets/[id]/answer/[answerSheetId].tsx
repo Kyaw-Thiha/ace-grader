@@ -218,6 +218,9 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
             {publishedWorksheet?.title}
           </h2>
 
+          <p className="text-muted-foreground">{answerSheet?.studentName}</p>
+          <p className="text-muted-foreground">{answerSheet?.studentEmail}</p>
+
           {status.startsWith("returned-") ? (
             <p className="text-right">
               Total Marks: {answerSheet?.totalMarks}/
