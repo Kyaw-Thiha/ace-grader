@@ -260,13 +260,7 @@ export const narrativeEssay = new BaseEssayQuestion(
       registerMarks +
       grammarMarks;
 
-    await updateEssayAnswer(
-      prisma,
-      criteriaMarks,
-      answer,
-      answerResponse,
-      marks
-    );
+    await updateEssayAnswer(prisma, criteriaMarks, answer, answerResponse);
 
     return marks;
   }
@@ -283,8 +277,7 @@ const updateEssayAnswer = async (
   prisma: PrismaClient,
   criteriaMarks: CriteriaMarks,
   essayAnswer: EssayAnswer,
-  response: Response,
-  marks: number
+  response: Response
 ) => {
   const editCriteria = async (
     id: string,
@@ -331,13 +324,4 @@ const updateEssayAnswer = async (
       text: response[property.name as keyof Response] as string,
     });
   }
-
-  await prisma.essayAnswer.update({
-    where: {
-      id: essayAnswer?.id,
-    },
-    data: {
-      marks: marks,
-    },
-  });
 };

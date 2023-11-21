@@ -292,13 +292,4 @@ const updateEssayAnswer = async (
       text: response[property.name as keyof Response] as string,
     });
   }
-
-  await prisma.essayAnswer.update({
-    where: {
-      id: essayAnswer?.id,
-    },
-    data: {
-      marks: marks,
-    },
-  });
 };
