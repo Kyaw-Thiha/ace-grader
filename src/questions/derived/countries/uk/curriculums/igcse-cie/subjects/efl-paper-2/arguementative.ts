@@ -312,9 +312,6 @@ const updateEssayAnswer = async (
 
   const criteria = essayAnswer?.criteria ?? [];
   for (const criterion of criteria) {
-    console.log("name - ", criterion.name);
-    console.log(response[criterion.name as keyof Response] as Criteria);
-
     await editCriteria(
       criterion.id,
       response[criterion.name as keyof Response] as Criteria,

@@ -180,8 +180,12 @@ const handleMarking = async (
         openEndedQuestion.text = parentQuestionText + openEndedQuestion.text;
       }
 
-      openEndedQuestions.push(openEndedQuestion);
-      openEndedQuestionAnswers.push(answer);
+      if (answer?.studentAnswer.trim() == "") {
+        await updateEmptyOpenEndedAnswer(prisma, answer.id);
+      } else {
+        openEndedQuestions.push(openEndedQuestion);
+        openEndedQuestionAnswers.push(answer);
+      }
     } else if (question.questionType == "EssayQuestion") {
       console.time("Checking Essay");
       const answer = answers.at(question.order - 1)?.essayAnswer as EssayAnswer;
@@ -192,29 +196,34 @@ const handleMarking = async (
         essayQuestion.text = parentQuestionText + essayQuestion.text;
       }
 
-      console.log("Fetching Essay");
-      // Fetching the marks and feedback
-      const res = await backOff(() =>
-        openaiAPI.essayQuestion.generateMarksAndFeedback(essayQuestion, answer)
-      );
-      console.log("res - ", res);
-      const data = res.choices[0]?.message?.content ?? "";
-      console.log("resData - ", data);
+      if (answer?.studentAnswer.trim() == "") {
+        // If student didn't answered anything
+        await updateEmptyEssayAnswer(prisma, answer.id);
+      } else {
+        // Fetching the marks and feedback
+        const res = await backOff(() =>
+          openaiAPI.essayQuestion.generateMarksAndFeedback(
+            essayQuestion,
+            answer
+          )
+        );
+        const data = res.choices[0]?.message?.content ?? "";
+        console.log("Essay Prompt Returned - ", data);
 
-      const essayQuestionObj = getQuestionType(
-        essayQuestion?.essayType ?? ""
-      ) as BaseEssayQuestion;
-      console.log("obj - ", essayQuestionObj);
-      const marks = await essayQuestionObj.checkAnswer(
-        prisma,
-        essayQuestionObj.criteria,
-        answer,
-        data
-      );
-      console.log("marks - ", marks);
+        const essayQuestionObj = getQuestionType(
+          essayQuestion?.essayType ?? ""
+        ) as BaseEssayQuestion;
 
-      // Adding up to the total marks
-      totalMarks = totalMarks + (marks ?? 0);
+        const marks = await essayQuestionObj.checkAnswer(
+          prisma,
+          essayQuestionObj.criteria,
+          answer,
+          data
+        );
+
+        // Adding up to the total marks
+        totalMarks = totalMarks + (marks ?? 0);
+      }
 
       console.timeEnd("Checking Essay");
     } else if (question.questionType == "NestedQuestion") {
@@ -417,6 +426,46 @@ const fetchAnswerSheet = (answerSheetId: string) => {
           },
         },
       },
+    },
+  });
+};
+
+const updateEmptyOpenEndedAnswer = async (
+  prisma: PrismaClient,
+  openEndedAnswerId: string
+) => {
+  await prisma.openEndedQuestionAnswer.update({
+    where: {
+      id: openEndedAnswerId,
+    },
+    data: {
+      marks: 0,
+      feedback: "N/A",
+    },
+  });
+};
+
+const updateEmptyEssayAnswer = async (
+  prisma: PrismaClient,
+  essayAnswerId: string
+) => {
+  await prisma.essayAnswerCriteria.updateMany({
+    where: {
+      essayAnswerId: essayAnswerId,
+    },
+    data: {
+      level: "0",
+      evaluation: "N/A",
+      marks: 0,
+    },
+  });
+
+  await prisma.essayAnswerProperty.updateMany({
+    where: {
+      essayAnswerId: essayAnswerId,
+    },
+    data: {
+      text: "No Answer was provided",
     },
   });
 };

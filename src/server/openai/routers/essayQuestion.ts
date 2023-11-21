@@ -98,8 +98,6 @@ const generateMarksAndFeedback = (
   const userPrompt = answer?.studentAnswer ?? "";
 
   console.log("systemPrompt - ", systemPrompt);
-  console.log("userPrompt - ", userPrompt);
-  console.log(openai);
 
   return openai.chat.completions.create({
     model: "gpt-3.5-turbo-16k",
