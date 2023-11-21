@@ -49,6 +49,10 @@ const EssayQuestion: React.FC<Props> = (props) => {
     (accumulator, criterion) => accumulator + criterion.marks,
     0
   );
+  const answerMarks = props.answer?.criteria.reduce(
+    (accumulator, criterion) => accumulator + criterion.marks,
+    0
+  );
 
   return (
     <div className="flex flex-col">
@@ -70,12 +74,12 @@ const EssayQuestion: React.FC<Props> = (props) => {
             {props.status.startsWith("returned-") ? (
               <span
                 className={`rounded-md border-2 px-2 py-1 ${
-                  props.answer?.marks ?? 0 >= totalMarks * 0.7
+                  answerMarks ?? 0 >= totalMarks * 0.7
                     ? "bg-green-100"
                     : "bg-red-100"
                 }`}
               >
-                Marks: {props.answer?.marks} / {totalMarks}
+                Marks: {answerMarks} / {totalMarks}
               </span>
             ) : (
               <span className="rounded-md border-2 px-2 py-1">

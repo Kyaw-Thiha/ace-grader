@@ -400,7 +400,6 @@ model EssayAnswer {
     // - Language and Vocabulary 
     criteria              EssayAnswerCriteria[]
     properties            EssayAnswerProperty[]
-    marks                 Int       @default(0)
 
     @@index([answerId])
 }
