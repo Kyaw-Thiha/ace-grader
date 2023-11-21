@@ -319,4 +319,22 @@ export const publishedWorksheetRouter = createTRPCRouter({
         },
       });
     }),
+
+  editTotalMarks: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        totalMarks: z.number(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.publishedWorksheet.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          totalMarks: input.totalMarks,
+        },
+      });
+    }),
 });
