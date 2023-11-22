@@ -74,8 +74,8 @@ const generateMarksAndFeedback = (
   The response should be in the following json format - 
   {
     '${criteria[0]?.name ?? ""}': {
-        level: (number of 0 to 6),
-        evaluation: (text)
+        'level': (number of 0 to 6),
+        'evaluation': (text)
     }
     ...
   }
