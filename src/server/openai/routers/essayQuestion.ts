@@ -104,6 +104,7 @@ const generateMarksAndFeedback = (
       { role: "system", content: systemPrompt },
       { role: "user", content: userPrompt },
     ],
+    response_format: { type: "json_object" },
     temperature: 0,
     max_tokens: 2500,
     top_p: 1,
