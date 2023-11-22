@@ -78,7 +78,10 @@ const generateMarksAndFeedback = (
         evaluation: (text)
     }
     ...
-    
+    '${criteria[criteria.length - 1]?.name ?? ""}': {
+      level: (number of 0 to 6),
+      evaluation: (text)
+    }
   }
   `;
 
