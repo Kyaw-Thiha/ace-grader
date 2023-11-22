@@ -21,6 +21,7 @@ import { Card } from "@/components/ui/card";
 import AnswerSheetNavLayout from "@/components/AnswerSheetNavLayout";
 import NestedQuestion from "@/components/answerSheet/NestedQuestion";
 import EssayQuestion from "@/components/answerSheet/EssayQuestion";
+import { EditTotalMarks } from "@/components/answerSheet/EditTotalMarks";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"] as string;
@@ -182,8 +183,8 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
       id: props.answerSheedId,
     });
   const answers = answerSheet?.answers ?? [];
-  console.log("Answers - ", answers);
-  console.log("ans - ", answers.at(2)?.nestedQuestionAnswer);
+  // console.log("Answers - ", answers);
+  // console.log("ans - ", answers.at(2)?.nestedQuestionAnswer);
 
   const status = props.isTeacher
     ? (`${answerSheet?.status ?? "answering"}-teacherview` as AnswerSheetStatus)
@@ -230,6 +231,18 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
             <p className="text-right">
               Total Marks: {publishedWorksheet?.totalMarks}
             </p>
+          )}
+
+          {(status == "checking-teacherview" ||
+            status == "returned-teacherview") && (
+            <div className="mt-2 flex justify-end">
+              <EditTotalMarks
+                id={answerSheet?.id ?? ""}
+                marks={answerSheet?.totalMarks ?? 0}
+                maxMarks={publishedWorksheet?.totalMarks ?? 0}
+                refetch={refetchAnswerSheet}
+              />
+            </div>
           )}
 
           {/* If answer sheet isn't checked, allows teacher to manually activate check */}

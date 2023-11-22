@@ -75,6 +75,7 @@ export const answerSheetRouter = createTRPCRouter({
           id: input.id,
         },
         select: {
+          id: true,
           studentName: true,
           studentEmail: true,
           status: true,
