@@ -99,7 +99,7 @@ const generateMarksAndFeedback = (
   console.log("systemPrompt - ", systemPrompt);
 
   return openai.chat.completions.create({
-    model: "gpt-3.5-turbo-16k",
+    model: "gpt-3.5-turbo-1106",
     messages: [
       { role: "system", content: systemPrompt },
       { role: "user", content: userPrompt },
