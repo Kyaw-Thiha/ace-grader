@@ -89,7 +89,7 @@ export const SubmitCodeForm: React.FC<Props> = (props) => {
   return (
     <div className="mt-40 flex justify-center md:mt-20">
       <div className="flex flex-col gap-8">
-        <Card className="md:px-32 md:py-32">
+        <Card className="px-4 py-8 md:px-32 md:py-32">
           <CardHeader>
             <CardTitle>Join with Code</CardTitle>
             <CardDescription>

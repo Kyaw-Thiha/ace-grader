@@ -5,7 +5,7 @@ import type {
 } from "next";
 import { useRouter } from "next/router";
 import { api } from "@/utils/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
@@ -116,6 +116,12 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
       void router.push(`${props.id}/answer/${answerSheet.id}`);
     },
   });
+
+  useEffect(() => {
+    if (!publishedWorksheet) {
+      void router.replace("/404");
+    }
+  }, [publishedWorksheet, router]);
 
   const addAnswerSheet = async () => {
     if (name.trim() == "") {
@@ -333,15 +339,15 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
       }
     }
 
-    console.log("answers - ", answers);
+    // console.log("answers - ", answers);
 
     return answers;
   };
 
   return (
-    <div className="mt-12 flex justify-center">
+    <div className="mt-40 flex justify-center md:mt-20">
       <div className="flex flex-col gap-8">
-        <Card className="px-4 py-8">
+        <Card className="px-4 py-8 md:px-32 md:py-32">
           <CardHeader>
             <CardTitle>Create Answer Sheet</CardTitle>
             <CardDescription>
