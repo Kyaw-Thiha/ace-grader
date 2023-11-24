@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { customAlphabet } from "nanoid";
 
 import {
   createTRPCRouter,
@@ -98,6 +99,19 @@ export const publishedWorksheetRouter = createTRPCRouter({
               },
             },
           },
+        },
+      });
+    }),
+
+  checkForCode: publicProcedure
+    .input(z.object({ code: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.publishedWorksheet.findFirst({
+        where: {
+          code: input.code,
+        },
+        select: {
+          id: true,
         },
       });
     }),
@@ -280,6 +294,11 @@ export const publishedWorksheetRouter = createTRPCRouter({
       })
     )
     .mutation(({ ctx, input }) => {
+      const nanoid = customAlphabet(
+        "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_",
+        10
+      );
+
       return ctx.prisma.publishedWorksheet.create({
         data: {
           title: input.title,
@@ -289,6 +308,7 @@ export const publishedWorksheetRouter = createTRPCRouter({
           status: "PRIVATE",
           totalMarks: input.totalMarks,
           version: input.version,
+          code: nanoid(),
           profileId: input.profileId,
           worksheetId: input.worksheetId,
           questions: {

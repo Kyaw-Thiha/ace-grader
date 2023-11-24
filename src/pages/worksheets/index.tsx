@@ -159,10 +159,13 @@ const WorksheetList: React.FC<Props> = (props) => {
 
               {worksheet.publishedWorksheets.length > 0 && (
                 <ShareDialog
-                  url={`${window.location.origin}/published-worksheets/${
-                    worksheet?.publishedWorksheets.at(0)?.id ?? ""
+                  url={`${window.location.origin}/join/${
+                    worksheet?.publishedWorksheets.at(0)?.code ?? ""
                   }`}
                   title={worksheet.title}
+                  oldURL={`${window.location.origin}/published-worksheets/${
+                    worksheet?.publishedWorksheets.at(0)?.id ?? ""
+                  }`}
                 />
               )}
               <DeleteWorksheetButton

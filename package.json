@@ -45,6 +45,7 @@
     "framer-motion": "^10.12.16",
     "lottie-react": "^2.4.0",
     "lucide-react": "^0.248.0",
+    "nanoid": "^5.0.3",
     "next": "^13.4.6",
     "next-seo": "^6.0.0",
     "next-sitemap": "^4.1.8",

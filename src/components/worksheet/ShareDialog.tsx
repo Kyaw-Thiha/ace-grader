@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,17 +13,16 @@ import {
 } from "@/components/ui/dialog";
 
 import { Copy, Share2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { type QueryObserverBaseResult } from "@tanstack/react-query";
-import { toast } from "react-toastify";
-// import GoogleShareToClassRoom  from "google-classroom-share";
 
-interface DeleteQuestionButtonProps {
+import { Separator } from "@/components/ui/separator";
+
+interface Props {
   url: string;
   title: string;
+  oldURL: string;
 }
 
-export const ShareDialog: React.FC<DeleteQuestionButtonProps> = (props) => {
+export const ShareDialog: React.FC<Props> = (props) => {
   const [open, setOpen] = useState(false);
   const [classroomShareUrl, setClassroomShareUrl] = useState("");
 
@@ -45,8 +47,8 @@ export const ShareDialog: React.FC<DeleteQuestionButtonProps> = (props) => {
     setClassroomShareUrl(shareUrl);
   }, [props.url, props.title]);
 
-  const copyToClipboard = () => {
-    void navigator.clipboard.writeText(props.url);
+  const copyToClipboard = (text: string) => {
+    void navigator.clipboard.writeText(text);
 
     toast.success("Link copied to your clipboard");
   };
@@ -77,28 +79,37 @@ export const ShareDialog: React.FC<DeleteQuestionButtonProps> = (props) => {
                 </a>
               </Button>
             </div>
-            <hr className="my-4" />
-            <div className="flex flex-row items-center justify-center gap-4">
-              <p className="rounded-md border px-4 py-1 text-center">
-                {props.url}
-              </p>
-              <Button variant="outline" onClick={copyToClipboard}>
-                <Copy className="h-4 w-4" />
-              </Button>
-            </div>
+            <Separator className="my-4" />
+            {props.url != "" ? (
+              <div className="flex flex-row items-center justify-between gap-4">
+                <p>
+                  <span className="rounded-md border px-4 py-2 text-center">
+                    {props.url}
+                  </span>
+                </p>
+
+                <Button
+                  variant="outline"
+                  onClick={() => copyToClipboard(props.url)}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <div className="flex flex-row items-center justify-center gap-4">
+                <p className="rounded-md border px-4 py-1 text-center">
+                  {props.oldURL}
+                </p>
+                <Button
+                  variant="outline"
+                  onClick={() => copyToClipboard(props.oldURL)}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
           </DialogDescription>
         </DialogHeader>
-
-        {/* <DialogFooter>
-          <Button
-            type="submit"
-            onClick={() => {
-              setOpen(false);
-            }}
-          >
-            Confirm
-          </Button>
-        </DialogFooter> */}
       </DialogContent>
     </Dialog>
   );

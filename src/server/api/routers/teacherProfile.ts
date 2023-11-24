@@ -45,6 +45,7 @@ export const teacherProfileRouter = createTRPCRouter({
               publishedWorksheets: {
                 select: {
                   id: true,
+                  code: true,
                 },
                 orderBy: { createdTime: "desc" },
               },
@@ -81,6 +82,7 @@ export const teacherProfileRouter = createTRPCRouter({
           orderBy: { createdTime: "desc" },
           select: {
             id: true,
+            code: true,
             title: true,
             createdTime: true,
           },
