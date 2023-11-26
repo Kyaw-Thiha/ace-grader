@@ -73,9 +73,16 @@ const EssayQuestion: React.FC<Props> = (props) => {
           <div className="mt-2">
             {props.status.startsWith("returned-") ? (
               <span
+                // className={`rounded-md border-2 px-2 py-1 ${
+                //   answerMarks ?? 0 >= totalMarks * 0.7
+                //     ? "bg-green-100"
+                //     : "bg-red-100"
+                // }`}
                 className={`rounded-md border-2 px-2 py-1 ${
-                  answerMarks ?? 0 >= totalMarks * 0.7
+                  (answerMarks ?? 0) >= totalMarks * 0.7
                     ? "bg-green-100"
+                    : (answerMarks ?? 0) >= totalMarks * 0.5
+                    ? "bg-yellow-100"
                     : "bg-red-100"
                 }`}
               >
@@ -263,7 +270,7 @@ export const Criteria: React.FC<CriteriaProps> = (props) => {
       </div>
       <div className="mt-4">
         <span
-          className={` rounded-md border-2 px-2 py-1 text-sm ${
+          className={`rounded-md border-2 px-2 py-1 text-sm dark:text-muted-foreground ${
             (props.criteria?.marks ?? 0) >= props.marks * 0.7
               ? "bg-green-100"
               : (props.criteria?.marks ?? 0) >= props.marks * 0.5
