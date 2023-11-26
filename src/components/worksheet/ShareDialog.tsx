@@ -80,7 +80,7 @@ export const ShareDialog: React.FC<Props> = (props) => {
               </Button>
             </div>
             <Separator className="my-4" />
-            {props.url != "" ? (
+            {!props.url.endsWith("/join/") ? (
               <div className="flex flex-row items-center justify-between gap-4">
                 <p>
                   <span className="rounded-md border px-4 py-2 text-center">

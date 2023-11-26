@@ -295,8 +295,8 @@ export const publishedWorksheetRouter = createTRPCRouter({
     )
     .mutation(({ ctx, input }) => {
       const nanoid = customAlphabet(
-        "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_",
-        10
+        "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+        12
       );
 
       return ctx.prisma.publishedWorksheet.create({
