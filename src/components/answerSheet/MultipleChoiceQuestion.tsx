@@ -44,6 +44,7 @@ import {
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { ConnectionStatus } from "@/components/ConnectionStatus";
 
 type MultipleChoiceQuestion = RouterOutputs["multipleChoiceQuestion"]["get"];
 type MultipleChoiceQuestionAnswer =
@@ -282,6 +283,19 @@ const ChoiceGroup: React.FC<Props> = (props) => {
           </div>
         ))}
       </RadioGroup>
+      <div className="flex justify-end">
+        <ConnectionStatus
+          connectionStatus={
+            !isOnline
+              ? "offline"
+              : editAnswer.isLoading
+              ? "loading"
+              : editAnswer.isError
+              ? "error"
+              : "success"
+          }
+        />
+      </div>
     </>
   );
 };

@@ -22,6 +22,7 @@ import AnswerSheetNavLayout from "@/components/AnswerSheetNavLayout";
 import NestedQuestion from "@/components/answerSheet/NestedQuestion";
 import EssayQuestion from "@/components/answerSheet/EssayQuestion";
 import { EditTotalMarks } from "@/components/answerSheet/EditTotalMarks";
+import { toast } from "react-toastify";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.["id"] as string;
@@ -163,6 +164,33 @@ const QuestionList: React.FC<QuestionListProps> = (props) => {
     }
   }, [incrementWindowCount, props.answerSheedId]); // Empty dependency array to ensure the effect runs only once
   // ***
+
+  const [isOnline, setIsOnline] = useState(true);
+  useEffect(() => {
+    // Retrieve data from local storage when the component mounts
+
+    // Add event listeners for online and offline events
+    window.addEventListener("online", () => {
+      setIsOnline(true);
+      toast.done("You are back online");
+    });
+    window.addEventListener("offline", () => {
+      setIsOnline(false);
+      toast.error("You lost internet connection");
+    });
+
+    return () => {
+      // Remove event listeners when the component unmounts
+      window.removeEventListener("online", () => {
+        setIsOnline(true);
+        toast.done("You are back online");
+      });
+      window.removeEventListener("offline", () => {
+        setIsOnline(false);
+        toast.error("You lost internet connection");
+      });
+    };
+  }, []);
 
   const [isChecking, setIsChecking] = useState(false);
 

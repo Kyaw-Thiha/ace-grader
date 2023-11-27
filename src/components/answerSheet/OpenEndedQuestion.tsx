@@ -47,6 +47,7 @@ import {
 } from "@/components/ui/form";
 import Image from "next/image";
 import { MathInputDialog } from "../MathInputDialog";
+import { ConnectionStatus } from "@/components/ConnectionStatus";
 
 type OpenEndedQuestion = RouterOutputs["openEndedQuestion"]["get"];
 type OpenEndedQuestionAnswer = RouterOutputs["openEndedQuestionAnswer"]["get"];
@@ -220,19 +221,33 @@ const StudentAnswer: React.FC<Props> = (props) => {
     //   outlined
     //   onChange={(e) => setAnswer(e.target.value)}
     // />
+    <>
+      <div className="flex items-center justify-center gap-4">
+        <AutosizeInput
+          minRows={4}
+          placeholder="Type here"
+          className="text-md transition-all disabled:cursor-default disabled:opacity-100"
+          disabled={props.status != "answering-studentview"}
+          value={answer}
+          onChange={(e) => setAnswer(e.target.value)}
+        />
 
-    <div className="flex items-center justify-center gap-4">
-      <AutosizeInput
-        minRows={4}
-        placeholder="Type here"
-        className="text-md transition-all disabled:cursor-default disabled:opacity-100"
-        disabled={props.status != "answering-studentview"}
-        value={answer}
-        onChange={(e) => setAnswer(e.target.value)}
-      />
-
-      <MathInputDialog onSave={handleMathSave} />
-    </div>
+        <MathInputDialog onSave={handleMathSave} />
+      </div>
+      <div className="flex justify-end">
+        <ConnectionStatus
+          connectionStatus={
+            !isOnline
+              ? "offline"
+              : editAnswer.isLoading
+              ? "loading"
+              : editAnswer.isError
+              ? "error"
+              : "success"
+          }
+        />
+      </div>
+    </>
   );
 };
 

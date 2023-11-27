@@ -19,7 +19,8 @@ import {
 import Image from "next/image";
 import { getQuestionType } from "@/questions/derived/functions";
 import type { BaseEssayQuestion } from "@/questions/base/essayQuestion";
-import { EditEssayCriteriaDialog } from "./EditEssayCriteriaDialog";
+import { EditEssayCriteriaDialog } from "@/components/answerSheet/EditEssayCriteriaDialog";
+import { ConnectionStatus } from "@/components/ConnectionStatus";
 
 type EssayQuestion = RouterOutputs["essayQuestion"]["get"];
 type EssayAnswer = RouterOutputs["essayAnswer"]["get"];
@@ -128,6 +129,8 @@ const EssayQuestion: React.FC<Props> = (props) => {
         </form>
       </CardContent>
 
+      {/* {props.status == "answering-studentview" && <ConnectionStatus />} */}
+
       {hasAnswered && (
         <CardFooter className="mt-8 flex flex-col gap-4">
           {props.answer?.criteria.map((criterion) => {
@@ -219,20 +222,36 @@ const StudentAnswer: React.FC<Props> = (props) => {
   };
   useAutosave({ data: answer, onSave: updateAnswer });
 
+  // http://localhost:3000/published-worksheets/clp6jlxco001ov9qolerukqzh/answer/clpghyidk0001akmuashw5jn4
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-4">
-      <AutosizeInput
-        minRows={20}
-        placeholder="Type here"
-        className="text-md select-none transition-all disabled:cursor-default disabled:opacity-100"
-        disabled={props.status != "answering-studentview"}
-        value={answer}
-        onChange={(e) => setAnswer(e.target.value)}
-      />
-      <span className="rounded-md border-2 px-2 py-1">
-        Word Count: {answer.split(" ").length}
-      </span>
-    </div>
+    <>
+      <div className="flex w-full flex-col items-center justify-center gap-4">
+        <AutosizeInput
+          minRows={20}
+          placeholder="Type here"
+          className="text-md select-none transition-all disabled:cursor-default disabled:opacity-100"
+          disabled={props.status != "answering-studentview"}
+          value={answer}
+          onChange={(e) => setAnswer(e.target.value)}
+        />
+        <span className="rounded-md border-2 px-2 py-1">
+          Word Count: {answer.split(" ").length}
+        </span>
+      </div>
+      <div className="flex justify-end">
+        <ConnectionStatus
+          connectionStatus={
+            !isOnline
+              ? "offline"
+              : editAnswer.isLoading
+              ? "loading"
+              : editAnswer.isError
+              ? "error"
+              : "success"
+          }
+        />
+      </div>
+    </>
   );
 };
 
