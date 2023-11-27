@@ -118,7 +118,7 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
   });
 
   useEffect(() => {
-    if (!publishedWorksheet) {
+    if (!publishedWorksheet && !isLoading) {
       void router.replace("/404");
     }
   }, [publishedWorksheet, router]);
