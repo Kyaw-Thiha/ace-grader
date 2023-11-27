@@ -222,7 +222,19 @@ const StudentAnswer: React.FC<Props> = (props) => {
   };
   useAutosave({ data: answer, onSave: updateAnswer });
 
-  // http://localhost:3000/published-worksheets/clp6jlxco001ov9qolerukqzh/answer/clpghyidk0001akmuashw5jn4
+  const countWords = (text: string) => {
+    // Remove leading and trailing spaces
+    const trimmedText = text.trim();
+
+    // Handle cases where there are multiple spaces between words
+    const wordsArray = trimmedText.split(/\s+/);
+
+    // Filter out empty strings (resulting from consecutive spaces)
+    const filteredWords = wordsArray.filter((word) => word !== "");
+
+    return filteredWords.length;
+  };
+
   return (
     <>
       <div className="flex w-full flex-col items-center justify-center gap-4">
@@ -235,7 +247,7 @@ const StudentAnswer: React.FC<Props> = (props) => {
           onChange={(e) => setAnswer(e.target.value)}
         />
         <span className="rounded-md border-2 px-2 py-1">
-          Word Count: {answer.split(" ").length}
+          Word Count: {countWords(answer)}
         </span>
       </div>
       <div className="flex justify-end">
