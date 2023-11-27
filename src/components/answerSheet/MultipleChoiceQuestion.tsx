@@ -283,19 +283,21 @@ const ChoiceGroup: React.FC<Props> = (props) => {
           </div>
         ))}
       </RadioGroup>
-      <div className="flex justify-end">
-        <ConnectionStatus
-          connectionStatus={
-            !isOnline
-              ? "offline"
-              : editAnswer.isLoading
-              ? "loading"
-              : editAnswer.isError
-              ? "error"
-              : "success"
-          }
-        />
-      </div>
+      {props.status == "answering-studentview" && (
+        <div className="flex justify-end">
+          <ConnectionStatus
+            connectionStatus={
+              !isOnline
+                ? "offline"
+                : editAnswer.isLoading
+                ? "loading"
+                : editAnswer.isError
+                ? "error"
+                : "success"
+            }
+          />
+        </div>
+      )}
     </>
   );
 };

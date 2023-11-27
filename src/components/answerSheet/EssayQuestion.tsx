@@ -250,19 +250,21 @@ const StudentAnswer: React.FC<Props> = (props) => {
           Word Count: {countWords(answer)}
         </span>
       </div>
-      <div className="flex justify-end">
-        <ConnectionStatus
-          connectionStatus={
-            !isOnline
-              ? "offline"
-              : editAnswer.isLoading
-              ? "loading"
-              : editAnswer.isError
-              ? "error"
-              : "success"
-          }
-        />
-      </div>
+      {props.status == "answering-studentview" && (
+        <div className="flex justify-end">
+          <ConnectionStatus
+            connectionStatus={
+              !isOnline
+                ? "offline"
+                : editAnswer.isLoading
+                ? "loading"
+                : editAnswer.isError
+                ? "error"
+                : "success"
+            }
+          />
+        </div>
+      )}
     </>
   );
 };
