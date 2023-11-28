@@ -151,7 +151,7 @@ const StudentCredentialsForm: React.FC<Props> = (props) => {
           setShowPrevAnswerSheets(true);
         } else {
           // console.log(await getAnswers());
-          void toast.promise(
+          await toast.promise(
             createAnswerSheet.mutateAsync({
               studentName: name,
               studentEmail: email,
